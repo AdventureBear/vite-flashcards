@@ -5,6 +5,7 @@ const URL = "http://localhost:3000/deck"
 import CompleteModal from './components/CompleteModal'
 import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
+import FeedbackModal from "./components/FeedbackModal.tsx";
 interface Card {
     question: string;
     answer: string;
@@ -52,11 +53,11 @@ function App() {
     const [showQuiz, setShowQuiz] = useState(true)
     const [correct, setCorrect] = useState(0)
     const [incorrect, setIncorrect] = useState(0)
-
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false)
+    const [answeredCorrectly, setAnsweredCorrectly] = useState(false)
     const { data, isPending, error } = useFetch(URL)
+
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
-
-
 
     useEffect(() => {
         setCurrentCardIndex(0)
@@ -69,9 +70,6 @@ function App() {
         }
     }, [cardsDone, deck.length]);
 
-
-    // const { data, isPending, error} = useFetch(URL)
-    console.log(typeof(data))
     useEffect(() => {
         if (data) {
             setDeck(data)
@@ -93,11 +91,15 @@ function App() {
         }
     }
 
+
+
     function handleCorrect() {
         if (cardsDone < deck.length) {
             setCorrect((prev) => prev + 1)
+            setAnsweredCorrectly(true)
             setCardsDone(cardsDone + 1);
-            handleNext()
+            setShowFeedbackModal(true)
+            // handleNext()
         } else {
             setShowComplete(true)
         }
@@ -106,8 +108,10 @@ function App() {
     function handleIncorrect() {
         if (cardsDone < deck.length) {
             setIncorrect((prev) => prev - 1)
+            setAnsweredCorrectly(false)
             setCardsDone(cardsDone + 1);
-            handleNext()
+            setShowFeedbackModal(true)
+            // handleNext()
         } else {
             setShowComplete(true)
         }
@@ -116,22 +120,14 @@ function App() {
 
     function handleAddNewCard(card: Card) {
         console.log(card)
+        //add to db
         postData(card)
 
+        //update state
+        setDeck((prev)=>[...prev, card])
+
     }
-    // async function handleAddCard(card: Card): Promise<void> {
-    //     const postData = {
-    //        card
-    //     }
-    //     useFetch(postData, "POST")
-    //
-    //     // try {
-    //     //     await postData(card);
-    //     //     setDeck((prev) => [...prev, card])
-    //     // } catch (error) {
-    //     //     console.error('Error:', error);
-    //     // }
-    // }
+
 
         const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
@@ -219,6 +215,12 @@ function App() {
                 </button>
             </div>
 
+                <FeedbackModal
+                    show = {showFeedbackModal}
+                    close = {()=>{setShowFeedbackModal(false)}}
+                    handleNext =  {handleNext}
+                    answeredCorrectly = {answeredCorrectly}
+                />
 
             {/* Add Modal */}
             <AddCardModal
@@ -243,6 +245,9 @@ function App() {
                 incorrect={incorrect}
             />
             </>
+
+
+
             }
         </>
 )

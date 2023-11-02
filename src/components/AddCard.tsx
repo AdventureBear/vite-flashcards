@@ -50,7 +50,7 @@ const AddCardModal = ({show, onClose, setShowQuiz, handleAddNewCard }: AddCardMo
         setQuestion('')
         setAnswer('')
         setShowConfirmAd(true)
-        onClose()
+        // onClose()
 
     }
 
