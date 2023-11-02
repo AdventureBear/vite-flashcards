@@ -5,6 +5,7 @@ import SuccessfulAddModal from "./SuccessfulAddModal";
 interface Card {
     question: string;
     answer: string;
+    postData: (arg0: Card)=>Promise<void>;
 }
 
 // const postData = (cardData: Card): Promise<Card[]> => {
@@ -28,32 +29,28 @@ interface Card {
 // }
 
 
-
 interface AddCardModalProps {
     show: boolean,
     onClose: ()=>void,
-    addCard: (card: Card)=>Promise<void>,
-    setShowQuiz: (arg0: boolean)=>void
+    setShowQuiz: (arg0: boolean)=>void,
+    handleAddNewCard: (arg0: Card)=>void
 }
-const AddCardModal = ({show, onClose, addCard, setShowQuiz }: AddCardModalProps) => {
+const AddCardModal = ({show, onClose, setShowQuiz, handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
     const [showConfirmAd, setShowConfirmAd] = useState(false)
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        const date = new Date();
-
-        const card = {
+        const newCard = {
             question,
-            answer,
-            id: date.getMilliseconds()
+            answer
         };
-        await addCard(card)
+        handleAddNewCard(newCard as Card)
         setQuestion('')
         setAnswer('')
         setShowConfirmAd(true)
-        // onClose()
+        onClose()
 
     }
 

@@ -1,26 +1,30 @@
 import { useState, useEffect } from "react"
 
-export const useFetch = (url, method = "GET") => {
-    const [data, setData] = useState(null)
-    const [isPending, setIsPending] = useState(false)
-    const [error, setError] = useState(null)
-    const [options, setOptions] = useState(null)
+
+interface Card {
+    question: string;
+    answer: string;
+}
+
+export const useFetch = (url: string, method: string = "GET") => {
+    const [data, setData] = useState<Card[] | null>(null)
+    const [isPending, setIsPending] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
+    const [options, setOptions] = useState<object | null>(null)
 
 
-    const postData = (postData) => {
-        return fetch(url,{
+    const postData = (postData: object) => {
+        setOptions({
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(postData)
         })
-            .then(res => res.json())
-            .catch(error => console.error('Error:', error));
     }
 
 
-    const putData = (url, putData) => {
+    const putData = (url: string, putData: object) => {
         return fetch(url, {
             method: "PUT",
             headers: {
@@ -33,7 +37,7 @@ export const useFetch = (url, method = "GET") => {
     }
 
 
-    const deleteData = (url) => {
+    const deleteData = (url: string) => {
         console.log("deleting data w/ fetch")
         return fetch(url, {
             method: "DELETE"
@@ -46,7 +50,7 @@ export const useFetch = (url, method = "GET") => {
     useEffect(() => {
         const controller = new AbortController()
 
-        const fetchData = async (fetchOptions) => {
+        const fetchData = async (fetchOptions?: object) => {
             setIsPending(true)
 
             try {
@@ -59,8 +63,8 @@ export const useFetch = (url, method = "GET") => {
                 setIsPending(false)
                 setData(data)
                 setError(null)
-            } catch (err) {
-                if (err.name === "AbortError") {
+            } catch (err ) {
+                if ((err as Error).name === "AbortError") {
                     console.log("the fetch was aborted")
                 } else {
                     setIsPending(false)

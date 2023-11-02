@@ -53,6 +53,11 @@ function App() {
     const [correct, setCorrect] = useState(0)
     const [incorrect, setIncorrect] = useState(0)
 
+    const { data, isPending, error } = useFetch(URL)
+    const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
+
+
+
     useEffect(() => {
         setCurrentCardIndex(0)
     }, [deck]);
@@ -65,19 +70,14 @@ function App() {
     }, [cardsDone, deck.length]);
 
 
-    const { data: deck , isPending, error} = useFetch('http://localhost:3000/events')
-
+    // const { data, isPending, error} = useFetch(URL)
+    console.log(typeof(data))
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const fetchedData: Card[] = await getData(URL, 'GET')
-                setDeck(fetchedData)
-            } catch(error) {
-                console.error('Error:', error)
-            }
+        if (data) {
+            setDeck(data)
         }
-        fetchData()
-    }, []);
+    }, [data]);
+
 
     function handlePrev() {
         if (currentCardIndex > 0) {
@@ -94,8 +94,6 @@ function App() {
     }
 
     function handleCorrect() {
-
-
         if (cardsDone < deck.length) {
             setCorrect((prev) => prev + 1)
             setCardsDone(cardsDone + 1);
@@ -106,8 +104,6 @@ function App() {
     }
 
     function handleIncorrect() {
-
-
         if (cardsDone < deck.length) {
             setIncorrect((prev) => prev - 1)
             setCardsDone(cardsDone + 1);
@@ -117,17 +113,33 @@ function App() {
         }
     }
 
-    async function handleAddCard(card: Card): Promise<void> {
-        try {
-            await postData(card);
-            setDeck((prev) => [...prev, card])
-        } catch (error) {
-            console.error('Error:', error);
-        }
+
+    function handleAddNewCard(card: Card) {
+        console.log(card)
+        postData(card)
+
     }
+    // async function handleAddCard(card: Card): Promise<void> {
+    //     const postData = {
+    //        card
+    //     }
+    //     useFetch(postData, "POST")
+    //
+    //     // try {
+    //     //     await postData(card);
+    //     //     setDeck((prev) => [...prev, card])
+    //     // } catch (error) {
+    //     //     console.error('Error:', error);
+    //     // }
+    // }
+
         const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
         return (<>
+
+            {isPending && <div>Loading...</div>}
+            {error && <div>Error: {error} </div>}
+            {data && <>
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
                 <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
                     <p className="font-bold  mb-2"><span
@@ -157,8 +169,7 @@ function App() {
                 </div>
 
 
-                <div
-                    className="max-w-xl mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
+                <div className="max-w-xl mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
                     <div>
                         <p className="text-lg font-bold ml-2"><span
                             className="text-amber-100 mr-2">Answered:</span>
@@ -178,8 +189,7 @@ function App() {
 
 
                 {/* Previous and Next Buttons */}
-                <div
-                    className="max-w-xl mx-auto mt-4 bg-white rounded-lg p-4 shadow-lg flex justify-between items-center">
+                <div className="max-w-xl mx-auto mt-4 bg-white rounded-lg p-4 shadow-lg flex justify-between items-center">
                     <button
                         className={`bg-blue-500 text-white px-2 py-2 rounded ${currentCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
                         onClick={handlePrev}
@@ -197,6 +207,7 @@ function App() {
                         Next
                     </button>
                 </div>
+
                 <button
                     className="mt-8 bg-blue-500 text-white px-4 py-2 rounded"
                     onClick={()=>{
@@ -211,13 +222,14 @@ function App() {
 
             {/* Add Modal */}
             <AddCardModal
-               addCard={handleAddCard}
+                handleAddNewCard = {handleAddNewCard}
                setShowQuiz={setShowQuiz}
                 show={showCard}
                 onClose={() => {
                     setShowQuiz(true)
                     setShowCard(false)
                 }}
+
             />
 
 
@@ -230,11 +242,10 @@ function App() {
                 correct={correct}
                 incorrect={incorrect}
             />
-
-
-
-
-        </>)
+            </>
+            }
+        </>
+)
 
 }
 export default App
