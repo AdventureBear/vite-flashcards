@@ -1,0 +1,53 @@
+{
+  "deck": [
+    {
+      "question": "What color is your dog?",
+      "answer": "Black and white and gray",
+      "type": "qa",
+      "category": "dogs"
+    },
+    {
+      "question": "How many paws does a cat have?",
+      "answer": "Four, Three, Two or One",
+      "category": "cats",
+      "type": "mc"
+    },
+    {
+      "question": "What do dogs say?",
+      "answer": "Woof or Arff",
+      "category": "dogs",
+      "type": "qa"
+    },
+    {
+      "question": "True or False: Dogs see in black and white",
+      "answer": "False",
+      "category": "science",
+      "type": "tf"
+    },
+    {
+      "question": "How much fun is Joy of Coding? ",
+      "answer": "LOTS OF FUN",
+      "id": 515
+    },
+    {
+      "question": "What does Fig want for Dinner? ",
+      "answer": "Snacks and Treats!",
+      "id": 541
+    },
+    {
+      "question": "What does Fig want for Dinner? ",
+      "answer": "Snacks and Treats!",
+      "id": 37
+    },
+    {
+      "question": "What does Fig want for Dinner? ",
+      "answer": "Snacks and Treats!",
+      "id": 724
+    },
+    {
+      "question": "What does Arche want for Dinner? ",
+      "answer": "Fig!",
+      "id": 9
+    }
+  ]
+}
