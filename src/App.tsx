@@ -7,41 +7,11 @@ import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
 interface Card {
+    // id: number | undefined,
     question: string;
     answer: string;
 }
 
-
-
-//  async function getData(URL: string, method: string): Promise<Card[]>  {
-//     const response = await fetch(URL, {
-//         method: method
-//     });
-//     const data = await response.json();
-//     console.log(data);
-//     return data as Card[]
-// }
-
-// const postData = async (cardData: Card): Promise<Card[]> => {
-//     return fetch(URL, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(cardData)
-//     })
-//         .then(res => {
-//             if (!res.ok) {
-//                 throw new Error(`HTTP error! status: ${res.status}`);
-//             }
-//             return res.json();
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             throw new Error('Error sending data to server');
-//         });
-//     // setDeck((prev) => [...prev, card])
-// }
 
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
@@ -55,7 +25,11 @@ function App() {
     const [incorrect, setIncorrect] = useState(0)
     const [showFeedbackModal, setShowFeedbackModal] = useState(false)
     const [answeredCorrectly, setAnsweredCorrectly] = useState(false)
+    const [questionsReviewed, setQuestionsReviewed] = useState<{ reviewed: boolean; correct: boolean | null }[]>([]);
+
     const { data, isPending, error } = useFetch(URL)
+
+    console.log(questionsReviewed)
 
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
@@ -64,17 +38,26 @@ function App() {
     }, [deck]);
 
     useEffect(() => {
-
         if (deck.length>0 && cardsDone===deck.length){
             setShowComplete(true)
         }
     }, [cardsDone, deck.length]);
 
     useEffect(() => {
+
         if (data) {
             setDeck(data)
+            let reviewedArray = data.map((_card)=>{
+                return {
+                    reviewed: false,
+                    correct: null
+                }
+            })
+            setQuestionsReviewed(reviewedArray)
+
         }
     }, [data]);
+
 
 
     function handlePrev() {
@@ -99,18 +82,39 @@ function App() {
             setAnsweredCorrectly(true)
             setCardsDone(cardsDone + 1);
             setShowFeedbackModal(true)
+            updateReviewedData(currentCardIndex, true, true)
             // handleNext()
         } else {
             setShowComplete(true)
         }
     }
 
+
+    function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
+        setQuestionsReviewed(prevData => {
+            // Create a copy of the array
+            const updatedData = prevData.slice();
+
+            if (index >= 0 && index < updatedData.length) {
+                // Update reviewed and correct properties
+                updatedData[index] = {
+                    ...updatedData[index],
+                    reviewed,
+                    correct,
+                };
+            }
+
+            return updatedData;
+        });
+    }
+
     function handleIncorrect() {
         if (cardsDone < deck.length) {
-            setIncorrect((prev) => prev - 1)
+            setIncorrect((prev) => prev + 1)
             setAnsweredCorrectly(false)
             setCardsDone(cardsDone + 1);
             setShowFeedbackModal(true)
+            updateReviewedData(currentCardIndex, true, false)
             // handleNext()
         } else {
             setShowComplete(true)
@@ -138,6 +142,15 @@ function App() {
             {data && <>
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
                 <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
+
+                    {/* Checkbox for indicating if the question was reviewed */}
+                    <div className="mb-4 flex items-center">
+                        <label className="inline-flex items-center">
+                            <input type="checkbox" readOnly checked={questionsReviewed[currentCardIndex]? questionsReviewed[currentCardIndex].reviewed: false} className="form-checkbox h-5 w-5 text-teal-600" />
+                            <span className="ml-2 text-white">Reviewed</span>
+                        </label>
+                    </div>
+
                     <p className="font-bold  mb-2"><span
                         className="text-amber-100">Question: {currentCardIndex + 1} of {deck.length}
                     </span></p>
@@ -151,12 +164,12 @@ function App() {
 
                     <div className="flex justify-around">
                         <button
-                            onClick={handleCorrect}
+                            onClick={showAnswer ? handleCorrect : undefined}
                             className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
                             <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>
                         </button>
                         <button
-                            onClick={handleIncorrect}
+                            onClick={showAnswer ? handleIncorrect : undefined}
                             className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
                             <span
                                 className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>
@@ -168,7 +181,7 @@ function App() {
                 <div className="max-w-xl mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
                     <div>
                         <p className="text-lg font-bold ml-2"><span
-                            className="text-amber-100 mr-2">Answered:</span>
+                            className="text-amber-100 mr-2">Reviewed:</span>
                         </p>
                     </div>
                     <div className="flex-1">
@@ -215,12 +228,7 @@ function App() {
                 </button>
             </div>
 
-                <FeedbackModal
-                    show = {showFeedbackModal}
-                    close = {()=>{setShowFeedbackModal(false)}}
-                    handleNext =  {handleNext}
-                    answeredCorrectly = {answeredCorrectly}
-                />
+
 
             {/* Add Modal */}
             <AddCardModal
@@ -234,6 +242,12 @@ function App() {
 
             />
 
+                <FeedbackModal
+                    show = {showFeedbackModal}
+                    close = {()=>{setShowFeedbackModal(false)}}
+                    handleNext =  {handleNext}
+                    answeredCorrectly = {answeredCorrectly}
+                />
 
             {/* Complete Modal */}
             <CompleteModal
@@ -245,8 +259,6 @@ function App() {
                 incorrect={incorrect}
             />
             </>
-
-
 
             }
         </>

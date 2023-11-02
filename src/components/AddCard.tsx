@@ -8,25 +8,6 @@ interface Card {
     postData: (arg0: Card)=>Promise<void>;
 }
 
-// const postData = (cardData: Card): Promise<Card[]> => {
-//     return fetch(URL, {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(cardData)
-//     })
-//         .then(res => {
-//             if (!res.ok) {
-//                 throw new Error(`HTTP error! status: ${res.status}`);
-//             }
-//             return res.json();
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             throw new Error('Error sending data to server');
-//         });
-// }
 
 
 interface AddCardModalProps {
