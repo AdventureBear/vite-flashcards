@@ -75,6 +75,20 @@ function App() {
     }
 
 
+    const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
+        if (cardsDone < deck.length) {
+            if (!questionsReviewed[cardIndex]) {
+                setAnsweredCorrectly(isCorrect)
+                questionsReviewed(prev => ({...prev, [cardIndex]: true}));
+                setCorrect(prev => prev + 1);
+                setCardsDone(cardsDone + 1);
+                setShowFeedbackModal(true)
+                updateReviewedData(currentCardIndex, true, isCorrect)
+            }
+        }  else {
+            setShowComplete(true)
+        }
+    };
 
     function handleCorrect() {
         if (cardsDone < deck.length) {
@@ -90,6 +104,18 @@ function App() {
     }
 
 
+    function handleIncorrect() {
+        if (cardsDone < deck.length) {
+            setIncorrect((prev) => prev + 1)
+            setAnsweredCorrectly(false)
+            setCardsDone(cardsDone + 1);
+            setShowFeedbackModal(true)
+            updateReviewedData(currentCardIndex, true, false)
+            // handleNext()
+        } else {
+            setShowComplete(true)
+        }
+    }
     function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
         setQuestionsReviewed(prevData => {
             // Create a copy of the array
@@ -106,19 +132,6 @@ function App() {
 
             return updatedData;
         });
-    }
-
-    function handleIncorrect() {
-        if (cardsDone < deck.length) {
-            setIncorrect((prev) => prev + 1)
-            setAnsweredCorrectly(false)
-            setCardsDone(cardsDone + 1);
-            setShowFeedbackModal(true)
-            updateReviewedData(currentCardIndex, true, false)
-            // handleNext()
-        } else {
-            setShowComplete(true)
-        }
     }
 
 
@@ -162,19 +175,35 @@ function App() {
                         setShowAnswer={setShowAnswer}
                     />
 
+
                     <div className="flex justify-around">
-                        <button
-                            onClick={showAnswer ? handleCorrect : undefined}
-                            className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                            <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>
-                        </button>
-                        <button
-                            onClick={showAnswer ? handleIncorrect : undefined}
-                            className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                            <span
-                                className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>
-                        </button>
+                            <button
+                                onClick={showAnswer ? handleAnswer(true, currentCardIndex) : undefined}
+                                className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                                <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>
+                            </button>
+                            <button
+                                onClick={showAnswer ? handleAnswer(false, currentCardIndex) : undefined}
+                                className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                                <span
+                                    className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>
+                            </button>
                     </div>
+
+
+                    {/*<div className="flex justify-around">*/}
+                    {/*    <button*/}
+                    {/*        onClick={showAnswer ? handleCorrect : undefined}*/}
+                    {/*        className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>*/}
+                    {/*        <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>*/}
+                    {/*    </button>*/}
+                    {/*    <button*/}
+                    {/*        onClick={showAnswer ? handleIncorrect : undefined}*/}
+                    {/*        className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>*/}
+                    {/*        <span*/}
+                    {/*            className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                 </div>
 
 
