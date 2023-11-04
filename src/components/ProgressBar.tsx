@@ -1,13 +1,16 @@
-import {Card} from '../App.tsx'
+import {Card} from '../types.ts'
+import {useFlashCardState} from "../store.ts";
 
 interface ProgressBarProps {
-    cardsDone: number,
     deck: Card[],
     progressBarWidth: string
 }
 
-const ProgressBar = ({cardsDone, deck, progressBarWidth}: ProgressBarProps) =>
-    (
+const ProgressBar = ({ deck, progressBarWidth}: ProgressBarProps) => {
+
+    const cardsDone = useFlashCardState((state)=>state.cardsDone)
+
+    return (
         <div className="max-w-xl mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
             <div>
                 <p className="text-lg font-bold ml-2"><span
@@ -27,5 +30,6 @@ const ProgressBar = ({cardsDone, deck, progressBarWidth}: ProgressBarProps) =>
         </div>
 
     )
+}
 
 export default ProgressBar

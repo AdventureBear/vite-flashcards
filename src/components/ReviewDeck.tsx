@@ -5,32 +5,45 @@ import IsCorrectControls from "./IsCorrectControls.tsx";
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
+import {useFlashCardState} from "../store.ts";
 
 interface ReviewDeckProps {
     deck: Card[],
     cardIdsToReview: number[],
-    currentCardIndex: number,
+    // currentCardIndex: number,
     showAnswer: boolean,
     setShowAnswer: Dispatch<SetStateAction<boolean>>
     handleAnswer: (cardIndex: number, isCorrect: boolean) => void;
-    cardsDone: number;
     progressBarWidth: string;
     handlePrev: ()=> void,
     handleNext: ()=> void,
     questionsReviewed: Review[]
 }
 
-const ReviewDeck = ({deck, cardIdsToReview, currentCardIndex, showAnswer, setShowAnswer, handleAnswer, cardsDone, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
-    console.log()
-return (
+interface QuestionNumberProps {
+    decklength: number
+}
+const QuestionNumber = ({decklength}:QuestionNumberProps) => {
+    const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
+    return ( <p className="font-bold  mb-2">
+        <span className="text-amber-100">Question: {currentCardIndex + 1} of {decklength}</span>
+    </p>)
+}
+const ReviewDeck = ({deck, cardIdsToReview, showAnswer, setShowAnswer, handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
+    const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
+
+    
+    return (
     <>
         <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
 
-            <ReviewedCheckbox questionsReviewed={questionsReviewed} currentCardIndex={currentCardIndex}/>
+            <ReviewedCheckbox questionsReviewed={questionsReviewed} />
 
-            <p className="font-bold  mb-2">
-                <span className="text-amber-100">Question: {currentCardIndex + 1} of {deck.length}</span>
-            </p>
+            <QuestionNumber decklength = {deck.length}/>
+
+            {/*<p className="font-bold  mb-2">*/}
+            {/*    <span className="text-amber-100">Question: {currentCardIndex + 1} of {deck.length}</span>*/}
+            {/*</p>*/}
 
             <Flashcard
                 question={deck[cardIdsToReview[currentCardIndex]]?.question || ""}
@@ -42,17 +55,14 @@ return (
             <IsCorrectControls
                 showAnswer={showAnswer}
                 handleAnswer={handleAnswer}
-                currentCardIndex={currentCardIndex}
             />
 
             <ProgressBar
-                cardsDone={cardsDone}
                 deck={deck}
                 progressBarWidth={progressBarWidth}
             />
 
             <NavigationControls
-                currentCardIndex={currentCardIndex}
                 handlePrev={handlePrev}
                 handleNext={handleNext}
                 deckLength={deck.length}
