@@ -9,7 +9,6 @@ interface Card {
 }
 
 
-
 interface AddCardModalProps {
     show: boolean,
     onClose: ()=>void,

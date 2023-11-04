@@ -7,7 +7,7 @@ import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
 interface Card {
-    // id: number | undefined,
+    // id: number ,
     question: string;
     answer: string;
 }
@@ -15,6 +15,7 @@ interface Card {
 
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
+    const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [showAnswer, setShowAnswer] = useState(false)
     const [cardsDone, setCardsDone] = useState(0);
@@ -24,12 +25,12 @@ function App() {
     const [correct, setCorrect] = useState(0)
     const [incorrect, setIncorrect] = useState(0)
     const [showFeedbackModal, setShowFeedbackModal] = useState(false)
-    const [answeredCorrectly, setAnsweredCorrectly] = useState(false)
-    const [questionsReviewed, setQuestionsReviewed] = useState<{ reviewed: boolean; correct: boolean | null }[]>([]);
+    const [answeredCorrectly, setAnsweredCorrectly] = useState(false)  //for Feedback Modal
+    const [questionsReviewed, setQuestionsReviewed] = useState<{ id:number,   reviewed: boolean; correct: boolean | null }[]>([]);  //Array to track each question for this round reviewed and correct
 
     const { data, isPending, error } = useFetch(URL)
 
-    console.log(questionsReviewed)
+    // console.log(questionsReviewed)
 
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
@@ -44,21 +45,29 @@ function App() {
     }, [cardsDone, deck.length]);
 
     useEffect(() => {
-
         if (data) {
-            setDeck(data)
-            let reviewedArray = data.map((_card)=>{
+            console.log(data)
+            setDeck(data)   //starting deck to review
+            setUnrevealedCards(data)  //initializing unreviewed cards, in case some are skipped
+            let reviewedArray = data.map((card)=>{
                 return {
+
+                    correct: null,
                     reviewed: false,
-                    correct: null
                 }
             })
             setQuestionsReviewed(reviewedArray)
-
         }
     }, [data]);
 
-
+    function checkUnreviewedCards() {
+        const unreviewedCount = questionsReviewed.filter(card => !card.reviewed);
+        if (unreviewedCount.length > 0) {
+            return unreviewedCount
+        } else {
+            return null
+        }
+    }
 
     function handlePrev() {
         if (currentCardIndex > 0) {
@@ -71,57 +80,72 @@ function App() {
         if (currentCardIndex < deck.length - 1) {
             setShowAnswer(false);
             setCurrentCardIndex(currentCardIndex + 1);
+        } else {
+            setShowAnswer(false);
+            if (checkUnreviewedCards()) {
+                console.log("you have cards to review")
+                console.log(checkUnreviewedCards())
+            }
         }
     }
 
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
+        // if (currentCardIndex)
+
         if (cardsDone < deck.length) {
-            if (!questionsReviewed[cardIndex]) {
-                setAnsweredCorrectly(isCorrect)
-                questionsReviewed(prev => ({...prev, [cardIndex]: true}));
-                setCorrect(prev => prev + 1);
-                setCardsDone(cardsDone + 1);
-                setShowFeedbackModal(true)
+            if (!questionsReviewed[cardIndex].reviewed) {
+                setAnsweredCorrectly(isCorrect)  //this triggers success window and message
+                // setQuestionsReviewed(prev => ({...prev, [cardIndex]: true}));  //redundant, older object to track reviewed questions
+                if (isCorrect) {
+                    setCorrect(prev => prev + 1);
+                } else {
+                    setIncorrect((prev) => prev + 1)
+                }
+                setCardsDone(prev => prev + 1)  // to check of the round of reviewing cards is over
                 updateReviewedData(currentCardIndex, true, isCorrect)
+                setShowFeedbackModal(true)
+            } else {
+                //card has already been reviewed
+                alert("You've already reviewed this card for this round")
             }
         }  else {
             setShowComplete(true)
         }
     };
 
-    function handleCorrect() {
-        if (cardsDone < deck.length) {
-            setCorrect((prev) => prev + 1)
-            setAnsweredCorrectly(true)
-            setCardsDone(cardsDone + 1);
-            setShowFeedbackModal(true)
-            updateReviewedData(currentCardIndex, true, true)
-            // handleNext()
-        } else {
-            setShowComplete(true)
-        }
-    }
+    // function handleCorrect() {
+    //     if (cardsDone < deck.length) {
+    //         setCorrect((prev) => prev + 1)
+    //         setAnsweredCorrectly(true)
+    //         setCardsDone(cardsDone + 1);
+    //         setShowFeedbackModal(true)
+    //         updateReviewedData(currentCardIndex, true, true)
+    //         // handleNext()
+    //     } else {
+    //         setShowComplete(true)
+    //     }
+    // }
 
 
-    function handleIncorrect() {
-        if (cardsDone < deck.length) {
-            setIncorrect((prev) => prev + 1)
-            setAnsweredCorrectly(false)
-            setCardsDone(cardsDone + 1);
-            setShowFeedbackModal(true)
-            updateReviewedData(currentCardIndex, true, false)
-            // handleNext()
-        } else {
-            setShowComplete(true)
-        }
-    }
+    // function handleIncorrect() {
+    //     if (cardsDone < deck.length) {
+    //         setIncorrect((prev) => prev + 1)
+    //         setAnsweredCorrectly(false)
+    //         setCardsDone(cardsDone + 1);
+    //         setShowFeedbackModal(true)
+    //         updateReviewedData(currentCardIndex, true, false)
+    //         // handleNext()
+    //     } else {
+    //         setShowComplete(true)
+    //     }
+    // }
     function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
         setQuestionsReviewed(prevData => {
             // Create a copy of the array
             const updatedData = prevData.slice();
 
-            if (index >= 0 && index < updatedData.length) {
+            if (index >= 0 && index < updatedData.length) {  //checking bounds, but shouldn't be an issue, as only passing existing indexes
                 // Update reviewed and correct properties
                 updatedData[index] = {
                     ...updatedData[index],
@@ -178,12 +202,12 @@ function App() {
 
                     <div className="flex justify-around">
                             <button
-                                onClick={showAnswer ? handleAnswer(true, currentCardIndex) : undefined}
+                                onClick={showAnswer ?()=> handleAnswer(currentCardIndex, true ) : undefined}
                                 className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
                                 <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>
                             </button>
                             <button
-                                onClick={showAnswer ? handleAnswer(false, currentCardIndex) : undefined}
+                                onClick={showAnswer ? ()=>handleAnswer(currentCardIndex, false) : undefined}
                                 className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
                                 <span
                                     className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>
