@@ -7,11 +7,21 @@ import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
 interface Card {
-    // id: number ,
+    id: number ,
     question: string;
     answer: string;
 }
 
+interface NewCard {
+    question: string,
+    answer: string
+}
+
+interface Review {
+    id: number,
+    reviewed: boolean,
+    correct: null | boolean
+}
 
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
@@ -26,7 +36,7 @@ function App() {
     const [incorrect, setIncorrect] = useState(0)
     const [showFeedbackModal, setShowFeedbackModal] = useState(false)
     const [answeredCorrectly, setAnsweredCorrectly] = useState(false)  //for Feedback Modal
-    const [questionsReviewed, setQuestionsReviewed] = useState<{ id:number,   reviewed: boolean; correct: boolean | null }[]>([]);  //Array to track each question for this round reviewed and correct
+    const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
 
     const { data, isPending, error } = useFetch(URL)
 
@@ -51,11 +61,13 @@ function App() {
             setUnrevealedCards(data)  //initializing unreviewed cards, in case some are skipped
             let reviewedArray = data.map((card)=>{
                 return {
-
+                    id: card.id,
                     correct: null,
                     reviewed: false,
                 }
             })
+
+            console.log(reviewedArray)
             setQuestionsReviewed(reviewedArray)
         }
     }, [data]);
@@ -114,32 +126,6 @@ function App() {
         }
     };
 
-    // function handleCorrect() {
-    //     if (cardsDone < deck.length) {
-    //         setCorrect((prev) => prev + 1)
-    //         setAnsweredCorrectly(true)
-    //         setCardsDone(cardsDone + 1);
-    //         setShowFeedbackModal(true)
-    //         updateReviewedData(currentCardIndex, true, true)
-    //         // handleNext()
-    //     } else {
-    //         setShowComplete(true)
-    //     }
-    // }
-
-
-    // function handleIncorrect() {
-    //     if (cardsDone < deck.length) {
-    //         setIncorrect((prev) => prev + 1)
-    //         setAnsweredCorrectly(false)
-    //         setCardsDone(cardsDone + 1);
-    //         setShowFeedbackModal(true)
-    //         updateReviewedData(currentCardIndex, true, false)
-    //         // handleNext()
-    //     } else {
-    //         setShowComplete(true)
-    //     }
-    // }
     function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
         setQuestionsReviewed(prevData => {
             // Create a copy of the array
@@ -159,18 +145,33 @@ function App() {
     }
 
 
-    function handleAddNewCard(card: Card) {
-        console.log(card)
-        //add to db
-        postData(card)
+    async function handleAddNewCard(newCard: NewCard) {
+        try {
+            // Validate the newCard object (hypothetical example)
+            if (!newCard.question || !newCard.answer) {
+                throw new Error('Both question and answer are required.');
+            }
 
-        //update state
-        setDeck((prev)=>[...prev, card])
+            // Add try-catch block around postData call
+            try {
+                const createdCardId = await postData(newCard);
+                // Update state with the ID
+                setDeck(prev => [...prev, { ...newCard, id: createdCardId }]);
+                // Update review array with new placeholder
+                setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id:createdCardId}])
+            } catch (error) {
+                console.error('Error during POST request:', error);
+                // Handle the error, if any, specific to the POST request
+            }
 
+        } catch (error) {
+            console.error('Error in handleAddNewCard:', error);
+            // Handle any other error that might occur
+        }
     }
 
 
-        const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
+    const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
         return (<>
 
@@ -214,20 +215,6 @@ function App() {
                             </button>
                     </div>
 
-
-                    {/*<div className="flex justify-around">*/}
-                    {/*    <button*/}
-                    {/*        onClick={showAnswer ? handleCorrect : undefined}*/}
-                    {/*        className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>*/}
-                    {/*        <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>*/}
-                    {/*    </button>*/}
-                    {/*    <button*/}
-                    {/*        onClick={showAnswer ? handleIncorrect : undefined}*/}
-                    {/*        className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>*/}
-                    {/*        <span*/}
-                    {/*            className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>*/}
-                    {/*    </button>*/}
-                    {/*</div>*/}
                 </div>
 
 
