@@ -9,7 +9,8 @@ import FeedbackModal from "./components/FeedbackModal.tsx";
 import ReviewDeck from "./components/ReviewDeck.tsx";
 
 import {Card, Review} from './types.ts'
-
+import {useBearStore} from './store.ts';
+import {useFlashCardState} from "./store.ts";
 
 interface NewCard {
     question: string,
@@ -28,7 +29,7 @@ function App() {
     const [showComplete, setShowComplete] = useState(false)
     const [showCard, setShowCard] = useState(false)
     const [showQuiz, setShowQuiz] = useState(true)
-    const [correct, setCorrect] = useState(0)
+    // const [correct, setCorrect] = useState(0)
     const [incorrect, setIncorrect] = useState(0)
     const [showFeedbackModal, setShowFeedbackModal] = useState(false)
     const [answeredCorrectly, setAnsweredCorrectly] = useState(false)  //for Feedback Modal
@@ -39,6 +40,10 @@ function App() {
 
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
+    // const bears = useBearStore((state) => state.bears)
+    // const increase = useBearStore((state) => state.increase)
+
+    // const correct = useFlashCardState((state)=> state.correct)
 
     useEffect(() => {
         setCurrentCardIndex(0)
@@ -108,7 +113,7 @@ function App() {
                 setAnsweredCorrectly(isCorrect)  //this triggers success window and message
                 // setQuestionsReviewed(prev => ({...prev, [cardIndex]: true}));  //redundant, older object to track reviewed questions
                 if (isCorrect) {
-                    setCorrect(prev => prev + 1);
+                    // setCorrect(prev => prev + 1);
                 } else {
                     setIncorrect((prev) => prev + 1)
                 }
@@ -180,6 +185,11 @@ function App() {
             {isPending && <div>Loading...</div>}
             {error && <div>Error: {error} </div>}
             {data && <>
+
+
+               <h1>{bears} bears around here...</h1>
+                <button onClick={increase()}>one up</button>
+
 
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
