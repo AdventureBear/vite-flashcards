@@ -6,8 +6,14 @@ import CompleteModal from './components/CompleteModal'
 import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
-interface Card {
-    id: number ,
+import ReviewedCheckbox from "./components/ReviewedCheckbox.tsx";
+import IsCorrectControls from "./components/IsCorrectControls.tsx";
+import ProgressBar from "./components/ProgressBar.tsx";
+import NavigationControls from "./components/NavigationControls.tsx";
+import ReviewDeck from "./components/ReviewDeck.tsx";
+
+export type Card ={
+    id: number,
     question: string;
     answer: string;
 }
@@ -17,7 +23,7 @@ interface NewCard {
     answer: string
 }
 
-interface Review {
+export type Review ={
     id: number,
     reviewed: boolean,
     correct: null | boolean
@@ -25,6 +31,7 @@ interface Review {
 
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
+    const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [showAnswer, setShowAnswer] = useState(false)
@@ -40,9 +47,10 @@ function App() {
 
     const { data, isPending, error } = useFetch(URL)
 
-    // console.log(questionsReviewed)
 
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
+
+
 
     useEffect(() => {
         setCurrentCardIndex(0)
@@ -57,8 +65,9 @@ function App() {
     useEffect(() => {
         if (data) {
             console.log(data)
-            setDeck(data)   //starting deck to review
-            setUnrevealedCards(data)  //initializing unreviewed cards, in case some are skipped
+            setDeck(data as Card[])   //starting deck to review
+            setCardIdsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+            setUnrevealedCards(data as Card[])  //initializing unreviewed cards, in case some are skipped
             let reviewedArray = data.map((card)=>{
                 return {
                     id: card.id,
@@ -67,7 +76,7 @@ function App() {
                 }
             })
 
-            console.log(reviewedArray)
+
             setQuestionsReviewed(reviewedArray)
         }
     }, [data]);
@@ -105,6 +114,7 @@ function App() {
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
         // if (currentCardIndex)
 
+
         if (cardsDone < deck.length) {
             if (!questionsReviewed[cardIndex].reviewed) {
                 setAnsweredCorrectly(isCorrect)  //this triggers success window and message
@@ -127,12 +137,17 @@ function App() {
     };
 
     function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
+
+        if (cardIdsToReview[index] !== questionsReviewed[index].id) {
+            console.log("There is a mismatch between reviewed cards and the current Index")
+        }
         setQuestionsReviewed(prevData => {
             // Create a copy of the array
             const updatedData = prevData.slice();
 
             if (index >= 0 && index < updatedData.length) {  //checking bounds, but shouldn't be an issue, as only passing existing indexes
                 // Update reviewed and correct properties
+
                 updatedData[index] = {
                     ...updatedData[index],
                     reviewed,
@@ -174,67 +189,41 @@ function App() {
     const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
         return (<>
-
             {isPending && <div>Loading...</div>}
             {error && <div>Error: {error} </div>}
             {data && <>
+
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
+
                 <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
 
-                    {/* Checkbox for indicating if the question was reviewed */}
-                    <div className="mb-4 flex items-center">
-                        <label className="inline-flex items-center">
-                            <input type="checkbox" readOnly checked={questionsReviewed[currentCardIndex]? questionsReviewed[currentCardIndex].reviewed: false} className="form-checkbox h-5 w-5 text-teal-600" />
-                            <span className="ml-2 text-white">Reviewed</span>
-                        </label>
-                    </div>
+                    <ReviewedCheckbox questionsReviewed={questionsReviewed} currentCardIndex={currentCardIndex}/>
 
                     <p className="font-bold  mb-2"><span
                         className="text-amber-100">Question: {currentCardIndex + 1} of {deck.length}
                     </span></p>
 
-                    <Flashcard
-                        question={deck[currentCardIndex]?.question || ""}
-                        answer={deck[currentCardIndex]?.answer || ""}
-                        showAnswer={showAnswer}
-                        setShowAnswer={setShowAnswer}
-                    />
+                   <ReviewDeck
+                       deck={deck}
+                       cardIdsToReview={cardIdsToReview}
+                       currentCardIndex={currentCardIndex}
+                       showAnswer={showAnswer}
+                       setShowAnswer={setShowAnswer}
+                   />
+                    {/*<Flashcard*/}
+                    {/*    question={deck[cardIdsToReview[currentCardIndex]]?.question || ""}*/}
+                    {/*    answer={deck[cardIdsToReview[currentCardIndex]]?.answer || ""}*/}
+                    {/*    showAnswer={showAnswer}*/}
+                    {/*    setShowAnswer={setShowAnswer}*/}
+                    {/*/>*/}
 
-
-                    <div className="flex justify-around">
-                            <button
-                                onClick={showAnswer ?()=> handleAnswer(currentCardIndex, true ) : undefined}
-                                className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                                <span className="material-symbols-outlined flex items-center justify-center">task_alt</span>
-                            </button>
-                            <button
-                                onClick={showAnswer ? ()=>handleAnswer(currentCardIndex, false) : undefined}
-                                className={`hover:text-white text-black font-bold bg-red-300 hover:bg-rose-400 px-8 py-2 rounded shadow-lg shadow-red-800 ${!showAnswer ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                                <span
-                                    className="material-symbols-outlined flex items-center justify-center">do_not_disturb_on</span>
-                            </button>
-                    </div>
+                    <IsCorrectControls showAnswer={showAnswer} handleAnswer={handleAnswer} currentCardIndex={currentCardIndex} />
 
                 </div>
 
+                <ProgressBar cardsDone={cardsDone} deck={deck} progressBarWidth={progressBarWidth} />
 
-                <div className="max-w-xl mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
-                    <div>
-                        <p className="text-lg font-bold ml-2"><span
-                            className="text-amber-100 mr-2">Reviewed:</span>
-                        </p>
-                    </div>
-                    <div className="flex-1">
-                        <div className="bg-gray-600 h-4 rounded-full ">
-                            <div className="bg-teal-500 h-full rounded-full " style={{width: progressBarWidth}}></div>
-                        </div>
-                    </div>
-                    <div>
-                        <p className="text-lg font-bold ml-2"><span
-                            className="text-amber-100">{cardsDone}</span> / {deck.length}
-                        </p>
-                    </div>
-                </div>
+                {/*<NavigationControls currentCardIndex={currentCardIndex} handlePrev={handlePrev} handleNext={handleNext} deckLength={deck.length} />*/}
 
 
                 {/* Previous and Next Buttons */}
