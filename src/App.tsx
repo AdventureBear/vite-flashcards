@@ -1,33 +1,22 @@
 import {useEffect, useState} from 'react'
 import './App.css'
-import Flashcard from "./components/Flashcard";
 const URL = "http://localhost:3000/deck"
 import CompleteModal from './components/CompleteModal'
 import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
-import ReviewedCheckbox from "./components/ReviewedCheckbox.tsx";
-import IsCorrectControls from "./components/IsCorrectControls.tsx";
-import ProgressBar from "./components/ProgressBar.tsx";
-import NavigationControls from "./components/NavigationControls.tsx";
+
 import ReviewDeck from "./components/ReviewDeck.tsx";
 
-export type Card ={
-    id: number,
-    question: string;
-    answer: string;
-}
+import {Card, Review} from './types.ts'
+
 
 interface NewCard {
     question: string,
     answer: string
 }
 
-export type Review ={
-    id: number,
-    reviewed: boolean,
-    correct: null | boolean
-}
+
 
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
@@ -51,7 +40,6 @@ function App() {
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
 
-
     useEffect(() => {
         setCurrentCardIndex(0)
     }, [deck]);
@@ -68,9 +56,9 @@ function App() {
             setDeck(data as Card[])   //starting deck to review
             setCardIdsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
             setUnrevealedCards(data as Card[])  //initializing unreviewed cards, in case some are skipped
-            let reviewedArray = data.map((card)=>{
+            let reviewedArray = data.map((x)=>{
                 return {
-                    id: card.id,
+                    id: x.id,
                     correct: null,
                     reviewed: false,
                 }
@@ -195,13 +183,6 @@ function App() {
 
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
-                <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
-
-                    <ReviewedCheckbox questionsReviewed={questionsReviewed} currentCardIndex={currentCardIndex}/>
-
-                    <p className="font-bold  mb-2"><span
-                        className="text-amber-100">Question: {currentCardIndex + 1} of {deck.length}
-                    </span></p>
 
                    <ReviewDeck
                        deck={deck}
@@ -209,42 +190,14 @@ function App() {
                        currentCardIndex={currentCardIndex}
                        showAnswer={showAnswer}
                        setShowAnswer={setShowAnswer}
+                       handleAnswer={handleAnswer}
+                       cardsDone={cardsDone}
+                       progressBarWidth={progressBarWidth}
+                       handleNext={handleNext}
+                       handlePrev={handlePrev}
+                       questionsReviewed={questionsReviewed}
                    />
-                    {/*<Flashcard*/}
-                    {/*    question={deck[cardIdsToReview[currentCardIndex]]?.question || ""}*/}
-                    {/*    answer={deck[cardIdsToReview[currentCardIndex]]?.answer || ""}*/}
-                    {/*    showAnswer={showAnswer}*/}
-                    {/*    setShowAnswer={setShowAnswer}*/}
-                    {/*/>*/}
 
-                    <IsCorrectControls showAnswer={showAnswer} handleAnswer={handleAnswer} currentCardIndex={currentCardIndex} />
-
-                </div>
-
-                <ProgressBar cardsDone={cardsDone} deck={deck} progressBarWidth={progressBarWidth} />
-
-                {/*<NavigationControls currentCardIndex={currentCardIndex} handlePrev={handlePrev} handleNext={handleNext} deckLength={deck.length} />*/}
-
-
-                {/* Previous and Next Buttons */}
-                <div className="max-w-xl mx-auto mt-4 bg-white rounded-lg p-4 shadow-lg flex justify-between items-center">
-                    <button
-                        className={`bg-blue-500 text-white px-2 py-2 rounded ${currentCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
-                        onClick={handlePrev}
-                        disabled={currentCardIndex === 0}
-                    >
-                        Previous
-                    </button>
-                    <p className="text-lg font-bold ml-2"><span
-                        className="text-blue-500">Question: {currentCardIndex + 1} of {deck.length}</span></p>
-                    <button
-                        className={`bg-blue-500 text-white px-2 py-2 rounded ${currentCardIndex === deck.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
-                        onClick={handleNext}
-                        disabled={currentCardIndex === deck.length - 1}
-                    >
-                        Next
-                    </button>
-                </div>
 
                 <button
                     className="mt-8 bg-blue-500 text-white px-4 py-2 rounded"
@@ -256,7 +209,6 @@ function App() {
                     >Add New Question
                 </button>
             </div>
-
 
 
             {/* Add Modal */}
