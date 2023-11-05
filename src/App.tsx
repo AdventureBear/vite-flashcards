@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 
 
 //Data
-const URL = "http://localhost:3000/deck"
+const URL = "http://localhost:3000/decks"
 import {useFetch} from "../hooks/useFetch.ts";
 
 //Components
@@ -20,20 +20,22 @@ import ReviewDeck from "./components/ReviewDeck.tsx";
 import './App.css'
 
 //Types
-import {Card, Review, NewCard} from './types.ts'
+import {Card, Review, NewCard, Deck} from './types.ts'
 
 //State Management
 import  { useFlashCardState } from "./store.ts";
+import Dashboard from "./components/Dashboard.tsx";
 
 
 function App() {
 
-
-    // const [deck, setDeck] = useState<Card[]>([]);
-    const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
+    // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
     // const { data, isPending, error } = useFetch(URL)
+    const [filteredDeck, setFilteredDeck] = useState<Card[]>([])
+
+
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
 
@@ -56,6 +58,12 @@ function App() {
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
     const deck = useFlashCardState((state)=>state.deck)
     const updateDeck = useFlashCardState((state)=>state.updateDeck)
+    const deckLength = useFlashCardState((state)=>state.deckLength)
+    const updateDeckList = useFlashCardState((state)=> state.updateDeckList)
+    const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
+    // const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
+    const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
+
     //reactQuery
     const { isLoading, error, data } = useQuery('repoData', () =>
         fetch(URL).then(res =>
@@ -63,16 +71,20 @@ function App() {
         )
     )
 
-
-
     useEffect(() => {
         if (data) {
-            console.log(data)
-            // setDeck(data as Card[])   //starting deck to review
-            updateDeck(data)
-            setCardIdsToReview(data.map(card => card.id))  // creates array of card ids for this round of review
-            setUnrevealedCards(data as Card[])  //initializing unreviewed cards, in case some are skipped
-            let reviewedArray = data.map((x: Card)=>{
+           updateDeckList(data.map((deck: Deck) => deck.name))
+        }
+    }, [data]);
+
+    useEffect(() => {
+        if(deck) {
+            setFilteredDeck(deck)
+            // setCardIdsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+            updateCardsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+
+            setUnrevealedCards(deck as Card[])  //initializing unreviewed cards, in case some are skipped
+            let reviewedArray = deck.map((x: Card)=>{
                 return {
                     id: x.id,
                     correct: null,
@@ -81,20 +93,17 @@ function App() {
             })
 
             setQuestionsReviewed(reviewedArray)
+            resetCurrentCardIndex()
+            updateDeckLength(deck.length)
         }
-    }, [data]);
+    }, [deck]);
 
 
        useEffect(() => {
-           resetCurrentCardIndex()
-           updateDeckLength(deck.length)
-       }, [deck]);
-
-       useEffect(() => {
-    if (deck.length>0 && cardsDone===deck.length){
+    if (deckLength>0 && cardsDone===deckLength){
                updateShowComplete(true)
            }
-       }, [cardsDone, deck.length]);
+       }, [cardsDone, deckLength]);
 
     function checkUnreviewedCards() {
         const unreviewedCount = questionsReviewed.filter(card => !card.reviewed);
@@ -127,6 +136,14 @@ function App() {
         }
     }
 
+    const selectDeck = (name: string) => {
+        const deck = (data.find(deck=>deck.name===name))
+
+        console.log( deck.cards)
+        updateDeck(deck.cards)
+        updateShowDashboard(false)
+
+    }
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
 
@@ -180,18 +197,16 @@ function App() {
         try {
             const createdCardId: number = await postData(newCard);
             // Update state with the ID
-            // setDeck(prev => [...prev, {...newCard, id: createdCardId}]);
-
             updateDeck([...deck, { id: createdCardId, ...newCard }])
 
-
             // Update review array with new placeholder
-            setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id: createdCardId}])
+            // setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id: createdCardId}])
         } catch (error) {
             console.error('Error during POST request:', error);
             // Handle the error, if any, specific to the POST request
         }
     }
+
 
     const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
@@ -203,10 +218,12 @@ function App() {
 
                 <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
+                    <Dashboard selectDeck ={selectDeck} />
+
 
                    <ReviewDeck
-                       deck={deck}
-                       cardIdsToReview={cardIdsToReview}
+                       // deck={deck}
+                       // cardIdsToReview={cardIdsToReview}
                        handleAnswer={handleAnswer}
                        progressBarWidth={progressBarWidth}
                        handleNext={handleNext}
@@ -216,7 +233,7 @@ function App() {
 
 
                 <button
-                    className="mt-8 bg-blue-500 text-white px-4 py-2 rounded"
+                    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"
                     onClick={()=>{
                         updateShowCard(true)
                         updateShowQuiz(false)
@@ -224,7 +241,15 @@ function App() {
                 }
                     >Add New Question
                 </button>
+                    <button
+                        className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"
+                        onClick={()=>{
+                            updateShowDashboard(true)
+                        }
+                        }
+                    >Show Dashboard</button>
             </div>
+
 
 
              {/* Add Modal */}

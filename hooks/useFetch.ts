@@ -24,10 +24,6 @@ export const useFetch = (url: string, method: string = "GET") => {
     }
 
 
-
-
-
-
     const putData = (url: string, putData: object) => {
         return fetch(url, {
             method: "PUT",
@@ -54,61 +50,6 @@ export const useFetch = (url: string, method: string = "GET") => {
     useEffect(() => {
         const controller = new AbortController()
 
-        // const fetchData = async (fetchOptions?: object) => {
-        //     setIsPending(true)
-        //
-        //     try {
-        //         const res = await fetch(url, { ...fetchOptions, signal: controller.signal })
-        //         if(!res.ok) {
-        //             throw new Error(res.statusText)
-        //         }
-        //         const data = await res.json()
-        //
-        //         setIsPending(false)
-        //         setData(data)
-        //         setError(null)
-        //     } catch (err ) {
-        //         if ((err as Error).name === "AbortError") {
-        //             console.log("the fetch was aborted")
-        //         } else {
-        //             setIsPending(false)
-        //             setError('Could not fetch the data')
-        //         }
-        //     }
-        // }
-
-
-        // const fetchData = async (fetchOptions?: object) => {
-        //     setIsPending(true);
-        //
-        //     try {
-        //         const res = await fetch(url, { ...fetchOptions, signal: controller.signal });
-        //         if (!res.ok) {
-        //             throw new Error(res.statusText);
-        //         }
-        //         const data = await res.json();
-        //
-        //         setIsPending(false);
-        //         setData(data);
-        //
-        //         // Check if the response contains an ID
-        //         if (data.id) {
-        //             // Return the ID if it exists
-        //             return data.id;
-        //         }
-        //
-        //         setError(null);
-        //     } catch (err) {
-        //         if ((err as Error).name === "AbortError") {
-        //             console.log("the fetch was aborted");
-        //         } else {
-        //             setIsPending(false);
-        //             setError('Could not fetch the data');
-        //         }
-        //     }
-        // }
-
-
         const fetchData = async (fetchOptions?: object) => {
             setIsPending(true);
 
@@ -134,6 +75,7 @@ export const useFetch = (url: string, method: string = "GET") => {
                 }
 
                 setError(null);
+
             } catch (err) {
                 if ((err as Error).name === "AbortError") {
                     console.log("the fetch was aborted");

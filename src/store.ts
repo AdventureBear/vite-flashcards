@@ -29,6 +29,12 @@ interface FlashCardState {
     updateShowFeedbackModal: (to:boolean)=>void
     answeredCorrectly: boolean
     updateAnsweredCorrectly: (to:boolean)=>void
+    deckList: string[],
+    updateDeckList: (list: string[])=>void,
+    showDashboard: boolean,
+    updateShowDashboard:(to:boolean)=>void
+    cardsToReview: number[]
+    updateCardsToReview: (cardsIds: number[])=>void
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
@@ -56,5 +62,11 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     showFeedbackModal: false,
     updateShowFeedbackModal: (to)=>set(()=>({showFeedbackModal: to})),
     answeredCorrectly: false,
-    updateAnsweredCorrectly: (to) => set(()=>({answeredCorrectly: to}))
+    updateAnsweredCorrectly: (to) => set(()=>({answeredCorrectly: to})),
+    deckList: [],
+    updateDeckList: (list: string[]) => set(()=>({deckList: list})),
+    showDashboard: true,
+    updateShowDashboard:(to)=> set(()=>({showDashboard: to})),
+    cardsToReview: [],
+    updateCardsToReview: (cardsIds: number[])=> set(()=>({cardsToReview: cardsIds}))
 }))

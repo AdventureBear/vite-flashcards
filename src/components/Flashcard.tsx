@@ -1,8 +1,8 @@
 import {useFlashCardState} from "../store.ts";
 
 interface FlashcardProps {
-    question: string,
-    answer: string,
+    question: string ,
+    answer: string ,
 }
 
 

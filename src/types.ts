@@ -1,3 +1,14 @@
+export type DeckApiResponse = {
+    name: string;
+    cards: Card[];
+}[];
+
+
+export type Deck = {
+    name: string,
+    cards: Card[]
+}
+
 export type Card ={
     id: number,
     question: string;

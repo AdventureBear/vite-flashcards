@@ -5,10 +5,9 @@ import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 import {useFlashCardState} from "../store.ts";
+import {useEffect, useState} from "react";
 
 interface ReviewDeckProps {
-    deck: Card[],
-    cardIdsToReview: number[],
     handleAnswer: (cardIndex: number, isCorrect: boolean) => void;
     progressBarWidth: string;
     handlePrev: ()=> void,
@@ -16,9 +15,6 @@ interface ReviewDeckProps {
     questionsReviewed: Review[]
 }
 
-// interface QuestionNumberProps {
-//     // decklength: number
-// }
 const QuestionNumber = () => {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const deckLength = useFlashCardState((state)=>state.deckLength)
@@ -27,20 +23,25 @@ const QuestionNumber = () => {
         <span className="text-amber-100">Question: {currentCardIndex + 1} of {deckLength}</span>
     </p>)
 }
-const ReviewDeck = ({deck, cardIdsToReview, handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
+const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
+    const deck = useFlashCardState((state)=>state.deck)
+    const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
+    console.log ( deck, currentCardIndex, cardsToReview)
+
+
     return (
     <>
-        <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
 
+
+        <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
             <ReviewedCheckbox questionsReviewed={questionsReviewed} />
 
             <QuestionNumber />
 
-
             <Flashcard
-                question={deck[cardIdsToReview[currentCardIndex]]?.question || ""}
-                answer={deck[cardIdsToReview[currentCardIndex]]?.answer || ""}
+                question =   {deck.find(card=> card.id === cardsToReview[currentCardIndex])?.question}
+                answer =     {deck.find(card=> card.id === cardsToReview[currentCardIndex])?.answer }
             />
 
             <IsCorrectControls
