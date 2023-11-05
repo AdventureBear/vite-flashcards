@@ -12,9 +12,7 @@ export default function Flashcard({question , answer}: FlashcardProps) {
     const showAnswer = useFlashCardState((state)=>state.showAnswer)
 
     return (
-            <div className="mb-8 p-8 bg-teal-600 shadow-lg rounded-xl"
-                // onClick={()=>{setShowAnswer(prev => !prev)}}
-                    >
+            <div className="mb-8 p-8 bg-teal-600 shadow-lg rounded-xl">
 
             {!showAnswer ?
                 <>

@@ -130,7 +130,7 @@ export const useFetch = (url: string, method: string = "GET") => {
                 setData(data);
 
                 if (method === "POST" && data.id) {
-                    return data.id;
+                    return data.id as number;
                 }
 
                 setError(null);

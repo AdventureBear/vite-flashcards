@@ -1,13 +1,18 @@
 //React
 import {useEffect, useState} from 'react'
 
+//React Query
+import { useQuery } from "react-query";
+
+
 //Data
 const URL = "http://localhost:3000/deck"
+import {useFetch} from "../hooks/useFetch.ts";
 
 //Components
 import CompleteModal from './components/CompleteModal'
 import AddCardModal from "./components/AddCard";
-import { useFetch } from "../hooks/useFetch"
+// import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
 import ReviewDeck from "./components/ReviewDeck.tsx";
 
@@ -15,25 +20,23 @@ import ReviewDeck from "./components/ReviewDeck.tsx";
 import './App.css'
 
 //Types
-import {Card, Review} from './types.ts'
+import {Card, Review, NewCard} from './types.ts'
 
 //State Management
 import  { useFlashCardState } from "./store.ts";
 
-//Interfaces
-interface NewCard {
-    question: string,
-    answer: string
-}
-
 
 function App() {
-    const [deck, setDeck] = useState<Card[]>([]);
+
+
+    // const [deck, setDeck] = useState<Card[]>([]);
     const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-    const { data, isPending, error } = useFetch(URL)
+    // const { data, isPending, error } = useFetch(URL)
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
+
+
 
     //Zustand State Management
     const increaseCorrect = useFlashCardState((state)=>state.increaseCorrect)
@@ -51,25 +54,25 @@ function App() {
     const updateShowQuiz = useFlashCardState((state)=>(state.updateShowQuiz))
     const updateShowFeedbackModal = useFlashCardState((state)=>state.updateShowFeedbackModal)
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
+    const deck = useFlashCardState((state)=>state.deck)
+    const updateDeck = useFlashCardState((state)=>state.updateDeck)
+    //reactQuery
+    const { isLoading, error, data } = useQuery('repoData', () =>
+        fetch(URL).then(res =>
+            res.json()
+        )
+    )
 
-    useEffect(() => {
-        resetCurrentCardIndex()
-        updateDeckLength(deck.length)
-    }, [deck]);
 
-    useEffect(() => {
- if (deck.length>0 && cardsDone===deck.length){
-            updateShowComplete(true)
-        }
-    }, [cardsDone, deck.length]);
 
     useEffect(() => {
         if (data) {
             console.log(data)
-            setDeck(data as Card[])   //starting deck to review
-            setCardIdsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+            // setDeck(data as Card[])   //starting deck to review
+            updateDeck(data)
+            setCardIdsToReview(data.map(card => card.id))  // creates array of card ids for this round of review
             setUnrevealedCards(data as Card[])  //initializing unreviewed cards, in case some are skipped
-            let reviewedArray = data.map((x)=>{
+            let reviewedArray = data.map((x: Card)=>{
                 return {
                     id: x.id,
                     correct: null,
@@ -77,10 +80,21 @@ function App() {
                 }
             })
 
-
             setQuestionsReviewed(reviewedArray)
         }
     }, [data]);
+
+
+       useEffect(() => {
+           resetCurrentCardIndex()
+           updateDeckLength(deck.length)
+       }, [deck]);
+
+       useEffect(() => {
+    if (deck.length>0 && cardsDone===deck.length){
+               updateShowComplete(true)
+           }
+       }, [cardsDone, deck.length]);
 
     function checkUnreviewedCards() {
         const unreviewedCount = questionsReviewed.filter(card => !card.reviewed);
@@ -160,41 +174,34 @@ function App() {
     }
 
 
+
     async function handleAddNewCard(newCard: NewCard) {
+        // Add try-catch block around postData call
         try {
-            // Validate the newCard object (hypothetical example)
-            if (!newCard.question || !newCard.answer) {
-                throw new Error('Both question and answer are required.');
-            }
+            const createdCardId: number = await postData(newCard);
+            // Update state with the ID
+            // setDeck(prev => [...prev, {...newCard, id: createdCardId}]);
 
-            // Add try-catch block around postData call
-            try {
-                const createdCardId = await postData(newCard);
-                // Update state with the ID
-                setDeck(prev => [...prev, { ...newCard, id: createdCardId }]);
-                // Update review array with new placeholder
-                setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id:createdCardId}])
-            } catch (error) {
-                console.error('Error during POST request:', error);
-                // Handle the error, if any, specific to the POST request
-            }
+            updateDeck([...deck, { id: createdCardId, ...newCard }])
 
+
+            // Update review array with new placeholder
+            setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id: createdCardId}])
         } catch (error) {
-            console.error('Error in handleAddNewCard:', error);
-            // Handle any other error that might occur
+            console.error('Error during POST request:', error);
+            // Handle the error, if any, specific to the POST request
         }
     }
 
-
     const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
+    if (isLoading) return 'Loading...'
+    if (error) return 'An error has occurred: ' + error
         return (<>
-            {isPending && <div>Loading...</div>}
-            {error && <div>Error: {error} </div>}
+
             {data && <>
 
-
-            <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
+                <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
 
                    <ReviewDeck
@@ -220,28 +227,28 @@ function App() {
             </div>
 
 
-            {/* Add Modal */}
-            <AddCardModal
-                handleAddNewCard = {handleAddNewCard}
-                onClose={() => {
-                    // setShowQuiz(true)
-                    updateShowQuiz(true)
-                    updateShowCard(false)
-                }}
+             {/* Add Modal */}
+                <AddCardModal
+                    handleAddNewCard = {handleAddNewCard}
+                    onClose={() => {
+                        // setShowQuiz(true)
+                        updateShowQuiz(true)
+                        updateShowCard(false)
+                    }}
 
-            />
+                />
 
                 <FeedbackModal
                     close = {()=>{updateShowFeedbackModal(false)}}
                     handleNext =  {handleNext}
                 />
 
-            {/* Complete Modal */}
-            <CompleteModal
-                onClose={() => {
-                    updateShowComplete(false)
-                }}
-            />
+                {/* Complete Modal */}
+                <CompleteModal
+                    onClose={() => {
+                        updateShowComplete(false)
+                    }}
+                />
             </>
 
             }

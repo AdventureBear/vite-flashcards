@@ -9,3 +9,8 @@ export type Review ={
     reviewed: boolean,
     correct: null | boolean
 }
+
+export type NewCard = {
+    question: string,
+    answer: string
+}

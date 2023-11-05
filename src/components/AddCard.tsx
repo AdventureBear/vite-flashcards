@@ -3,18 +3,18 @@ import {useState} from "react";
 import SuccessfulAddModal from "./SuccessfulAddModal";
 import {useFlashCardState} from "../store.ts";
 
-interface Card {
+interface PostCard {
     question: string;
     answer: string;
-    postData: (arg0: Card)=>Promise<void>;
+    postData: (arg0: PostCard)=>Promise<void>;
 }
 
 
+
+
 interface AddCardModalProps {
-    // show: boolean,
     onClose: ()=>void,
-    // setShowQuiz: (arg0: boolean)=>void,
-    handleAddNewCard: (arg0: Card)=>void
+    handleAddNewCard: (arg0: PostCard)=>void
 }
 const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
@@ -30,7 +30,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
             question,
             answer
         };
-        handleAddNewCard(newCard as Card)
+        handleAddNewCard(newCard as PostCard)
         setQuestion('')
         setAnswer('')
         setShowConfirmAd(true)
@@ -91,7 +91,6 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
 
             <SuccessfulAddModal
                 show = {showConfirmAd}
-                // setShowQuiz={setShowQuiz}
                 closeAddCard = {onClose}
                 close = {()=>{setShowConfirmAd(false)}}
             />

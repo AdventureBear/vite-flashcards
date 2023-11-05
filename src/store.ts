@@ -1,8 +1,11 @@
 import { create } from 'zustand'
 
+import {Card} from "./types.ts";
 
 
 interface FlashCardState {
+    deck: Card[],
+    updateDeck: (deck: Card[]) => void
     correct: number
     increaseCorrect: () => void
     incorrect: number
@@ -29,6 +32,8 @@ interface FlashCardState {
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
+    deck: [],
+    updateDeck: (deck: Card[])=> set(()=>({deck: deck})),
     correct: 0,
     increaseCorrect: () => set((state) => ({ correct: state.correct + 1 })),
     incorrect: 0,
