@@ -1,6 +1,7 @@
 import {useState} from "react";
 // const URL = "http://localhost:3000/deck"
 import SuccessfulAddModal from "./SuccessfulAddModal";
+import {useFlashCardState} from "../store.ts";
 
 interface Card {
     question: string;
@@ -10,15 +11,18 @@ interface Card {
 
 
 interface AddCardModalProps {
-    show: boolean,
+    // show: boolean,
     onClose: ()=>void,
-    setShowQuiz: (arg0: boolean)=>void,
+    // setShowQuiz: (arg0: boolean)=>void,
     handleAddNewCard: (arg0: Card)=>void
 }
-const AddCardModal = ({show, onClose, setShowQuiz, handleAddNewCard }: AddCardModalProps) => {
+const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
     const [showConfirmAd, setShowConfirmAd] = useState(false)
+
+   const showCard = useFlashCardState((state)=>state.showCard)
+    // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -36,7 +40,7 @@ const AddCardModal = ({show, onClose, setShowQuiz, handleAddNewCard }: AddCardMo
 
     return (
         <>
-            <div className={`bg-amber-50 p-8 ${show ? 'block' : 'hidden'}`}>
+            <div className={`bg-amber-50 p-8 ${showCard ? 'block' : 'hidden'}`}>
             <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
                 <p className="font-bold  mb-2">
                     <span className="text-amber-100">Create New Flashcard</span>
@@ -87,7 +91,7 @@ const AddCardModal = ({show, onClose, setShowQuiz, handleAddNewCard }: AddCardMo
 
             <SuccessfulAddModal
                 show = {showConfirmAd}
-                setShowQuiz={setShowQuiz}
+                // setShowQuiz={setShowQuiz}
                 closeAddCard = {onClose}
                 close = {()=>{setShowConfirmAd(false)}}
             />

@@ -2,13 +2,13 @@ import {useFlashCardState} from "../store.ts";
 
 
 interface isCorrectControlsProps {
-    showAnswer: boolean,
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
 
 }
 
-const IsCorrectControls = ({showAnswer, handleAnswer}: isCorrectControlsProps) => {
+const IsCorrectControls = ({ handleAnswer}: isCorrectControlsProps) => {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
+    const showAnswer = useFlashCardState((state)=>state.showAnswer)
 
     return (
 

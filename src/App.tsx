@@ -1,61 +1,65 @@
+//React
 import {useEffect, useState} from 'react'
-import './App.css'
+
+//Data
 const URL = "http://localhost:3000/deck"
+
+//Components
 import CompleteModal from './components/CompleteModal'
 import AddCardModal from "./components/AddCard";
 import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
-
 import ReviewDeck from "./components/ReviewDeck.tsx";
 
+//Style
+import './App.css'
+
+//Types
 import {Card, Review} from './types.ts'
 
-import {useFlashCardState} from "./store.ts";
+//State Management
+import  { useFlashCardState } from "./store.ts";
 
+//Interfaces
 interface NewCard {
     question: string,
     answer: string
 }
 
 
-
 function App() {
     const [deck, setDeck] = useState<Card[]>([]);
     const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
-    const [showAnswer, setShowAnswer] = useState(false)
-    const [showComplete, setShowComplete] = useState(false)
-    const [showCard, setShowCard] = useState(false)
-    const [showQuiz, setShowQuiz] = useState(true)
-    const [showFeedbackModal, setShowFeedbackModal] = useState(false)
-    const [answeredCorrectly, setAnsweredCorrectly] = useState(false)  //for Feedback Modal
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-
     const { data, isPending, error } = useFetch(URL)
-
-
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
-    // const bears = useBearStore((state) => state.bears)
-    // const increase = useBearStore((state) => state.increase)
-
-    const correct = useFlashCardState((state)=> state.correct)
+    //Zustand State Management
     const increaseCorrect = useFlashCardState((state)=>state.increaseCorrect)
-    const incorrect = useFlashCardState((state)=> state.incorrect)
     const increaseIncorrect = useFlashCardState((state)=>state.increaseIncorrect)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const changeCurrentCardIndex = useFlashCardState((state)=>state.changeCurrentCardIndex)
     const resetCurrentCardIndex = useFlashCardState((state)=>state.resetCurrentCardIndex)
     const cardsDone = useFlashCardState((state)=>state.cardsDone)
     const increaseCardsDone = useFlashCardState((state)=>state.increaseCardsDone)
+    const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
+    const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
+    const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
+    const showQuiz = useFlashCardState((state)=>(state.showQuiz))
+    const updateShowQuiz = useFlashCardState((state)=>(state.updateShowQuiz))
+    const updateShowFeedbackModal = useFlashCardState((state)=>state.updateShowFeedbackModal)
+    const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
 
     useEffect(() => {
         resetCurrentCardIndex()
+        updateDeckLength(deck.length)
     }, [deck]);
 
     useEffect(() => {
-        if (deck.length>0 && cardsDone===deck.length){
-            setShowComplete(true)
+ if (deck.length>0 && cardsDone===deck.length){
+            updateShowComplete(true)
         }
     }, [cardsDone, deck.length]);
 
@@ -89,7 +93,8 @@ function App() {
 
     function handlePrev() {
         if (currentCardIndex > 0) {
-            setShowAnswer(false);
+            // setShowAnswer(false);
+            updateShowAnswer(false)
             // setCurrentCardIndex(currentCardIndex - 1);
             changeCurrentCardIndex(-1)
         }
@@ -97,11 +102,10 @@ function App() {
 
     function handleNext() {
         if (currentCardIndex < deck.length - 1) {
-            setShowAnswer(false);
-            // setCurrentCardIndex(currentCardIndex + 1);
+            updateShowAnswer(false)
             changeCurrentCardIndex(1)
         } else {
-            setShowAnswer(false);
+            updateShowAnswer(false)
             if (checkUnreviewedCards()) {
                 console.log("you have cards to review")
                 console.log(checkUnreviewedCards())
@@ -111,28 +115,24 @@ function App() {
 
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
-        // if (currentCardIndex)
-
 
         if (cardsDone < deck.length) {
             if (!questionsReviewed[cardIndex].reviewed) {
-                setAnsweredCorrectly(isCorrect)  //this triggers success window and message
+                updateAnsweredCorrectly(isCorrect)  //this triggers success window and message
                 if (isCorrect) {
                     increaseCorrect()
                 } else {
-                    // setIncorrect((prev) => prev + 1)
                     increaseIncorrect()
                 }
-                // setCardsDone(prev => prev + 1)  // to check of the round of reviewing cards is over
                 increaseCardsDone()
                 updateReviewedData(currentCardIndex, true, isCorrect)
-                setShowFeedbackModal(true)
+                updateShowFeedbackModal(true)
             } else {
                 //card has already been reviewed
                 alert("You've already reviewed this card for this round")
             }
         }  else {
-            setShowComplete(true)
+            updateShowComplete(true)
         }
     };
 
@@ -194,19 +194,12 @@ function App() {
             {data && <>
 
 
-               {/*<h1>{bears} bears around here...</h1>*/}
-               {/* <button onClick={increase}>one up</button>*/}
-
-
             <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
 
                    <ReviewDeck
                        deck={deck}
                        cardIdsToReview={cardIdsToReview}
-                       currentCardIndex={currentCardIndex}
-                       showAnswer={showAnswer}
-                       setShowAnswer={setShowAnswer}
                        handleAnswer={handleAnswer}
                        progressBarWidth={progressBarWidth}
                        handleNext={handleNext}
@@ -218,8 +211,8 @@ function App() {
                 <button
                     className="mt-8 bg-blue-500 text-white px-4 py-2 rounded"
                     onClick={()=>{
-                        setShowCard(true)
-                        setShowQuiz(false)
+                        updateShowCard(true)
+                        updateShowQuiz(false)
                     }
                 }
                     >Add New Question
@@ -230,30 +223,24 @@ function App() {
             {/* Add Modal */}
             <AddCardModal
                 handleAddNewCard = {handleAddNewCard}
-               setShowQuiz={setShowQuiz}
-                show={showCard}
                 onClose={() => {
-                    setShowQuiz(true)
-                    setShowCard(false)
+                    // setShowQuiz(true)
+                    updateShowQuiz(true)
+                    updateShowCard(false)
                 }}
 
             />
 
                 <FeedbackModal
-                    show = {showFeedbackModal}
-                    close = {()=>{setShowFeedbackModal(false)}}
+                    close = {()=>{updateShowFeedbackModal(false)}}
                     handleNext =  {handleNext}
-                    answeredCorrectly = {answeredCorrectly}
                 />
 
             {/* Complete Modal */}
             <CompleteModal
-                show={showComplete}
                 onClose={() => {
-                    setShowComplete(false)
+                    updateShowComplete(false)
                 }}
-                correct={correct}
-                incorrect={incorrect}
             />
             </>
 

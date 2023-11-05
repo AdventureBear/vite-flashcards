@@ -1,11 +1,15 @@
+import {useFlashCardState} from "../store.ts";
+
 interface SucessfulAddModalProps {
     show: boolean,
-    setShowQuiz: (arg0: boolean) => void,
+    // setShowQuiz: (arg0: boolean) => void,
     close: () => void,  // close this modal
     closeAddCard: ()=>void,  //close add card
 }
 
-const SuccessfulAddModal = ({setShowQuiz, show, close, closeAddCard}: SucessfulAddModalProps) => {
+const SuccessfulAddModal = ({ show, close, closeAddCard}: SucessfulAddModalProps) => {
+    const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
+
     return (
         // Modal
         (<div className="flex justify-center items-center h-screen">
@@ -23,7 +27,8 @@ const SuccessfulAddModal = ({setShowQuiz, show, close, closeAddCard}: SucessfulA
                                 onClick={() => {
                                     close()
                                     // onClose()
-                                    setShowQuiz(true)
+                                    updateShowQuiz(true)
+                                    // setShowQuiz(true)
                                     closeAddCard()
                             }}>
                                 Return to Quiz

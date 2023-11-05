@@ -2,18 +2,14 @@ import {useFlashCardState} from "../store.ts";
 
 
 interface NavigationControlsProps {
-
     handlePrev: ()=> void,
     handleNext: ()=> void,
-    deckLength: number
-
 }
 
 
-const NavigationControls = ({handlePrev, handleNext, deckLength}: NavigationControlsProps) => {
-
+const NavigationControls = ({handlePrev, handleNext}: NavigationControlsProps) => {
     const currentCardIndex = useFlashCardState((state) => state.currentCardIndex)
-
+    const deckLength = useFlashCardState((state)=>state.deckLength)
 
     return (
         <div className="max-w-xl mx-auto mt-4 bg-white rounded-lg p-4 shadow-lg flex justify-between items-center">
