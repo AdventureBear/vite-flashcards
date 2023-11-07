@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import {useFlashCardState} from "../src/store.ts";
 
 
 interface Card {
@@ -11,6 +12,9 @@ export const useFetch = (url: string, method: string = "GET") => {
     const [isPending, setIsPending] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [options, setOptions] = useState<object | null>(null)
+
+    // const postId = useFlashCardState((state)=>state.postId)
+    const updatePostId = useFlashCardState((state)=>state.updatePostId)
 
 
     const postData = (postData: object) => {
@@ -47,7 +51,7 @@ export const useFetch = (url: string, method: string = "GET") => {
     }
 
 
-    useEffect(() => {
+    useEffect(()  => {
         const controller = new AbortController()
 
         const fetchData = async (fetchOptions?: object) => {
@@ -71,7 +75,8 @@ export const useFetch = (url: string, method: string = "GET") => {
                 setData(data);
 
                 if (method === "POST" && data.id) {
-                    return data.id as number;
+                    updatePostId(data.id)
+                    // return data.id as number;
                 }
 
                 setError(null);
@@ -101,7 +106,7 @@ export const useFetch = (url: string, method: string = "GET") => {
             controller.abort()
         }
 
-    }, [url, method, options])
+    }, [url, method, options, updatePostId])
 
     return { data, isPending, error, postData, putData, deleteData }
 }

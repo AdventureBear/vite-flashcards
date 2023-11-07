@@ -4,6 +4,9 @@ import {useEffect, useState} from 'react'
 //React Query
 import { useQuery } from "react-query";
 
+//ComponentLibrary
+import Button from "./templates/Button.tsx";
+
 
 //Data
 const URL = "http://localhost:3000/decks"
@@ -25,6 +28,9 @@ import {Card, Review, NewCard, Deck} from './types.ts'
 //State Management
 import  { useFlashCardState } from "./store.ts";
 import Dashboard from "./components/Dashboard.tsx";
+import ConfirmReopenDashboard from "./components/ConfirmReopenDashboard.tsx";
+
+//functions
 
 
 function App() {
@@ -32,9 +38,7 @@ function App() {
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-    // const { data, isPending, error } = useFetch(URL)
-    const [filteredDeck, setFilteredDeck] = useState<Card[]>([])
-
+    const [confirmDashboardShow, setConfirmDashboardShow] = useState(false)
 
     const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
@@ -42,27 +46,35 @@ function App() {
 
     //Zustand State Management
     const increaseCorrect = useFlashCardState((state)=>state.increaseCorrect)
+    const resetCorrect = useFlashCardState((state)=>state.resetCorrect)
     const increaseIncorrect = useFlashCardState((state)=>state.increaseIncorrect)
+    const resetIncorrect = useFlashCardState((state)=>state.resetIncorrect)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const changeCurrentCardIndex = useFlashCardState((state)=>state.changeCurrentCardIndex)
     const resetCurrentCardIndex = useFlashCardState((state)=>state.resetCurrentCardIndex)
     const cardsDone = useFlashCardState((state)=>state.cardsDone)
     const increaseCardsDone = useFlashCardState((state)=>state.increaseCardsDone)
+    const resetCardsDone = useFlashCardState((state)=>state.resetCardsDone)
+
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
-    const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
+    // const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
     const showQuiz = useFlashCardState((state)=>(state.showQuiz))
     const updateShowQuiz = useFlashCardState((state)=>(state.updateShowQuiz))
     const updateShowFeedbackModal = useFlashCardState((state)=>state.updateShowFeedbackModal)
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
     const deck = useFlashCardState((state)=>state.deck)
     const updateDeck = useFlashCardState((state)=>state.updateDeck)
-    const deckLength = useFlashCardState((state)=>state.deckLength)
+    // const deckLength = useFlashCardState((state)=>state.deckLength)
     const updateDeckList = useFlashCardState((state)=> state.updateDeckList)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
-    // const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
+    const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
     const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
+
+    const postId = useFlashCardState((state)=>state.postId)
+    const updatePostId = useFlashCardState((state)=>state.updatePostId)
+
 
     //reactQuery
     const { isLoading, error, data } = useQuery('repoData', () =>
@@ -79,10 +91,9 @@ function App() {
 
     useEffect(() => {
         if(deck) {
-            setFilteredDeck(deck)
-            // setCardIdsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+            console.log("Deck Changed", deck)
+            // setFilteredDeck(deck)
             updateCardsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
-
             setUnrevealedCards(deck as Card[])  //initializing unreviewed cards, in case some are skipped
             let reviewedArray = deck.map((x: Card)=>{
                 return {
@@ -94,16 +105,16 @@ function App() {
 
             setQuestionsReviewed(reviewedArray)
             resetCurrentCardIndex()
-            updateDeckLength(deck.length)
+            // updateDeckLength(deck.length)
+
         }
     }, [deck]);
 
-
-       useEffect(() => {
-    if (deckLength>0 && cardsDone===deckLength){
+    useEffect(() => {
+    if (deck.length>0 && cardsDone===deck.length){
                updateShowComplete(true)
            }
-       }, [cardsDone, deckLength]);
+       }, [cardsDone, deck]);
 
     function checkUnreviewedCards() {
         const unreviewedCount = questionsReviewed.filter(card => !card.reviewed);
@@ -116,9 +127,7 @@ function App() {
 
     function handlePrev() {
         if (currentCardIndex > 0) {
-            // setShowAnswer(false);
             updateShowAnswer(false)
-            // setCurrentCardIndex(currentCardIndex - 1);
             changeCurrentCardIndex(-1)
         }
     }
@@ -136,12 +145,30 @@ function App() {
         }
     }
 
+    function handleOpenDashboard(){
+        setConfirmDashboardShow(false)
+        updateShowDashboard(true)
+        updateShowQuiz(false)
+        init()
+    }
+
+    function init(){
+        updateDeck([])
+        updateCardsToReview([])
+        setQuestionsReviewed([])
+        resetCardsDone()
+        resetCorrect()
+        resetIncorrect()
+    }
+
     const selectDeck = (name: string) => {
-        const deck = (data.find(deck=>deck.name===name))
+        const deck = (data.find((deck: { name: string; })=>deck.name===name))
 
         console.log( deck.cards)
         updateDeck(deck.cards)
+        // updateDeckLength(deck.length)
         updateShowDashboard(false)
+        updateShowQuiz(true)
 
     }
 
@@ -169,7 +196,7 @@ function App() {
 
     function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
 
-        if (cardIdsToReview[index] !== questionsReviewed[index].id) {
+        if (cardsToReview[index] !== questionsReviewed[index].id) {
             console.log("There is a mismatch between reviewed cards and the current Index")
         }
         setQuestionsReviewed(prevData => {
@@ -190,14 +217,16 @@ function App() {
         });
     }
 
-
-
     async function handleAddNewCard(newCard: NewCard) {
         // Add try-catch block around postData call
         try {
-            const createdCardId: number = await postData(newCard);
+            postData(newCard);
             // Update state with the ID
-            updateDeck([...deck, { id: createdCardId, ...newCard }])
+            if (postId != -1) {
+                updateDeck([...deck, { id: postId, ...newCard }])
+                updatePostId(-1)
+            }
+
 
             // Update review array with new placeholder
             // setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id: createdCardId}])
@@ -216,14 +245,11 @@ function App() {
 
             {data && <>
 
+                <Dashboard selectDeck ={selectDeck} />
+
                 <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
 
-                    <Dashboard selectDeck ={selectDeck} />
-
-
                    <ReviewDeck
-                       // deck={deck}
-                       // cardIdsToReview={cardIdsToReview}
                        handleAnswer={handleAnswer}
                        progressBarWidth={progressBarWidth}
                        handleNext={handleNext}
@@ -232,31 +258,50 @@ function App() {
                    />
 
 
-                <button
-                    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"
-                    onClick={()=>{
-                        updateShowCard(true)
-                        updateShowQuiz(false)
-                    }
-                }
-                    >Add New Question
-                </button>
-                    <button
-                        className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"
-                        onClick={()=>{
-                            updateShowDashboard(true)
-                        }
-                        }
-                    >Show Dashboard</button>
-            </div>
+                {/*<button*/}
+                {/*    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"*/}
+                {/*    onClick={()=>{*/}
+                {/*        updateShowCard(true)*/}
+                {/*        updateShowQuiz(false)*/}
+                {/*    }*/}
+                {/*}*/}
+                {/*    >Add New Question*/}
+                {/*</button>*/}
 
+                    {/*<button*/}
+                    {/*    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"*/}
+                    {/*    onClick={()=>{setConfirmDashboardShow(true)}*/}
+                    {/*    }*/}
+                    {/*>Show Dashboard</button>*/}
+
+                    <Button
+                        onClick={()=>{
+                            updateShowCard(true)
+                            updateShowQuiz(false)
+                        }}
+                    >Add new Question
+                    </Button>
+
+                    <Button
+                        onClick={()=>{
+                            setConfirmDashboardShow(true)
+                        }}>
+                        Show Dashboard
+                        </Button>
+
+
+                    <ConfirmReopenDashboard
+                        confirmDashboardShow={confirmDashboardShow}
+                        onClose = {()=>setConfirmDashboardShow(false)}
+                        handleOpenDashboard={handleOpenDashboard}
+                    />
+            </div>
 
 
              {/* Add Modal */}
                 <AddCardModal
                     handleAddNewCard = {handleAddNewCard}
                     onClose={() => {
-                        // setShowQuiz(true)
                         updateShowQuiz(true)
                         updateShowCard(false)
                     }}

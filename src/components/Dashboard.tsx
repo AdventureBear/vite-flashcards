@@ -11,7 +11,11 @@ interface DashboardProps {
 const Dashboard = ({selectDeck}:DashboardProps) => {
     const deckList = useFlashCardState((state)=>state.deckList)
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
-    const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
+    // const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
+    // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
+
+    // const updateDeck = useFlashCardState((state)=>state.updateDeck)
+
 
 
     return (
@@ -31,7 +35,9 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
                                 <div
                                     key={i}
                                     className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
-                                    onClick={()=>selectDeck(name)}
+                                    onClick={()=>
+                                        selectDeck(name)
+                                    }
                                 >
                                     <h2>{name}</h2>
                                 </div>
@@ -41,12 +47,18 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
                         <div className="flex justify-around">
 
                             <button
-                                className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg shadow-green-800`}>
-                               Just a button
+                                className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800`}>
+                               Add New Deck
                             </button>
                         </div>
 
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=> updateShowDashboard(false)}>Close</button>
+                        {/*<button className="bg-blue-500 text-white px-4 py-2 rounded"*/}
+                        {/*        onClick={()=> {*/}
+                        {/*            updateShowDashboard(false)*/}
+                        {/*            updateShowQuiz(true)*/}
+                        {/*        }}*/}
+
+                        {/*>Close</button>*/}
 
                 </div>
             </div>

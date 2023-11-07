@@ -1,12 +1,16 @@
 import Flashcard from "./Flashcard.tsx";
-import {Card, Review} from '../types.ts'
-import IsCorrectControls from "./IsCorrectControls.tsx";
+import { Review} from '../types.ts'
+// import IsCorrectControls from "./IsCorrectControls.tsx";
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 import {useFlashCardState} from "../store.ts";
-import {useEffect, useState} from "react";
 
+import  Badge  from '../templates/Badge.tsx'
+
+interface QuestionNumberProps {
+    deckLength: number
+}
 interface ReviewDeckProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean) => void;
     progressBarWidth: string;
@@ -15,9 +19,9 @@ interface ReviewDeckProps {
     questionsReviewed: Review[]
 }
 
-const QuestionNumber = () => {
+const QuestionNumber = ({deckLength}: QuestionNumberProps) => {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
-    const deckLength = useFlashCardState((state)=>state.deckLength)
+    // const deck = useFlashCardState((state)=>state.deck)
 
     return ( <p className="font-bold  mb-2">
         <span className="text-amber-100">Question: {currentCardIndex + 1} of {deckLength}</span>
@@ -37,16 +41,13 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
         <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
             <ReviewedCheckbox questionsReviewed={questionsReviewed} />
 
-            <QuestionNumber />
+            <QuestionNumber deckLength = {deck.length as number} />
 
-            <Flashcard
-                question =   {deck.find(card=> card.id === cardsToReview[currentCardIndex])?.question}
-                answer =     {deck.find(card=> card.id === cardsToReview[currentCardIndex])?.answer }
-            />
+            <Flashcard handleAnswer = {handleAnswer}/>
 
-            <IsCorrectControls
-                handleAnswer={handleAnswer}
-            />
+            {/*<IsCorrectControls*/}
+            {/*    handleAnswer={handleAnswer}*/}
+            {/*/>*/}
 
             <ProgressBar
                 deck={deck}
@@ -57,6 +58,8 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
                 handlePrev={handlePrev}
                 handleNext={handleNext}
             />
+
+            <Badge size="1" variant="2">TEST</Badge>
 
         </div>
         </>
