@@ -83,49 +83,66 @@ function App() {
         )
     )
 
+    //Dependency **DATA**
+    //When database loaded, gather deck names
     useEffect(() => {
         if (data) {
            updateDeckList(data.map((deck: Deck) => deck.name))
         }
     }, [data]);
 
+    //when deck chosen, load cards into deck global state
+    const selectDeck = (name: string) => {
+        const deck = (data.find((deck: { name: string; })=>deck.name===name))
+        updateDeck(deck.cards)
+        updateShowDashboard(false)
+        updateShowQuiz(true)
+
+    }
+
+    //Dependency **DECK**
+    //When deck cards loaded...
+    //Create a set of cards for current review session
+    //Initialize questions/cards reviewed array,
+    //Call init here too?
+
     useEffect(() => {
         if(deck) {
-            console.log("Deck Changed", deck)
-            // setFilteredDeck(deck)
             updateCardsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+            resetCurrentCardIndex()
             setUnrevealedCards(deck as Card[])  //initializing unreviewed cards, in case some are skipped
-            let reviewedArray = deck.map((x: Card)=>{
+            setQuestionsReviewed(deck.map((x: Card)=>{
                 return {
                     id: x.id,
                     correct: null,
-                    reviewed: false,
+                    reviewed: false
                 }
-            })
-
-            setQuestionsReviewed(reviewedArray)
-            resetCurrentCardIndex()
-            // updateDeckLength(deck.length)
+            }))
 
         }
     }, [deck]);
 
+    //Dependency **DECK, CARDSDONE**
+    //Check for end of review (should this be reviewed array instead?
+    //Show end screen
     useEffect(() => {
     if (deck.length>0 && cardsDone===deck.length){
                updateShowComplete(true)
            }
        }, [cardsDone, deck]);
 
+
     function checkUnreviewedCards() {
-        const unreviewedCount = questionsReviewed.filter(card => !card.reviewed);
-        if (unreviewedCount.length > 0) {
-            return unreviewedCount
+        const unreviewedCards = questionsReviewed.filter(card => !card.reviewed);
+        if (unreviewedCards.length > 0) {
+            return unreviewedCards
         } else {
             return null
         }
     }
 
     function handlePrev() {
+        //check boundries
         if (currentCardIndex > 0) {
             updateShowAnswer(false)
             changeCurrentCardIndex(-1)
@@ -133,11 +150,11 @@ function App() {
     }
 
     function handleNext() {
+        updateShowAnswer(false)
+        //check boundries
         if (currentCardIndex < deck.length - 1) {
-            updateShowAnswer(false)
             changeCurrentCardIndex(1)
         } else {
-            updateShowAnswer(false)
             if (checkUnreviewedCards()) {
                 console.log("you have cards to review")
                 console.log(checkUnreviewedCards())
@@ -159,18 +176,10 @@ function App() {
         resetCardsDone()
         resetCorrect()
         resetIncorrect()
+        updateShowAnswer(false)
     }
 
-    const selectDeck = (name: string) => {
-        const deck = (data.find((deck: { name: string; })=>deck.name===name))
 
-        console.log( deck.cards)
-        updateDeck(deck.cards)
-        // updateDeckLength(deck.length)
-        updateShowDashboard(false)
-        updateShowQuiz(true)
-
-    }
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
 
