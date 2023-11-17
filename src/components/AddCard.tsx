@@ -1,27 +1,19 @@
 import {useState} from "react";
-// const URL = "http://localhost:3000/deck"
 import SuccessfulAddModal from "./SuccessfulAddModal";
-import {useFlashCardState} from "../store.ts";
-
-interface PostCard {
-    question: string;
-    answer: string;
-    postData: (arg0: PostCard)=>Promise<void>;
-}
-
-
-
+// import {useFlashCardState} from "../store.ts";
+import {NewCard} from '../types.ts'
 
 interface AddCardModalProps {
     onClose: ()=>void,
-    handleAddNewCard: (arg0: PostCard)=>void
+    handleAddNewCard: (newCard: NewCard)=>void
 }
+
 const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
     const [showConfirmAd, setShowConfirmAd] = useState(false)
 
-   const showCard = useFlashCardState((state)=>state.showCard)
+   // const showCard = useFlashCardState((state)=>state.showCard)
     // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
 
     async function handleSubmit(e: React.FormEvent) {
@@ -30,7 +22,8 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
             question,
             answer
         };
-        handleAddNewCard(newCard as PostCard)
+
+        handleAddNewCard(newCard)
         setQuestion('')
         setAnswer('')
         setShowConfirmAd(true)
@@ -40,7 +33,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
 
     return (
         <>
-            <div className={`bg-amber-50 p-8 ${showCard ? 'block' : 'hidden'}`}>
+            <div className={`bg-amber-50 p-8`}>
             <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
                 <p className="font-bold  mb-2">
                     <span className="text-amber-100">Create New Flashcard</span>

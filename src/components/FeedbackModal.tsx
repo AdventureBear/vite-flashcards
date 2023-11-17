@@ -1,5 +1,4 @@
 import {useFlashCardState} from "../store.ts";
-// import {successPhrases} from "../utils/successPhrases.ts";
 import {encouragementPhrases, successPhrases} from '../utils/successPhrases.ts'
 import Modal from "../templates/Modal.tsx";
 import Button from "../templates/Button.tsx";
@@ -31,7 +30,7 @@ const FeedbackModal = ({ close, handleNext }: FeedbackModalProps) => {
                             handleNext();
                         }}
                     >Next</Button>
-                    
+
                 </Modal>
 
             </>

@@ -1,12 +1,11 @@
 
 interface ConfirmReopenDashboardModalProps {
-    confirmDashboardShow: boolean
     onClose: ()=> void
     handleOpenDashboard: ()=> void
 }
-const ConfirmReopenDashboardModal = ({confirmDashboardShow, onClose, handleOpenDashboard}: ConfirmReopenDashboardModalProps) => {
+const ConfirmReopenDashboardModal = ({onClose, handleOpenDashboard}: ConfirmReopenDashboardModalProps) => {
     return (
-        <div className={`${ confirmDashboardShow ? 'block' : 'hidden'} fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}>
+        <div className={`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}>
             <div className="bg-teal-800 p-8 rounded-lg shadow-lg text-center w-96">
                  <div className={`bg-amber-50 p-8 h-60 overflow-hidden`}>
                      <h2 className="text-2xl mb-6">

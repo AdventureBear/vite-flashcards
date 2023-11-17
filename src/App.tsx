@@ -10,7 +10,8 @@ import Button from "./templates/Button.tsx";
 
 //Data
 const URL = "http://localhost:3000/decks"
-import {useFetch} from "../hooks/useFetch.ts";
+// import {useFetch} from "../hooks/useFetch.ts";
+import { v4 as uuidv4 } from 'uuid';
 
 //Components
 import CompleteModal from './components/CompleteModal'
@@ -18,6 +19,7 @@ import AddCardModal from "./components/AddCard";
 // import { useFetch } from "../hooks/useFetch"
 import FeedbackModal from "./components/FeedbackModal.tsx";
 import ReviewDeck from "./components/ReviewDeck.tsx";
+import AddDeckModal from "./components/AddDeck.tsx"
 
 //Style
 import './App.css'
@@ -29,6 +31,7 @@ import {Card, Review, NewCard, Deck} from './types.ts'
 import  { useFlashCardState } from "./store.ts";
 import Dashboard from "./components/Dashboard.tsx";
 import ConfirmReopenDashboard from "./components/ConfirmReopenDashboard.tsx";
+import DeckOptions from "./components/DeckOptions.tsx";
 
 //functions
 
@@ -40,7 +43,7 @@ function App() {
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
     const [confirmDashboardShow, setConfirmDashboardShow] = useState(false)
 
-    const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
+    // const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
 
 
@@ -59,8 +62,12 @@ function App() {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     // const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
     const showQuiz = useFlashCardState((state)=>(state.showQuiz))
+    const showCard = useFlashCardState((state) => state.showCard)
+    const showAddDeck = useFlashCardState((state)=> state.showAddDeck)
+    const showComplete = useFlashCardState((state)=>state.showComplete)
     const updateShowQuiz = useFlashCardState((state)=>(state.updateShowQuiz))
     const updateShowFeedbackModal = useFlashCardState((state)=>state.updateShowFeedbackModal)
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
@@ -71,12 +78,16 @@ function App() {
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
     const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
+    const deckName = useFlashCardState((state) => state.deckName)
+    const updateDeckName = useFlashCardState((state)=> state.updateDeckName)
+    // const postId = useFlashCardState((state)=>state.postId)
+    // const updatePostId = useFlashCardState((state)=>state.updatePostId)
+    const showDashboard = useFlashCardState((state)=>state.showDashboard)
+    const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
+    const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
 
-    const postId = useFlashCardState((state)=>state.postId)
-    const updatePostId = useFlashCardState((state)=>state.updatePostId)
 
-
-    //reactQuery
+    //reactQuery, get all data
     const { isLoading, error, data } = useQuery('repoData', () =>
         fetch(URL).then(res =>
             res.json()
@@ -94,6 +105,7 @@ function App() {
     //when deck chosen, load cards into deck global state
     const selectDeck = (name: string) => {
         const deck = (data.find((deck: { name: string; })=>deck.name===name))
+        updateDeckName(name)
         updateDeck(deck.cards)
         updateShowDashboard(false)
         updateShowQuiz(true)
@@ -179,8 +191,6 @@ function App() {
         updateShowAnswer(false)
     }
 
-
-
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
 
         if (cardsDone < deck.length) {
@@ -226,25 +236,60 @@ function App() {
         });
     }
 
-    async function handleAddNewCard(newCard: NewCard) {
-        // Add try-catch block around postData call
-        try {
-            postData(newCard);
-            // Update state with the ID
-            if (postId != -1) {
-                updateDeck([...deck, { id: postId, ...newCard }])
-                updatePostId(-1)
-            }
+    async function handleAddNewDeck(name: string) {
+        console.log(name)
+        const response = await fetch("http://localhost:3000/decks", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({
+                name
+            }),
+        })
 
+        const result = await response.json();
+        console.log(result)
 
-            // Update review array with new placeholder
-            // setQuestionsReviewed(prev => [...prev, {reviewed: false, correct: null, id: createdCardId}])
-        } catch (error) {
-            console.error('Error during POST request:', error);
-            // Handle the error, if any, specific to the POST request
+        if (!response.ok) {
+            throw new Error(result.message);
+
         }
+        return result;
+
     }
 
+    async function handleAddNewCard(newCard: NewCard ) {
+        const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
+        console.log(workingDeck.name, workingDeck.id, newCard)
+
+        if (workingDeck.id === undefined) {
+            throw new Error("Deck not found");
+        }
+
+        const updatedCards = [...workingDeck.cards, {"id": uuidv4(), newCard}]
+
+
+        console.log(updatedCards)
+
+
+        const response = await fetch(`http://localhost:3000/decks/${workingDeck.id}`, {
+            method: "PATCH",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify({
+                "cards": updatedCards
+            }),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+        return result;
+    }
 
     const progressBarWidth = `${(cardsDone / deck.length) * 100}%`;
 
@@ -253,10 +298,33 @@ function App() {
         return (<>
 
             {data && <>
+                {showDashboard &&
+                    <Dashboard selectDeck ={selectDeck} />
+                }
 
-                <Dashboard selectDeck ={selectDeck} />
+                {showAddDeck &&
+                    <AddDeckModal
+                        handleAddNewDeck = {handleAddNewDeck}
+                        onClose={() => {
+                            updateShowDashboard(true)
+                            updateShowAddDeck(false)
+                        }}
+                    />
+                }
 
-                <div className={`bg-amber-50 p-8 ${showQuiz ? 'block' : 'hidden'}`}>
+                {showDeckOptions &&
+                    <DeckOptions
+                        deckName = {deckName}
+                        onClose={()=> {
+                            updateShowDeckOptions(false)
+                            updateShowDashboard(true)
+                        }}
+                    />
+                }
+
+
+                {showQuiz &&
+                    <div className={`bg-amber-50 p-8 `}>
 
                    <ReviewDeck
                        handleAnswer={handleAnswer}
@@ -266,22 +334,6 @@ function App() {
                        questionsReviewed={questionsReviewed}
                    />
 
-
-                {/*<button*/}
-                {/*    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"*/}
-                {/*    onClick={()=>{*/}
-                {/*        updateShowCard(true)*/}
-                {/*        updateShowQuiz(false)*/}
-                {/*    }*/}
-                {/*}*/}
-                {/*    >Add New Question*/}
-                {/*</button>*/}
-
-                    {/*<button*/}
-                    {/*    className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-4 mx-2 rounded shadow-lg"*/}
-                    {/*    onClick={()=>{setConfirmDashboardShow(true)}*/}
-                    {/*    }*/}
-                    {/*>Show Dashboard</button>*/}
 
                     <Button
                         onClick={()=>{
@@ -298,24 +350,32 @@ function App() {
                         Show Dashboard
                         </Button>
 
+                    {confirmDashboardShow &&
+                        <ConfirmReopenDashboard
+                            // confirmDashboardShow={confirmDashboardShow}
+                            onClose = {()=>setConfirmDashboardShow(false)}
+                            handleOpenDashboard={handleOpenDashboard}
+                        />
+                    }
 
-                    <ConfirmReopenDashboard
-                        confirmDashboardShow={confirmDashboardShow}
-                        onClose = {()=>setConfirmDashboardShow(false)}
-                        handleOpenDashboard={handleOpenDashboard}
+                    </div>
+                }
+
+
+
+                {showCard &&
+                    <AddCardModal
+                        handleAddNewCard = {handleAddNewCard}
+                        onClose={() => {
+                            updateShowQuiz(true)
+                            updateShowCard(false)
+                        }}
+
                     />
-            </div>
+                }
 
 
-             {/* Add Modal */}
-                <AddCardModal
-                    handleAddNewCard = {handleAddNewCard}
-                    onClose={() => {
-                        updateShowQuiz(true)
-                        updateShowCard(false)
-                    }}
 
-                />
 
                 <FeedbackModal
                     close = {()=>{updateShowFeedbackModal(false)}}
@@ -323,11 +383,13 @@ function App() {
                 />
 
                 {/* Complete Modal */}
-                <CompleteModal
-                    onClose={() => {
-                        updateShowComplete(false)
-                    }}
-                />
+                {showComplete &&
+                    <CompleteModal
+                        onClose={() => {
+                            updateShowComplete(false)
+                        }}
+                    />
+                }
             </>
 
             }

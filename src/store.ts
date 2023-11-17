@@ -4,6 +4,8 @@ import {Card} from "./types.ts";
 
 
 interface FlashCardState {
+    deckName: string,
+    updateDeckName: (to: string) =>void,
     deck: Card[],
     updateDeck: (deck: Card[]) => void
     correct: number
@@ -24,6 +26,10 @@ interface FlashCardState {
     updateShowComplete: (to: boolean) => void
     showCard: boolean
     updateShowCard: (to:boolean)=>void
+    showAddDeck: boolean
+    updateShowAddDeck: (to:boolean)=>void
+    showDeckOptions: boolean
+    updateShowDeckOptions: (to:boolean)=>void
     deckLength: number
     updateDeckLength:(to:number)=>void
     showQuiz: boolean
@@ -43,6 +49,8 @@ interface FlashCardState {
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
+    deckName: "",
+    updateDeckName: (to) => set(()=>({deckName: to})),
     deck: [],
     updateDeck: (deck: Card[])=> set(()=>({deck: deck})),
     correct: 0,
@@ -63,6 +71,10 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     updateShowComplete: (to) => set(()=>({showComplete: to})),
     showCard: false,
     updateShowCard: (to)=> set(()=>({showCard: to})),
+    showAddDeck: false,
+    updateShowAddDeck: (to)=> set(()=>({showAddDeck: to})),
+    showDeckOptions: true,
+    updateShowDeckOptions: (to)=> set(()=>({showDeckOptions: to})),
     deckLength: 0,
     updateDeckLength: (to) => set((state)=>({deckLength: state.deckLength + to})),
     showQuiz: false,

@@ -1,8 +1,8 @@
 {
   "decks": [
     {
-      "id": "j-VnnFJGUqJH4oNWzttpT",
-      "name": "Dog Trivia",
+      "id": 1,
+      "name": "Test",
       "cards": [
         {
           "question": "What color is your dog?",
@@ -38,17 +38,6 @@
           "question": "What does Archiee want for Dinner? ",
           "answer": "Fig!",
           "id": 9
-        },
-        {
-          "id": 10,
-          "question": "Who is the prettiest dog in town?",
-          "answer": "Fig and Archie!"
-        },
-        {
-          "newCard": {
-            "question": "test",
-            "answer": "test3"
-          }
         }
       ]
     },
@@ -72,10 +61,6 @@
           "id": 546
         }
       ]
-    },
-    {
-      "name": "Coding practictes",
-      "id": "LVT61JF"
     }
   ]
 }

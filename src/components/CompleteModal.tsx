@@ -8,10 +8,9 @@ interface CompleteModalProps {
 function CompleteModal({  onClose }:CompleteModalProps):  JSX.Element {
     const correct = useFlashCardState((state)=> state.correct)
     const incorrect = useFlashCardState((state)=> state.incorrect)
-    const showComplete = useFlashCardState((state)=>state.showComplete)
 
     return (
-        <div className={`fixed inset-0 flex items-center justify-center ${showComplete ? 'block' : 'hidden'}`}>
+        <div className={`fixed inset-0 flex items-center justify-center`}>
             <div className="bg-white rounded-lg p-8 shadow-lg">
                 <h2 className="text-2xl font-bold mb-4">Great Job, you're a rockstar!</h2>
                 <div className="flex justify-center mb-4">
