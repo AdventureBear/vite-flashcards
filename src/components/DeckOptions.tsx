@@ -2,9 +2,11 @@
 interface DeckOptionsProps {
     deckName: string;
     onClose: ()=>void;
+    reviewDeck: ()=>void;
+    addQuestions: () => void;
 }
 
-const DeckOptions = ({onClose, deckName} :DeckOptionsProps) => {
+const DeckOptions = ({onClose, deckName, reviewDeck, addQuestions} :DeckOptionsProps) => {
 
     return (
         <>
@@ -24,18 +26,16 @@ const DeckOptions = ({onClose, deckName} :DeckOptionsProps) => {
                         <div className="flex justify-around">
 
                             <button
-                                onClick={()=>{
-                                }}
+                                onClick={reviewDeck}
                                 className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
-                               Add or Modify Cards
+                                Review Deck
                             </button>
                         </div>
                     <div className="flex justify-around">
                             <button
-                                onClick={()=>{
-                                }}
+                                onClick={addQuestions}
                                 className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
-                                Review Deck
+                                Add or Modify Cards
                             </button>
                 </div>
                     <div className="flex justify-around">
@@ -43,7 +43,7 @@ const DeckOptions = ({onClose, deckName} :DeckOptionsProps) => {
                                 onClick={()=>{
                                 }}
                                 className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
-                                Delete Deck
+                                Archive Deck
                             </button>
                         </div>
 

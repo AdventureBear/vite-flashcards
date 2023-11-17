@@ -29,3 +29,8 @@ If you are developing a production application, we recommend updating the config
 
 
 https://medium.com/@farhoddev/how-to-create-a-reusable-react-button-component-bac643ca4594
+https://dev.to/frontenddeveli/simple-mutations-with-tanstack-query-and-nextjs-4b0m
+https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
+https://shekhargulati.com/2019/07/10/how-to-setup-json-server-to-use-custom-id-and-route/
+https://quickref.me/generate-an-unique-and-increment-id.html
+https://paletton.com/#uid=73g0S0kqUjc9ko8iOm3AXfQSRbN

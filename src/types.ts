@@ -5,6 +5,8 @@ export type DeckApiResponse = {
 
 
 export type Deck = {
+    id: number,
+    archive: boolean,
     name: string,
     cards: Card[]
 }

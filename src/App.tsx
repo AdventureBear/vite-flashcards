@@ -11,7 +11,6 @@ import Button from "./templates/Button.tsx";
 //Data
 const URL = "http://localhost:3000/decks"
 // import {useFetch} from "../hooks/useFetch.ts";
-import { v4 as uuidv4 } from 'uuid';
 
 //Components
 import CompleteModal from './components/CompleteModal'
@@ -108,8 +107,18 @@ function App() {
         updateDeckName(name)
         updateDeck(deck.cards)
         updateShowDashboard(false)
-        updateShowQuiz(true)
+        updateShowDeckOptions(true)
 
+    }
+
+    const handleReviewDeck = () => {
+        updateShowDeckOptions(false)
+        updateShowQuiz(true)
+    }
+
+    const handleAddQuestions = () =>{
+        updateShowCard(true)
+        updateShowDeckOptions(false)
     }
 
     //Dependency **DECK**
@@ -262,15 +271,16 @@ function App() {
     async function handleAddNewCard(newCard: NewCard ) {
         const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
         console.log(workingDeck.name, workingDeck.id, newCard)
-
+        const uid = (() => {
+            let id = Math.max(...workingDeck.cards.map((card: { id: number, answer: string, question: string; }) => card.id || 0)); // Find the maximum existing ID
+                return  ()=> id+=1;
+        })();
+        const nextId = uid()
         if (workingDeck.id === undefined) {
             throw new Error("Deck not found");
         }
 
-        const updatedCards = [...workingDeck.cards, {"id": uuidv4(), newCard}]
-
-
-        console.log(updatedCards)
+        const updatedCards = [...workingDeck.cards, {...newCard, "id": nextId}]
 
 
         const response = await fetch(`http://localhost:3000/decks/${workingDeck.id}`, {
@@ -284,7 +294,7 @@ function App() {
         });
 
         const result = await response.json();
-
+        console.log(result)
         if (!response.ok) {
             throw new Error(result.message);
         }
@@ -315,6 +325,8 @@ function App() {
                 {showDeckOptions &&
                     <DeckOptions
                         deckName = {deckName}
+                        reviewDeck = {handleReviewDeck}
+                        addQuestions = {handleAddQuestions}
                         onClose={()=> {
                             updateShowDeckOptions(false)
                             updateShowDashboard(true)

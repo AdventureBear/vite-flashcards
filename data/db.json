@@ -2,6 +2,7 @@
   "decks": [
     {
       "id": "j-VnnFJGUqJH4oNWzttpT",
+      "archive": false,
       "name": "Dog Trivia",
       "cards": [
         {
@@ -45,16 +46,21 @@
           "answer": "Fig and Archie!"
         },
         {
-          "newCard": {
-            "question": "test",
-            "answer": "test3"
-          }
+          "question": "What are little boys made of? ",
+          "answer": "Snips and Snails and puppy dog's tails",
+          "id": 542
+        },
+        {
+          "question": "1",
+          "answer": "5",
+          "id": 543
         }
       ]
     },
     {
       "id": 2,
       "name": "Lifestyle medicine: 1",
+      "archive": false,
       "cards": [
         {
           "question": "What is Lifestyle Medicine",

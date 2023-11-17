@@ -73,7 +73,7 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     updateShowCard: (to)=> set(()=>({showCard: to})),
     showAddDeck: false,
     updateShowAddDeck: (to)=> set(()=>({showAddDeck: to})),
-    showDeckOptions: true,
+    showDeckOptions: false,
     updateShowDeckOptions: (to)=> set(()=>({showDeckOptions: to})),
     deckLength: 0,
     updateDeckLength: (to) => set((state)=>({deckLength: state.deckLength + to})),
