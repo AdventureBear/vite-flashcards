@@ -30,12 +30,20 @@ const QuestionNumber = ({deckLength}: QuestionNumberProps) => {
 }
 const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
+    const deckName = useFlashCardState((state)=>state.deckName)
 
     return (
     <>
 
         <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
+            <div
+                className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
+            >
+                <h2>{deckName}</h2>
+            </div>
+
             <ReviewedCheckbox questionsReviewed={questionsReviewed} />
+
 
             <QuestionNumber deckLength = {deck.length as number} />
 

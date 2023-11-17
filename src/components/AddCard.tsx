@@ -2,6 +2,7 @@ import {useState} from "react";
 import SuccessfulAddModal from "./SuccessfulAddModal";
 // import {useFlashCardState} from "../store.ts";
 import {NewCard} from '../types.ts'
+import {useFlashCardState} from "../store.ts";
 
 interface AddCardModalProps {
     onClose: ()=>void,
@@ -12,6 +13,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
     const [showConfirmAd, setShowConfirmAd] = useState(false)
+    const deckName = useFlashCardState((state)=>state.deckName)
 
    // const showCard = useFlashCardState((state)=>state.showCard)
     // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
@@ -35,6 +37,11 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
         <>
             <div className={`bg-amber-50 p-8`}>
             <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
+                <div
+                    className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
+                >
+                    <h2>{deckName}</h2>
+                </div>
                 <p className="font-bold  mb-2">
                     <span className="text-amber-100">Create New Flashcard</span>
                 </p>
