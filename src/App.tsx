@@ -120,10 +120,10 @@ function App() {
         updateShowDeckOptions(false)
     }
 
-    function handleCloseAddQuestions() {
-        updateShowDeckOptions(true)
-        updateShowCard(false)
-    }
+    // function handleCloseAddQuestions() {
+    //     updateShowDeckOptions(true)
+    //     updateShowCard(false)
+    // }
     //Dependency **DECK**
     //When deck cards loaded...
     //Create a set of cards for current review session
@@ -394,7 +394,7 @@ function App() {
                 {showCard &&
                     <AddCardModal
                         handleAddNewCard = {handleAddNewCard}
-                        onClose={handleCloseAddQuestions}
+                        // onClose={handleCloseAddQuestions}
 
                     />
                 }

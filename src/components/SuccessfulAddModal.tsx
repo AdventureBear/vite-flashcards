@@ -1,19 +1,22 @@
 import {useFlashCardState} from "../store.ts";
 
-interface SucessfulAddModalProps {
-    show: boolean,
-    // setShowQuiz: (arg0: boolean) => void,
-    close: () => void,  // close this modal
-    closeAddCard: ()=>void,  //close add card
-}
+// interface SucessfulAddModalProps {
+//
+//
+// }
 
-const SuccessfulAddModal = ({ show, close, closeAddCard}: SucessfulAddModalProps) => {
+const SuccessfulAddModal = ( ) => {
     const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
+    const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
+    const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAdd)
+
+
 
     return (
         // Modal
         (<div className="flex justify-center items-center h-screen">
-                {show &&
+                {showConfirmAdd &&
                     // Overlay
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                         {/*// Modal*/}
@@ -21,17 +24,20 @@ const SuccessfulAddModal = ({ show, close, closeAddCard}: SucessfulAddModalProps
                             <h2 className="text-2xl mb-4">Success!</h2>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
-                                onClick={close}>Add another question</button>
+                                onClick={()=>{
+                                    updateShowConfirmAdd(false)
+                                    updateShowCard(true)
+                                }}>Add another question
+                            </button>
+
                             <button
                                 className="bg-green-500 text-white px-4 py-2 rounded"
                                 onClick={() => {
-                                    close()
-                                    // onClose()
+                                    updateShowConfirmAdd(false)
+                                    updateShowCard(false)
                                     updateShowQuiz(true)
-                                    // setShowQuiz(true)
-                                    closeAddCard()
                             }}>
-                                Return to Quiz
+                                Go to Review
                             </button>
                         </div>
                     </div>

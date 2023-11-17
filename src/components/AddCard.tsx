@@ -9,13 +9,17 @@ interface AddCardModalProps {
     handleAddNewCard: (newCard: NewCard)=>void
 }
 
-const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
+const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
-    const [showConfirmAd, setShowConfirmAd] = useState(false)
+    // const [showConfirmAd, setShowConfirmAd] = useState(false)
     const deckName = useFlashCardState((state)=>state.deckName)
+    // const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
+    const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
 
-   // const showCard = useFlashCardState((state)=>state.showCard)
+
+    // const showCard = useFlashCardState((state)=>state.showCard)
     // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
 
     async function handleSubmit(e: React.FormEvent) {
@@ -28,7 +32,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
         handleAddNewCard(newCard)
         setQuestion('')
         setAnswer('')
-        setShowConfirmAd(true)
+        updateShowConfirmAdd(true)
         // onClose()
 
     }
@@ -81,7 +85,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
                     <input type="submit" value="Add"/>
                 </button>
             </div>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>Close</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=>updateShowCard(false)}>Close</button>
 
 
             {/*<input type="submit" value="Add"/>*/}
@@ -89,11 +93,7 @@ const AddCardModal = ({ onClose, handleAddNewCard }: AddCardModalProps) => {
             </div>
             </div>
 
-            <SuccessfulAddModal
-                show = {showConfirmAd}
-                closeAddCard = {onClose}
-                close = {()=>{setShowConfirmAd(false)}}
-            />
+            <SuccessfulAddModal />
 
         </>
 
