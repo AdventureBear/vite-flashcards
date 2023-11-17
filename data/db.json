@@ -2,7 +2,7 @@
   "decks": [
     {
       "id": "j-VnnFJGUqJH4oNWzttpT",
-      "archive": false,
+      "archived": false,
       "name": "Dog Trivia",
       "cards": [
         {
@@ -54,18 +54,13 @@
           "question": "Who is the best dog in town? ",
           "answer": "NOT HARVEY",
           "id": 543
-        },
-        {
-          "question": "test",
-          "answer": "test",
-          "id": 544
         }
       ]
     },
     {
       "id": 2,
       "name": "Lifestyle medicine: 1",
-      "archive": false,
+      "archived": false,
       "cards": [
         {
           "question": "What is Lifestyle Medicine",
@@ -85,8 +80,34 @@
       ]
     },
     {
-      "name": "Coding practictes",
-      "id": "LVT61JF"
+      "name": "coffee things",
+      "archived": false,
+      "cards": [],
+      "id": "ctmG-d5"
+    },
+    {
+      "name": "test 1",
+      "archived": false,
+      "cards": [],
+      "id": "_kNFBSQ"
+    },
+    {
+      "name": "test 2",
+      "archived": false,
+      "cards": [],
+      "id": "n-3t9ca"
+    },
+    {
+      "name": "test 3",
+      "archived": false,
+      "cards": [
+        {
+          "question": "q 2",
+          "answer": "answer 2",
+          "id": null
+        }
+      ],
+      "id": "giDcH3r"
     }
   ]
 }

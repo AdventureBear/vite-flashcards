@@ -87,7 +87,7 @@ function App() {
 
 
     //reactQuery, get all data
-    const { isLoading, error, data } = useQuery('repoData', () =>
+    const { isLoading, error, data , refetch } = useQuery('repoData', () =>
         fetch(URL).then(res =>
             res.json()
         )
@@ -256,7 +256,11 @@ function App() {
                 "content-type": "application/json",
             },
             body: JSON.stringify({
-                name
+                name,
+                "archived": false,
+                "cards": [
+
+                ]
             }),
         })
 
@@ -265,8 +269,16 @@ function App() {
 
         if (!response.ok) {
             throw new Error(result.message);
-
         }
+        // Update local state after successful API call
+        await refetch();
+        updateDeckName(name)
+        updateDeck( [])
+        updateShowDashboard(false)
+        updateShowDeckOptions(false)
+        updateShowQuiz(true)
+        // updateDeckName(name)
+
         return result;
 
     }
@@ -302,9 +314,7 @@ function App() {
             throw new Error(result.message);
         }
         // Update local state after successful API call
-
         updateDeck(updatedCards)
-
 
         return result;
     }
@@ -324,7 +334,6 @@ function App() {
                     <AddDeckModal
                         handleAddNewDeck = {handleAddNewDeck}
                         onClose={() => {
-                            updateShowDashboard(true)
                             updateShowAddDeck(false)
                         }}
                     />
