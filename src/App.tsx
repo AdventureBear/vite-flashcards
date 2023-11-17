@@ -121,6 +121,10 @@ function App() {
         updateShowDeckOptions(false)
     }
 
+    function handleCloseAddQuestions() {
+        updateShowDeckOptions(true)
+        updateShowCard(false)
+    }
     //Dependency **DECK**
     //When deck cards loaded...
     //Create a set of cards for current review session
@@ -364,7 +368,6 @@ function App() {
 
                     {confirmDashboardShow &&
                         <ConfirmReopenDashboard
-                            // confirmDashboardShow={confirmDashboardShow}
                             onClose = {()=>setConfirmDashboardShow(false)}
                             handleOpenDashboard={handleOpenDashboard}
                         />
@@ -378,10 +381,7 @@ function App() {
                 {showCard &&
                     <AddCardModal
                         handleAddNewCard = {handleAddNewCard}
-                        onClose={() => {
-                            updateShowQuiz(true)
-                            updateShowCard(false)
-                        }}
+                        onClose={handleCloseAddQuestions}
 
                     />
                 }

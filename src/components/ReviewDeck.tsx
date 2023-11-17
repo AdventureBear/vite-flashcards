@@ -8,9 +8,9 @@ import {useFlashCardState} from "../store.ts";
 
 import  Badge  from '../templates/Badge.tsx'
 
-interface QuestionNumberProps {
-    deckLength: number
-}
+// interface QuestionNumberProps {
+//     deckLength: number
+// }
 interface ReviewDeckProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean) => void;
     progressBarWidth: string;
@@ -19,15 +19,15 @@ interface ReviewDeckProps {
     questionsReviewed: Review[]
 }
 
-const QuestionNumber = ({deckLength}: QuestionNumberProps) => {
-    const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
-
-    return (
-        <p className="font-bold  mb-2">
-            <span className="text-amber-100">Question: {currentCardIndex + 1} of {deckLength}</span>
-        </p>
-    )
-}
+// const QuestionNumber = ({deckLength}: QuestionNumberProps) => {
+//     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
+//
+//     return (
+//         <p className="font-bold  mb-2">
+//             <span className="text-amber-100">Question: {currentCardIndex + 1} of {deckLength}</span>
+//         </p>
+//     )
+// }
 const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     const deckName = useFlashCardState((state)=>state.deckName)
@@ -44,8 +44,12 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
 
             <ReviewedCheckbox questionsReviewed={questionsReviewed} />
 
+            <NavigationControls
+                handlePrev={handlePrev}
+                handleNext={handleNext}
+            />
 
-            <QuestionNumber deckLength = {deck.length as number} />
+            {/*<QuestionNumber deckLength = {deck.length as number} />*/}
 
             <Flashcard handleAnswer = {handleAnswer}/>
 
@@ -54,10 +58,7 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
                 progressBarWidth={progressBarWidth}
             />
 
-            <NavigationControls
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-            />
+
 
             <Badge size={1} variant={2}>TEST</Badge>
 
