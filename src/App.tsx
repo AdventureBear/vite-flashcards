@@ -108,7 +108,6 @@ function App() {
         updateDeck(deck.cards)
         updateShowDashboard(false)
         updateShowDeckOptions(true)
-
     }
 
     const handleReviewDeck = () => {
@@ -302,6 +301,11 @@ function App() {
         if (!response.ok) {
             throw new Error(result.message);
         }
+        // Update local state after successful API call
+
+        updateDeck(updatedCards)
+
+
         return result;
     }
 
