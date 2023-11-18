@@ -268,9 +268,9 @@ function App() {
         await refetch();
         updateDeckName(name)
         updateDeck( [])
-        updateShowDashboard(false)
-        updateShowDeckOptions(false)
-        updateShowQuiz(true)
+        // updateShowDashboard(false)
+        // updateShowDeckOptions(false)
+        // updateShowQuiz(true)
         // updateDeckName(name)
 
         return result;

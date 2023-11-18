@@ -6,15 +6,15 @@ const SuccessfulAddDeckModal = () => {
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
-    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
-    const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAddCard)
+    const updateShowConfirmAddDeck = useFlashCardState((state)=>state.updateShowConfirmAddDeck)
+    // const showConfirmAddDeck = useFlashCardState((state)=>state.showConfirmAddCard)
 
 
 
     return (
         // Modal
         (<div className="flex justify-center items-center h-screen">
-                {showConfirmAdd &&
+                {/*{showConfirmAddDeck &&*/}
                     // Overlay
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                         {/*// Modal*/}
@@ -25,19 +25,19 @@ const SuccessfulAddDeckModal = () => {
                                 onClick={()=>{
                                     updateShowCard(true)
                                     updateShowAddDeck(false)
-                                    updateShowConfirmAdd(false)
+                                    updateShowConfirmAddDeck(false)
                                 }}>Add Questions</button>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
                                 onClick={()=>{
                                     updateShowDashboard(true)
                                     updateShowAddDeck(false)
-                                    updateShowConfirmAdd(false)
+                                    updateShowConfirmAddDeck(false)
                                 }}>Back to Dashboard</button>
 
                         </div>
                     </div>
-                }
+                {/*}*/}
             </div>
         )
     )
