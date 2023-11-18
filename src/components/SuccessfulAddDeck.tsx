@@ -1,22 +1,23 @@
 import {useFlashCardState} from "../store.ts";
 
-interface SuccessfulAddDeckModalProps {
-    show: boolean,
-}
+// interface SuccessfulAddDeckModalProps {
+//     // show: boolean,
+// }
 
-const SuccessfulAddDeckModal = ({ show}: SuccessfulAddDeckModalProps) => {
+const SuccessfulAddDeckModal = () => {
 
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
+    const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAdd)
 
 
 
     return (
         // Modal
         (<div className="flex justify-center items-center h-screen">
-                {show &&
+                {showConfirmAdd &&
                     // Overlay
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                         {/*// Modal*/}

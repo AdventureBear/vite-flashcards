@@ -7,15 +7,16 @@ interface AddDeckModalProps {
 }
 
 const AddDeckModal = ({  handleAddNewDeck }: AddDeckModalProps) => {
-    const [showConfirmAdd, setShowConfirmAdd] = useState(false)
+    // const [showConfirmAdd, setShowConfirmAdd] = useState(false)
     const [deckName, setDeckName] = useState('')
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
+    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         handleAddNewDeck(deckName)
         setDeckName('')
-        setShowConfirmAdd(true)
+        updateShowConfirmAdd(true)
     }
 
     return (
@@ -57,7 +58,7 @@ const AddDeckModal = ({  handleAddNewDeck }: AddDeckModalProps) => {
             </div>
 
             <SuccessfulAddDeckModal
-                show = {showConfirmAdd}
+                // show = {showConfirmAdd}
 
             />
 
