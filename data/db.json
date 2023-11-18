@@ -54,31 +54,6 @@
           "question": "Who is the best dog in town? ",
           "answer": "NOT HARVEY",
           "id": 543
-        },
-        {
-          "question": "test2",
-          "answer": "test2",
-          "id": 544
-        },
-        {
-          "question": "test3",
-          "answer": "test3",
-          "id": 545
-        },
-        {
-          "question": "test4",
-          "answer": "test4",
-          "id": 546
-        },
-        {
-          "question": "test5",
-          "answer": "test5",
-          "id": 547
-        },
-        {
-          "question": "new 3",
-          "answer": "ans 3",
-          "id": 548
         }
       ]
     },
@@ -117,86 +92,21 @@
       "id": "ctmG-d5"
     },
     {
-      "name": "test 1",
+      "name": "test 69",
       "archived": false,
       "cards": [
         {
-          "question": "q 2",
-          "answer": "a2",
-          "id": null
-        }
-      ],
-      "id": "_kNFBSQ"
-    },
-    {
-      "name": "test 2",
-      "archived": false,
-      "cards": [],
-      "id": "n-3t9ca"
-    },
-    {
-      "name": "test 3",
-      "archived": false,
-      "cards": [
-        {
-          "question": "q 2",
-          "answer": "answer 2",
-          "id": 0
-        }
-      ],
-      "id": "giDcH3r"
-    },
-    {
-      "name": "fun things",
-      "archived": false,
-      "cards": [],
-      "id": "3B7CDte"
-    },
-    {
-      "name": "test",
-      "archived": false,
-      "cards": [
-        {
-          "question": "teawfdsfd",
-          "answer": "adfad",
-          "id": null
-        },
-        {
-          "question": "ytr",
-          "answer": "h,lkjh",
+          "question": "adf",
+          "answer": "asdf",
           "id": 1
         },
         {
-          "question": "lkj",
-          "answer": "lkj",
+          "question": "asdf",
+          "answer": "adsf",
           "id": 2
         }
       ],
-      "id": "zicUtIl"
-    },
-    {
-      "name": "Fig",
-      "archived": false,
-      "cards": [
-        {
-          "question": "antoehr",
-          "answer": "one",
-          "id": null
-        }
-      ],
-      "id": "YJKilk1"
-    },
-    {
-      "name": "adsfadf",
-      "archived": false,
-      "cards": [],
-      "id": "JXU2zvH"
-    },
-    {
-      "name": "adf",
-      "archived": false,
-      "cards": [],
-      "id": "Q7-UNsD"
+      "id": "Y-HemVV"
     }
   ]
 }

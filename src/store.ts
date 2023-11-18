@@ -27,8 +27,10 @@ interface FlashCardState {
     updateShowComplete: (to: boolean) => void
     showCard: boolean
     updateShowCard: (to:boolean)=>void
-    showConfirmAdd: boolean,
-    updateShowConfirmAdd: (to:boolean)=>void
+    showConfirmAddCard: boolean,
+    updateShowConfirmAddCard: (to:boolean)=>void
+    showConfirmAddDeck: boolean,
+    updateShowConfirmAddDeck: (to:boolean)=>void
     showAddDeck: boolean
     updateShowAddDeck: (to:boolean)=>void
     showDeckOptions: boolean
@@ -75,8 +77,10 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     updateShowComplete: (to) => set(()=>({showComplete: to})),
     showCard: false,
     updateShowCard: (to)=> set(()=>({showCard: to})),
-    showConfirmAdd:  false,
-    updateShowConfirmAdd: (to) => set(()=>({showConfirmAdd: to})),
+    showConfirmAddCard:  false,
+    updateShowConfirmAddCard: (to) => set(()=>({showConfirmAddCard: to})),
+    showConfirmAddDeck:  false,
+    updateShowConfirmAddDeck: (to) => set(()=>({showConfirmAddCard: to})),
     showAddDeck: false,
     updateShowAddDeck: (to)=> set(()=>({showAddDeck: to})),
     showDeckOptions: false,

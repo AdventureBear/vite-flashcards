@@ -16,7 +16,7 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
     const deckName = useFlashCardState((state)=>state.deckName)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
-    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
+    const updateShowConfirmAddCard = useFlashCardState((state)=>state.updateShowConfirmAddCard)
 
 
     // const showCard = useFlashCardState((state)=>state.showCard)
@@ -32,7 +32,7 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
         handleAddNewCard(newCard)
         setQuestion('')
         setAnswer('')
-        updateShowConfirmAdd(true)
+        updateShowConfirmAddCard(true)
         // onClose()
 
     }

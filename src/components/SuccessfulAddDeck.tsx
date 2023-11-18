@@ -7,7 +7,7 @@ const SuccessfulAddDeckModal = () => {
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
-    const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAdd)
+    const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAddCard)
 
 
 
