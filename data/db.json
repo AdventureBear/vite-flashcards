@@ -60,7 +60,7 @@
     {
       "id": 2,
       "name": "Lifestyle medicine: 1",
-      "archived": false,
+      "archived": true,
       "cards": [
         {
           "question": "What is Lifestyle Medicine",
@@ -110,7 +110,7 @@
     },
     {
       "name": "asdfadf",
-      "archived": false,
+      "archived": true,
       "cards": [],
       "id": "Raqainv"
     },

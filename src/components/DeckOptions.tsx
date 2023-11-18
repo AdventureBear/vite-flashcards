@@ -2,15 +2,16 @@ import {useFlashCardState} from "../store.ts";
 
 interface DeckOptionsProps {
     deckName: string;
-    // onClose: ()=>void;
     reviewDeck: ()=>void;
     addQuestions: () => void;
+    handleArchiveDeck: (id:string)=>void;
 }
 
-const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) => {
+const DeckOptions = ({ deckName, reviewDeck, addQuestions, handleArchiveDeck} :DeckOptionsProps) => {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const deck = useFlashCardState((state)=>state.deck)
+    const deckId = useFlashCardState((state)=>state.deckId)
 
     return (
         <>
@@ -33,8 +34,8 @@ const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) =>
                                 onClick={reviewDeck}
                                 disabled={deck.length === 0}
                                 // className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
-                                className={` hover:text-white text-black font-bold 
-                                           ${deck.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-teal-300 hover:bg-teal-500'}
+                                className={`  text-black font-bold 
+                                           ${deck.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-teal-300 hover:bg-teal-500 hover:text-white'}
                                             px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`
                                 }>
                                 Review Deck
@@ -50,6 +51,7 @@ const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) =>
                     <div className="flex justify-around">
                             <button
                                 onClick={()=>{
+                                    handleArchiveDeck(deckId)
                                 }}
                                 className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
                                 Archive Deck

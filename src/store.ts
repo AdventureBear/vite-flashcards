@@ -51,6 +51,8 @@ interface FlashCardState {
     updateCardsToReview: (cardsIds: number[])=>void
     confirmDashboardShow: boolean
     updateConfirmDashboardShow: (to:boolean)=>void
+    deckId: string
+    updateDeckId: (to: string)=>void
 
 }
 
@@ -100,5 +102,7 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     cardsToReview: [],
     updateCardsToReview: (cardsIds: number[])=> set(()=>({cardsToReview: cardsIds})),
     confirmDashboardShow: false,
-    updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to}))
+    updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to})),
+    deckId: "",
+    updateDeckId: (to: string)=>set(()=>({deckId: to}))
 }))

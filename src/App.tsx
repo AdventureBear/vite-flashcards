@@ -82,7 +82,7 @@ function App() {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const confirmDashboardShow = useFlashCardState((state)=>state.confirmDashboardShow)
     const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
-
+    const updateDeckId = useFlashCardState((state)=>state.updateDeckId)
 
     //reactQuery, get all data
     const { isLoading, error, data , refetch } = useQuery('repoData', () =>
@@ -102,7 +102,9 @@ function App() {
     //when deck chosen, load cards into deck global state
     const selectDeck = (name: string) => {
         const deck = (data.find((deck: { name: string; })=>deck.name===name))
+        console.log(deck.id)
         updateDeckName(name)
+        updateDeckId(deck.id)
         updateDeck(deck.cards)
         updateShowDashboard(false)
         updateShowDeckOptions(true)
@@ -268,13 +270,37 @@ function App() {
         await refetch();
         updateDeckName(name)
         updateDeck( [])
-        // updateShowDashboard(false)
-        // updateShowDeckOptions(false)
-        // updateShowQuiz(true)
-        // updateDeckName(name)
 
         return result;
 
+    }
+
+    async function handleArchiveDeck(deckId:string) {
+        console.log("Archiving Deck, ", deckId);
+
+        const response = await fetch(`http://localhost:3000/decks/${deckId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                archived: true,
+            }),
+        });
+
+        const result = await response.json();
+        console.log("Archived:", result.archived)
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+
+        // Update local state after successful API call
+        await refetch();
+
+        // If you have an 'updateDeck' function, you might not need this line
+        // updateDeck([]);
+
+        return result;
     }
 
     async function handleAddNewCard(newCard: NewCard ) {
@@ -338,6 +364,7 @@ function App() {
 
                 {showDeckOptions &&
                     <DeckOptions
+                        handleArchiveDeck={handleArchiveDeck}
                         deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
