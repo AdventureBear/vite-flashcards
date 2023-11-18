@@ -10,6 +10,7 @@ interface DeckOptionsProps {
 const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) => {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
+    const deck = useFlashCardState((state)=>state.deck)
 
     return (
         <>
@@ -30,7 +31,12 @@ const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) =>
 
                             <button
                                 onClick={reviewDeck}
-                                className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
+                                disabled={deck.length === 0}
+                                // className={`hover:text-white text-black font-bold  bg-teal-300 hover:bg-teal-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
+                                className={` hover:text-white text-black font-bold 
+                                           ${deck.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-teal-300 hover:bg-teal-500'}
+                                            px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`
+                                }>
                                 Review Deck
                             </button>
                         </div>
