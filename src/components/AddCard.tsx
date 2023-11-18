@@ -14,7 +14,7 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
     const [question, setQuestion] = useState('')
     // const [showConfirmAd, setShowConfirmAd] = useState(false)
     const deckName = useFlashCardState((state)=>state.deckName)
-    // const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
+    const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
 
@@ -85,7 +85,11 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
                     <input type="submit" value="Add"/>
                 </button>
             </div>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=>updateShowCard(false)}>Close</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=>{
+                updateShowDeckOptions(true)
+                updateShowCard(false)
+
+            }}>Close</button>
 
 
             {/*<input type="submit" value="Add"/>*/}

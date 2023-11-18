@@ -1,16 +1,15 @@
 import {useFlashCardState} from "../store.ts";
 
-interface SucessfulAddDeckModalProps {
+interface SuccessfulAddDeckModalProps {
     show: boolean,
-    close: () => void,  // close this modal
-    // closeAddCard: ()=>void,  //close add card
 }
 
-const SuccessfulAddDeckModal = ({ show, close}: SucessfulAddDeckModalProps) => {
+const SuccessfulAddDeckModal = ({ show}: SuccessfulAddDeckModalProps) => {
 
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
 
 
 
@@ -26,16 +25,16 @@ const SuccessfulAddDeckModal = ({ show, close}: SucessfulAddDeckModalProps) => {
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
                                 onClick={()=>{
-                                    updateShowAddDeck(false)
                                     updateShowCard(true)
-                                    close()
+                                    updateShowAddDeck(false)
+                                    updateShowConfirmAdd(false)
                                 }}>Add Questions</button>
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
                                 onClick={()=>{
-                                    updateShowAddDeck(false)
                                     updateShowDashboard(true)
-                                    close()
+                                    updateShowAddDeck(false)
+                                    updateShowConfirmAdd(false)
                                 }}>Back to Dashboard</button>
 
                         </div>

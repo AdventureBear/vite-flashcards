@@ -249,7 +249,7 @@ function App() {
     }
 
     async function handleAddNewDeck(name: string) {
-        console.log(name)
+        // console.log(name)
         const response = await fetch("http://localhost:3000/decks", {
             method: "POST",
             headers: {
@@ -265,7 +265,7 @@ function App() {
         })
 
         const result = await response.json();
-        console.log(result)
+        // console.log(result)
 
         if (!response.ok) {
             throw new Error(result.message);
@@ -285,7 +285,7 @@ function App() {
 
     async function handleAddNewCard(newCard: NewCard ) {
         const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
-        console.log(workingDeck.name, workingDeck.id, newCard)
+        // console.log(workingDeck.name, workingDeck.id, newCard)
         const uid = (() => {
             let id = Math.max(...workingDeck.cards.map((card: { id: number, answer: string, question: string; }) => card.id || 0)); // Find the maximum existing ID
                 return  ()=> id+=1;
@@ -309,7 +309,7 @@ function App() {
         });
 
         const result = await response.json();
-        console.log(result)
+        // console.log(result)
         if (!response.ok) {
             throw new Error(result.message);
         }
@@ -333,9 +333,6 @@ function App() {
                 {showAddDeck &&
                     <AddDeckModal
                         handleAddNewDeck = {handleAddNewDeck}
-                        onClose={() => {
-                            updateShowAddDeck(false)
-                        }}
                     />
                 }
 

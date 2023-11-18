@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 import {Card} from "./types.ts";
-import {useState} from "react";
+// import {useState} from "react";
 
 
 interface FlashCardState {

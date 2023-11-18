@@ -1,14 +1,15 @@
 import {useState} from "react";
 import SuccessfulAddDeckModal from "./SuccessfulAddDeck.tsx";
+import {useFlashCardState} from "../store.ts";
 
 interface AddDeckModalProps {
-    onClose: ()=>void,
     handleAddNewDeck: (name: string)=>void
 }
 
-const AddDeckModal = ({ onClose, handleAddNewDeck }: AddDeckModalProps) => {
+const AddDeckModal = ({  handleAddNewDeck }: AddDeckModalProps) => {
     const [showConfirmAdd, setShowConfirmAdd] = useState(false)
     const [deckName, setDeckName] = useState('')
+    const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -46,7 +47,9 @@ const AddDeckModal = ({ onClose, handleAddNewDeck }: AddDeckModalProps) => {
                     <input type="submit" value="Add"/>
                 </button>
             </div>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>Close</button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=>{
+                updateShowAddDeck(false)
+            }}>Close</button>
 
 
         </form>
@@ -55,8 +58,7 @@ const AddDeckModal = ({ onClose, handleAddNewDeck }: AddDeckModalProps) => {
 
             <SuccessfulAddDeckModal
                 show = {showConfirmAdd}
-                // closeAddCard = {onClose}
-                close = {()=>{setShowConfirmAdd(false)}}
+
             />
 
         </>
