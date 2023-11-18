@@ -1,8 +1,5 @@
 import {useFlashCardState} from "../store.ts";
 
-// interface SuccessfulAddDeckModalProps {
-//     // show: boolean,
-// }
 
 const SuccessfulAddDeckModal = () => {
 

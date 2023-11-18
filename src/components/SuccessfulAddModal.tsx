@@ -1,9 +1,5 @@
 import {useFlashCardState} from "../store.ts";
 
-// interface SucessfulAddModalProps {
-//
-//
-// }
 
 const SuccessfulAddModal = ( ) => {
     const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
