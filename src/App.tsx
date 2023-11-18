@@ -40,10 +40,6 @@ function App() {
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-    // const [confirmDashboardShow, setConfirmDashboardShow] = useState(false)
-
-    // const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
-
 
 
     //Zustand State Management
@@ -121,11 +117,7 @@ function App() {
         updateShowCard(true)
         updateShowDeckOptions(false)
     }
-
-    // function handleCloseAddQuestions() {
-    //     updateShowDeckOptions(true)
-    //     updateShowCard(false)
-    // }
+    
     //Dependency **DECK**
     //When deck cards loaded...
     //Create a set of cards for current review session
@@ -380,7 +372,7 @@ function App() {
 
                     {confirmDashboardShow &&
                         <ConfirmReopenDashboard
-                            // onClose = {()=>updateConfirmDashboardShow(false)}
+
                             handleOpenDashboard={handleOpenDashboard}
                         />
                     }
@@ -393,7 +385,7 @@ function App() {
                 {showCard &&
                     <AddCardModal
                         handleAddNewCard = {handleAddNewCard}
-                        // onClose={handleCloseAddQuestions}
+
 
                     />
                 }
@@ -409,9 +401,7 @@ function App() {
                 {/* Complete Modal */}
                 {showComplete &&
                     <CompleteModal
-                        // onClose={() => {
-                        //     updateShowComplete(false)
-                        // }}
+
                     />
                 }
             </>
