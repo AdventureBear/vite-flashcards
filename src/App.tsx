@@ -407,9 +407,9 @@ function App() {
                 {/* Complete Modal */}
                 {showComplete &&
                     <CompleteModal
-                        onClose={() => {
-                            updateShowComplete(false)
-                        }}
+                        // onClose={() => {
+                        //     updateShowComplete(false)
+                        // }}
                     />
                 }
             </>

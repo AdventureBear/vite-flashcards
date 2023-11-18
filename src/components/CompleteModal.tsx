@@ -1,13 +1,15 @@
 import {useFlashCardState} from "../store.ts";
 
-interface CompleteModalProps {
+// interface CompleteModalProps {
+//
+// }
 
-    onClose: ()=>void,
-}
-
-function CompleteModal({  onClose }:CompleteModalProps):  JSX.Element {
+function CompleteModal():  JSX.Element {
     const correct = useFlashCardState((state)=> state.correct)
     const incorrect = useFlashCardState((state)=> state.incorrect)
+    const updateShowComplete = useFlashCardState((state)=> state.updateShowComplete)
+
+    updateShowComplete
 
     return (
         <div className={`fixed inset-0 flex items-center justify-center`}>
@@ -18,7 +20,7 @@ function CompleteModal({  onClose }:CompleteModalProps):  JSX.Element {
                     {/* Example: <img src="your_graphic_url.png" alt="Pie Chart" /> */}
                 </div>
                 <p className="text-lg mb-4">Correct: {correct}, Incorrect: {incorrect}</p>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>Close</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=> updateShowComplete(false)}>Close</button>
             </div>
         </div>
     );
