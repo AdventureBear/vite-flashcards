@@ -358,13 +358,13 @@ function App() {
                    />
 
 
-                    <Button
-                        onClick={()=>{
-                            updateShowCard(true)
-                            updateShowQuiz(false)
-                        }}
-                    >Add new Question
-                    </Button>
+                    {/*<Button*/}
+                    {/*    onClick={()=>{*/}
+                    {/*        updateShowCard(true)*/}
+                    {/*        updateShowQuiz(false)*/}
+                    {/*    }}*/}
+                    {/*>Add new Question*/}
+                    {/*</Button>*/}
 
                     <Button
                         onClick={()=>{
