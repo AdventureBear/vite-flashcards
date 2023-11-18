@@ -117,7 +117,7 @@ function App() {
         updateShowCard(true)
         updateShowDeckOptions(false)
     }
-    
+
     //Dependency **DECK**
     //When deck cards loaded...
     //Create a set of cards for current review session
