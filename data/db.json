@@ -107,7 +107,13 @@
     {
       "name": "coffee things",
       "archived": false,
-      "cards": [],
+      "cards": [
+        {
+          "question": "one",
+          "answer": "two",
+          "id": 1
+        }
+      ],
       "id": "ctmG-d5"
     },
     {
@@ -154,6 +160,16 @@
           "question": "teawfdsfd",
           "answer": "adfad",
           "id": null
+        },
+        {
+          "question": "ytr",
+          "answer": "h,lkjh",
+          "id": 1
+        },
+        {
+          "question": "lkj",
+          "answer": "lkj",
+          "id": 2
         }
       ],
       "id": "zicUtIl"

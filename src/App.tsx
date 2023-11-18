@@ -281,8 +281,14 @@ function App() {
         const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
         // console.log(workingDeck.name, workingDeck.id, newCard)
         const uid = (() => {
-            let id = Math.max(...workingDeck.cards.map((card: { id: number, answer: string, question: string; }) => card.id || 0)); // Find the maximum existing ID
-                return  ()=> id+=1;
+            let id: number;
+            if (workingDeck.cards.length > 0) {
+                id = Math.max(...workingDeck.cards.map((card: { id: number }) => card.id || 0)) + 1;
+            } else {
+                id = 1; // Set a default ID if the array is empty
+            }
+
+            return () => id++;
         })();
         const nextId = uid()
         if (workingDeck.id === undefined) {
@@ -335,10 +341,7 @@ function App() {
                         deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
-                        // onClose={()=> {
-                        //     updateShowDeckOptions(false)
-                        //     updateShowDashboard(true)
-                        // }}
+
                     />
                 }
 

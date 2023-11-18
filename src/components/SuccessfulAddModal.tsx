@@ -7,8 +7,6 @@ const SuccessfulAddModal = ( ) => {
     const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAdd)
     const showConfirmAdd = useFlashCardState((state)=>state.showConfirmAdd)
 
-
-
     return (
         // Modal
         (<div className="flex justify-center items-center h-screen">
