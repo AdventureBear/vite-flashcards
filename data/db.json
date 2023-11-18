@@ -122,13 +122,13 @@
     },
     {
       "name": "test",
-      "archived": false,
+      "archived": true,
       "cards": [],
       "id": "PUqzcwK"
     },
     {
       "name": "asdf",
-      "archived": false,
+      "archived": true,
       "cards": [
         {
           "question": "sdfdsf",

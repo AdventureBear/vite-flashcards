@@ -95,7 +95,8 @@ function App() {
     //When database loaded, gather deck names
     useEffect(() => {
         if (data) {
-           updateDeckList(data.map((deck: Deck) => deck.name))
+           updateDeckList(data.filter((deck: Deck)=>!deck.archived)
+               .map((deck: Deck) => deck.name ))
         }
     }, [data]);
 
