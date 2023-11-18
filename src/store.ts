@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 import {Card} from "./types.ts";
-// import {useState} from "react";
+
 
 
 interface FlashCardState {
@@ -47,8 +47,9 @@ interface FlashCardState {
     updateShowDashboard:(to:boolean)=>void
     cardsToReview: number[]
     updateCardsToReview: (cardsIds: number[])=>void
-    postId: number,
-    updatePostId: (to: number) => void
+    confirmDashboardShow: boolean
+    updateConfirmDashboardShow: (to:boolean)=>void
+
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
@@ -94,6 +95,6 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     updateShowDashboard:(to)=> set(()=>({showDashboard: to})),
     cardsToReview: [],
     updateCardsToReview: (cardsIds: number[])=> set(()=>({cardsToReview: cardsIds})),
-    postId: -1,
-    updatePostId: (to: number) => set(()=> ({postId: to}))
+    confirmDashboardShow: false,
+    updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to}))
 }))

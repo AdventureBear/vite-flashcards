@@ -5,7 +5,7 @@ import {NewCard} from '../types.ts'
 import {useFlashCardState} from "../store.ts";
 
 interface AddCardModalProps {
-    onClose: ()=>void,
+    // onClose: ()=>void,
     handleAddNewCard: (newCard: NewCard)=>void
 }
 

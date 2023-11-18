@@ -40,7 +40,7 @@ function App() {
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-    const [confirmDashboardShow, setConfirmDashboardShow] = useState(false)
+    // const [confirmDashboardShow, setConfirmDashboardShow] = useState(false)
 
     // const { postData, data: _postRequest, error: _postError } = useFetch(URL, "POST")
 
@@ -84,6 +84,8 @@ function App() {
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
+    const confirmDashboardShow = useFlashCardState((state)=>state.confirmDashboardShow)
+    const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
 
 
     //reactQuery, get all data
@@ -187,7 +189,7 @@ function App() {
     }
 
     function handleOpenDashboard(){
-        setConfirmDashboardShow(false)
+        updateConfirmDashboardShow(false)
         updateShowDashboard(true)
         updateShowQuiz(false)
         init()
@@ -371,14 +373,14 @@ function App() {
 
                     <Button
                         onClick={()=>{
-                            setConfirmDashboardShow(true)
+                            updateConfirmDashboardShow(true)
                         }}>
                         Show Dashboard
                         </Button>
 
                     {confirmDashboardShow &&
                         <ConfirmReopenDashboard
-                            onClose = {()=>setConfirmDashboardShow(false)}
+                            // onClose = {()=>updateConfirmDashboardShow(false)}
                             handleOpenDashboard={handleOpenDashboard}
                         />
                     }
