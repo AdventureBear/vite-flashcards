@@ -4,13 +4,15 @@ import Modal from "../templates/Modal.tsx";
 import Button from "../templates/Button.tsx";
 
 interface FeedbackModalProps {
-    close: () => void,  // close this modal
+    // close: () => void,  // close this modal
     handleNext: () => void,
 }
 
-const FeedbackModal = ({ close, handleNext }: FeedbackModalProps) => {
+const FeedbackModal = ({ handleNext }: FeedbackModalProps) => {
     const showFeedbackModal = useFlashCardState((state)=> (state.showFeedbackModal))
     const answeredCorrectly = useFlashCardState((state)=> (state.answeredCorrectly))
+    const updateShowFeedbackModal = useFlashCardState((state)=>(state.updateShowFeedbackModal))
+
     return (
         showFeedbackModal && (
             <>
@@ -25,8 +27,8 @@ const FeedbackModal = ({ close, handleNext }: FeedbackModalProps) => {
 
                     <Button
                         color={2}
-                        onClick={() => {
-                            close();
+                        onClick= {()=>{
+                            updateShowFeedbackModal(false)
                             handleNext();
                         }}
                     >Next</Button>

@@ -394,7 +394,7 @@ function App() {
 
 
                 <FeedbackModal
-                    close = {()=>{updateShowFeedbackModal(false)}}
+                    // close = {()=>{updateShowFeedbackModal(false)}}
                     handleNext =  {handleNext}
                 />
 
