@@ -9,8 +9,6 @@ function CompleteModal():  JSX.Element {
     const incorrect = useFlashCardState((state)=> state.incorrect)
     const updateShowComplete = useFlashCardState((state)=> state.updateShowComplete)
 
-    updateShowComplete
-
     return (
         <div className={`fixed inset-0 flex items-center justify-center`}>
             <div className="bg-white rounded-lg p-8 shadow-lg">

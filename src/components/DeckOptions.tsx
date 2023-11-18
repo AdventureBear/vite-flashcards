@@ -1,12 +1,15 @@
+import {useFlashCardState} from "../store.ts";
 
 interface DeckOptionsProps {
     deckName: string;
-    onClose: ()=>void;
+    // onClose: ()=>void;
     reviewDeck: ()=>void;
     addQuestions: () => void;
 }
 
-const DeckOptions = ({onClose, deckName, reviewDeck, addQuestions} :DeckOptionsProps) => {
+const DeckOptions = ({ deckName, reviewDeck, addQuestions} :DeckOptionsProps) => {
+    const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
+    const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
 
     return (
         <>
@@ -47,7 +50,13 @@ const DeckOptions = ({onClose, deckName, reviewDeck, addQuestions} :DeckOptionsP
                             </button>
                         </div>
 
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onClose}>Close</button>
+                    <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={()=>{
+                            updateShowDeckOptions(false)
+                            updateShowDashboard(true)
+                        }}>Close
+                    </button>
 
 
                 </div>

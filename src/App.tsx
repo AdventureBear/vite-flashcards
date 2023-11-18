@@ -335,10 +335,10 @@ function App() {
                         deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
-                        onClose={()=> {
-                            updateShowDeckOptions(false)
-                            updateShowDashboard(true)
-                        }}
+                        // onClose={()=> {
+                        //     updateShowDeckOptions(false)
+                        //     updateShowDashboard(true)
+                        // }}
                     />
                 }
 
