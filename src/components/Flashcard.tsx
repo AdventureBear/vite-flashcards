@@ -1,11 +1,14 @@
 import {useFlashCardState} from "../store.ts";
 import IsCorrectControls from "./IsCorrectControls.tsx";
+import { Review} from "../types.ts";
+import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 
 interface FlashcardProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
+    questionsReviewed: Review[]
 }
 
-export default function Flashcard({handleAnswer}: FlashcardProps) {
+export default function Flashcard({handleAnswer, questionsReviewed}: FlashcardProps) {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const showAnswer = useFlashCardState((state)=>state.showAnswer)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
@@ -17,9 +20,10 @@ export default function Flashcard({handleAnswer}: FlashcardProps) {
 
     return (
             <div className="mb-8 p-8 bg-teal-600 shadow-lg rounded-xl">
-
+                <ReviewedCheckbox questionsReviewed={questionsReviewed} />
             {!showAnswer ?
                 <>
+
                 <h2 className="text-2xl text-amber-100 font-bold mb-4">Question</h2>
                     <p className="text-xl text-amber-100">{question}</p>
                     <button className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-12 rounded shadow-lg"

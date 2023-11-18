@@ -3,7 +3,7 @@ import { Review} from '../types.ts'
 
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
-import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
+// import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 import {useFlashCardState} from "../store.ts";
 
 import  Badge  from '../templates/Badge.tsx'
@@ -19,15 +19,7 @@ interface ReviewDeckProps {
     questionsReviewed: Review[]
 }
 
-// const QuestionNumber = ({deckLength}: QuestionNumberProps) => {
-//     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
-//
-//     return (
-//         <p className="font-bold  mb-2">
-//             <span className="text-amber-100">Question: {currentCardIndex + 1} of {deckLength}</span>
-//         </p>
-//     )
-// }
+
 const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     const deckName = useFlashCardState((state)=>state.deckName)
@@ -42,7 +34,7 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
                 <h2>{deckName}</h2>
             </div>
 
-            <ReviewedCheckbox questionsReviewed={questionsReviewed} />
+            {/*<ReviewedCheckbox questionsReviewed={questionsReviewed} />*/}
 
             <NavigationControls
                 handlePrev={handlePrev}
@@ -51,7 +43,10 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
 
             {/*<QuestionNumber deckLength = {deck.length as number} />*/}
 
-            <Flashcard handleAnswer = {handleAnswer}/>
+            <Flashcard
+                handleAnswer = {handleAnswer}
+                questionsReviewed={questionsReviewed}
+            />
 
             <ProgressBar
                 deck={deck}
