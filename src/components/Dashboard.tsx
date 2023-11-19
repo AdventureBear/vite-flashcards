@@ -1,6 +1,7 @@
 
 //State Management
 import  { useFlashCardState } from '../store.ts'
+import ShowArchivedCheckbox from "./ShowArchivedCheckbox.tsx";
 // import {useEffect, useState} from "react";
 // import {Deck} from "../types.ts";
 
@@ -10,14 +11,8 @@ interface DashboardProps {
 
 const Dashboard = ({selectDeck}:DashboardProps) => {
     const deckList = useFlashCardState((state)=>state.deckList)
-    // const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
-    // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
-
-    // const updateDeck = useFlashCardState((state)=>state.updateDeck)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
-
-
 
     return (
         <>
@@ -49,7 +44,6 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
 
                             <button
                                 onClick={()=>{
-                                    // console.log("me clicked")
                                     updateShowAddDeck(true)
                                     updateShowDashboard(false)}
                                 }
@@ -58,13 +52,7 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
                             </button>
                         </div>
 
-                        {/*<button className="bg-blue-500 text-white px-4 py-2 rounded"*/}
-                        {/*        onClick={()=> {*/}
-                        {/*            updateShowDashboard(false)*/}
-                        {/*            updateShowQuiz(true)*/}
-                        {/*        }}*/}
-
-                        {/*>Close</button>*/}
+                    <ShowArchivedCheckbox />
 
                 </div>
             </div>

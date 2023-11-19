@@ -53,6 +53,8 @@ interface FlashCardState {
     updateConfirmDashboardShow: (to:boolean)=>void
     deckId: string
     updateDeckId: (to: string)=>void
+    showArchived: boolean
+    updateShowArchived: (to:boolean)=>void
 
 }
 
@@ -104,5 +106,7 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     confirmDashboardShow: false,
     updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to})),
     deckId: "",
-    updateDeckId: (to: string)=>set(()=>({deckId: to}))
+    updateDeckId: (to: string)=>set(()=>({deckId: to})),
+    showArchived: false,
+    updateShowArchived:(to: boolean)=> set(()=>({showArchived: to}))
 }))

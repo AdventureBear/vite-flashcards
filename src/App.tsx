@@ -31,12 +31,13 @@ import  { useFlashCardState } from "./store.ts";
 import Dashboard from "./components/Dashboard.tsx";
 import ConfirmReopenDashboard from "./components/ConfirmReopenDashboard.tsx";
 import DeckOptions from "./components/DeckOptions.tsx";
+import showArchivedCheckbox from "./components/ShowArchivedCheckbox.tsx";
 
 //functions
 
 
 function App() {
-
+    const [isArchived, setIsArchived] = useState(false)
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
     const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
@@ -57,7 +58,7 @@ function App() {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
-    const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
+    // const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     // const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
     const showQuiz = useFlashCardState((state)=>(state.showQuiz))
     const showCard = useFlashCardState((state) => state.showCard)
@@ -83,6 +84,7 @@ function App() {
     const confirmDashboardShow = useFlashCardState((state)=>state.confirmDashboardShow)
     const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
     const updateDeckId = useFlashCardState((state)=>state.updateDeckId)
+    const showArchived = useFlashCardState((state)=>state.showArchived)
 
     //reactQuery, get all data
     const { isLoading, error, data , refetch } = useQuery('repoData', () =>
@@ -95,15 +97,16 @@ function App() {
     //When database loaded, gather deck names
     useEffect(() => {
         if (data) {
-           updateDeckList(data.filter((deck: Deck)=>!deck.archived)
+           updateDeckList(data.filter((deck: Deck)=> deck.archived === showArchived)
                .map((deck: Deck) => deck.name ))
         }
-    }, [data]);
+    }, [data, showArchived]);
 
     //when deck chosen, load cards into deck global state
     const selectDeck = (name: string) => {
         const deck = (data.find((deck: { name: string; })=>deck.name===name))
         console.log(deck.id)
+        setIsArchived(deck.archived)
         updateDeckName(name)
         updateDeckId(deck.id)
         updateDeck(deck.cards)
@@ -277,7 +280,7 @@ function App() {
     }
 
     async function handleArchiveDeck(deckId:string) {
-        console.log("Archiving Deck, ", deckId);
+        console.log("Archiving/Unarchiving Deck, ", deckId);
 
         const response = await fetch(`http://localhost:3000/decks/${deckId}`, {
             method: "PATCH",
@@ -285,7 +288,7 @@ function App() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                archived: true,
+                archived: !isArchived,
             }),
         });
 
@@ -369,6 +372,8 @@ function App() {
                         deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
+                        isArchived={isArchived}
+
 
                     />
                 }
