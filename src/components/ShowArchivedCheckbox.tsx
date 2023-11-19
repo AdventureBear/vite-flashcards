@@ -17,7 +17,7 @@ const ShowArchivedCheckbox = () => {
                     type="checkbox"
                     title="show archived decks"
                     checked={showArchived}
-                    onClick={()=>updateShowArchived(!showArchived)}
+                    onChange={()=>updateShowArchived(!showArchived)}
                     className="form-checkbox h-5 w-5 text-teal-600"/>
                 <span className="ml-2 text-white">Show Archived Decks</span>
             </label>

@@ -13,24 +13,26 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
     const deckList = useFlashCardState((state)=>state.deckList)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
+    const showArchived = useFlashCardState((state)=>state.showArchived)
 
     return (
         <>
-            <div className={`bg-amber-50 p-8`}>
-                <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
-                    <p className="font-bold  mb-2">
-                        <span className="text-amber-100">Choose your Deck</span>
+            {/*<div className={`bg-amber-50 p-8`}>*/}
+                <div className="w-full  mx-auto bg-purple-400 rounded-lg p-4 shadow-lg">
+                    {/*<p className="font-bold  mb-2">*/}
+                    {/*    <span className="text-amber-100">Choose your Deck</span>*/}
+                    {/*</p>*/}
+                    <p className="font-bold text-2xl mb-2">
+                        <span className="text-blue-900">{showArchived ? 'Archived Decks' : 'Deck List'}</span>
                     </p>
 
-                        <div className="mb-8 p-8 bg-teal-600 shadow-lg rounded-xl w-full h-full">
-                            <p className="font-bold  mb-2">
-                                <span className="text-amber-100">Deck List</span>
-                            </p>
+                        <div className="mb-8 p-8 bg-indigo-400 shadow-lg rounded-xl w-full h-full">
+
 
                             {deckList.map((name, i) => (
                                 <div
                                     key={i}
-                                    className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
+                                    className="bg-blue-800 w-full text-xl text-white text-bold py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
                                     onClick={()=>
                                         selectDeck(name)
                                     }
@@ -55,7 +57,7 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
                     <ShowArchivedCheckbox />
 
                 </div>
-            </div>
+            {/*</div>*/}
         </>
     )
 };

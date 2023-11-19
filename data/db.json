@@ -125,18 +125,6 @@
       "archived": true,
       "cards": [],
       "id": "PUqzcwK"
-    },
-    {
-      "name": "asdf",
-      "archived": true,
-      "cards": [
-        {
-          "question": "sdfdsf",
-          "answer": "sdfsd",
-          "id": 1
-        }
-      ],
-      "id": "paDdkxs"
     }
   ]
 }

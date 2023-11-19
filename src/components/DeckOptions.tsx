@@ -5,10 +5,11 @@ interface DeckOptionsProps {
     reviewDeck: ()=>void;
     addQuestions: () => void;
     handleArchiveDeck: (id:string)=>void;
+    handleDeleteDeck:(id:string)=>void;
     isArchived:boolean;
 }
 
-const DeckOptions = ({ deckName, reviewDeck, addQuestions, handleArchiveDeck, isArchived} :DeckOptionsProps) => {
+const DeckOptions = ({ deckName, reviewDeck, addQuestions, handleArchiveDeck, handleDeleteDeck, isArchived} :DeckOptionsProps) => {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const deck = useFlashCardState((state)=>state.deck)
@@ -60,6 +61,18 @@ const DeckOptions = ({ deckName, reviewDeck, addQuestions, handleArchiveDeck, is
                                 { isArchived ? "Un-archive Deck" : "Archive Deck" }
                             </button>
                         </div>
+
+                    <div className={`flex justify-around ${isArchived? 'block': 'hidden'}`}>
+                        <button
+                            onClick={()=>{
+                                handleDeleteDeck(deckId)
+                                updateShowDeckOptions(false)
+                                updateShowDashboard(true)
+                            }}
+                            className={`hover:text-white text-black font-bold  bg-red-300 hover:bg-red-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
+                            { isArchived ? "Delete Deck" : "Archive Deck" }
+                        </button>
+                    </div>
 
                     <button
                         className="bg-blue-500 text-white px-4 py-2 rounded"

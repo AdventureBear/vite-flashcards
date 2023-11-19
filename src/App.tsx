@@ -307,6 +307,28 @@ function App() {
         return result;
     }
 
+    async function handleDeleteDeck(deckId:string) {
+        const response = await fetch(`http://localhost:3000/decks/${deckId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //     archived: !isArchived,
+            // }),
+        });
+
+        const result = await response.json();
+        console.log("Deleting:", deckId)
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+
+        // Update local state after successful API call
+        await refetch();
+
+        return result;
+    }
     async function handleAddNewCard(newCard: NewCard ) {
         const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
         // console.log(workingDeck.name, workingDeck.id, newCard)
@@ -354,6 +376,8 @@ function App() {
     if (isLoading) return 'Loading...'
     if (error) return 'An error has occurred: ' + error
         return (<>
+            <div className={`bg-gray-800 shadow-xl shadow-gray-950 p-4 `}>
+                <div className={`bg-white p-8`}>
 
             {data && <>
                 {showDashboard &&
@@ -369,6 +393,7 @@ function App() {
                 {showDeckOptions &&
                     <DeckOptions
                         handleArchiveDeck={handleArchiveDeck}
+                        handleDeleteDeck={handleDeleteDeck}
                         deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
@@ -380,7 +405,8 @@ function App() {
 
 
                 {showQuiz &&
-                    <div className={`bg-amber-50 p-8 `}>
+                    <>
+                    {/*// <div className={`bg-gray-800 shadow-xl shadow-gray-950 p-8 `}>*/}
 
                    <ReviewDeck
                        handleAnswer={handleAnswer}
@@ -405,7 +431,8 @@ function App() {
                         />
                     }
 
-                    </div>
+                    {/*</div>*/}
+                    </>
                 }
 
 
@@ -435,6 +462,8 @@ function App() {
             </>
 
             }
+                </div>
+            </div>
         </>
 )
 
