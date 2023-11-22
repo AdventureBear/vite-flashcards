@@ -1,10 +1,10 @@
 import {useFlashCardState} from "../store.ts";
 
-// interface CompleteModalProps {
-//
-// }
+interface CompleteModalProps {
+    saveReviewStats: ()=>void;
+}
 
-function CompleteModal():  JSX.Element {
+function CompleteModal({saveReviewStats}:CompleteModalProps) {
     const correct = useFlashCardState((state)=> state.correct)
     const incorrect = useFlashCardState((state)=> state.incorrect)
     const updateShowComplete = useFlashCardState((state)=> state.updateShowComplete)
@@ -18,6 +18,8 @@ function CompleteModal():  JSX.Element {
                     {/* Example: <img src="your_graphic_url.png" alt="Pie Chart" /> */}
                 </div>
                 <p className="text-lg mb-4">Correct: {correct}, Incorrect: {incorrect}</p>
+                <button className="bg-teal-300 text-black px-4 py-2 rounded" onClick={saveReviewStats}>Save Stats</button>
+
                 <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={()=> updateShowComplete(false)}>Close</button>
             </div>
         </div>

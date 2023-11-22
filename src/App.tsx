@@ -10,6 +10,7 @@ import Button from "./templates/Button.tsx";
 
 //Data
 const URL = "http://localhost:3000/decks"
+const statsURL = "http://localhost:3000/stats"
 // import {useFetch} from "../hooks/useFetch.ts";
 
 //Components
@@ -31,7 +32,8 @@ import  { useFlashCardState } from "./store.ts";
 import Dashboard from "./components/Dashboard.tsx";
 import ConfirmReopenDashboard from "./components/ConfirmReopenDashboard.tsx";
 import DeckOptions from "./components/DeckOptions.tsx";
-import showArchivedCheckbox from "./components/ShowArchivedCheckbox.tsx";
+// import showArchivedCheckbox from "./components/ShowArchivedCheckbox.tsx";
+import UploadCsv from "./components/UploadCsv.tsx";
 
 //functions
 
@@ -83,15 +85,25 @@ function App() {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const confirmDashboardShow = useFlashCardState((state)=>state.confirmDashboardShow)
     const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
+    const deckId = useFlashCardState((state)=>state.deckId)
     const updateDeckId = useFlashCardState((state)=>state.updateDeckId)
     const showArchived = useFlashCardState((state)=>state.showArchived)
 
     //reactQuery, get all data
-    const { isLoading, error, data , refetch } = useQuery('repoData', () =>
+    const { isLoading, error,  data , refetch } = useQuery('repoData', () =>
         fetch(URL).then(res =>
             res.json()
         )
     )
+
+    const { isLoading: isLoadingStats, error: errorStats, data: dataStats , refetch: refetchStats } = useQuery('repoStats', () =>
+        fetch(statsURL).then(res =>
+            res.json()
+
+        )
+    )
+
+    // console.log(isLoadingStats, errorStats, dataStats)
 
     //Dependency **DATA**
     //When database loaded, gather deck names
@@ -248,6 +260,89 @@ function App() {
         });
     }
 
+    function saveReviewStats(){
+        let newStats: { id: number; deckId: string; reviews: { date: Date, correct:boolean }[]}[]=[]
+            console.log("calculatnig review stats")
+        questionsReviewed.map((question)=>{
+            console.log(deckId, question.id, question.correct, question.reviewed)
+            //add entry to stats in this format:
+            if (question.reviewed) {
+                const newReview = {
+                    "date": JSON.stringify(new Date()),
+                    "correct": question.correct
+                }
+                newStats.push({"id": question.id, "deckId": deckId, "reviews": updateStats(deckId, question.id, newReview)})
+            }
+        } )
+        console.log(newStats)
+        updateStatsDB(newStats)
+    }
+
+    async function updateStats(deckId: string, cardId: number, review: { reviewDate: string; correct: boolean | null; }) {
+        console.log("*** update stats ***")
+        let currentCardStats = null
+        let currentReviews = []
+        const currentDeckStats = dataStats.find((elem)=> elem.id === deckId)
+        if (currentDeckStats) {
+            // console.log("Found Deck")
+             currentCardStats = currentDeckStats.cards.find((elem) => elem.cardId === cardId)
+            if (currentCardStats) {
+                // The card with the matching deckId & cardId was found
+                // console.log("Found Card");
+                currentReviews = currentCardStats.reviewed
+                console.log("current review stats: ", currentReviews)
+            } else {
+                // The card with the specified Id was not found
+                // console.log("Card not found");
+            }
+        } else {
+            // console.log("Deck not found")
+        }
+
+        const newReviews = [...currentReviews,review]
+return newReviews
+        // console.log("New Reviews for ", cardId, newReviews)
+        // const response = await fetch(`http://localhost:3000/stats/${deckId}/cards`, {
+        //     method: "PUT",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //         newReviews
+        //     }),
+        // });
+        //
+        // const result = await response.json();
+        // console.log(result)
+        //
+        // if (!response.ok) {
+        //     throw new Error(result.message);
+        // }
+        //
+        // return result
+    }
+
+    async function updateStatsDB(newReviews: any) {
+        const response = await fetch(`http://localhost:3000/stats/${deckId}/cards`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                newReviews
+            }),
+        });
+
+        const result = await response.json();
+        console.log(result)
+
+        if (!response.ok) {
+            throw new Error(result.message);
+        }
+
+        return result
+    }
+
     async function handleAddNewDeck(name: string) {
         // console.log(name)
         const response = await fetch("http://localhost:3000/decks", {
@@ -376,8 +471,9 @@ function App() {
     if (isLoading) return 'Loading...'
     if (error) return 'An error has occurred: ' + error
         return (<>
-            <div className={`bg-gray-800 shadow-xl shadow-gray-950 p-4 `}>
+            <div className={`bg-gray-800 shadow-xl shadow-gray-950 p-12 `}>
                 <div className={`bg-white p-8`}>
+                    <div className="w-full  mx-auto bg-gray-800 rounded-lg p-4 shadow-lg">
 
             {data && <>
                 {showDashboard &&
@@ -456,12 +552,16 @@ function App() {
                 {/* Complete Modal */}
                 {showComplete &&
                     <CompleteModal
-
+                        saveReviewStats={saveReviewStats}
                     />
                 }
+
+                {/*<UploadCsv />*/}
             </>
 
+
             }
+                    </div>
                 </div>
             </div>
         </>

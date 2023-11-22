@@ -26,15 +26,18 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
 
     return (
     <>
+        {/*<div className=" min-h-screen bg-slate-100">*/}
+        {/*<div className=" max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">*/}
+        {/*    <div*/}
+        {/*        className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"*/}
+        {/*    >*/}
+                <div className="bg-white p-8 font-extrabold text-2xl mb-2">
 
-        <div className="max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">
-            <div
-                className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
-            >
                 <h2>{deckName}</h2>
             </div>
 
             {/*<ReviewedCheckbox questionsReviewed={questionsReviewed} />*/}
+            <div className="mb-8 px-8 py-4 bg-indigo-200 shadow-lg rounded-xl">
 
             <NavigationControls
                 handlePrev={handlePrev}
@@ -47,6 +50,7 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
                 handleAnswer = {handleAnswer}
                 questionsReviewed={questionsReviewed}
             />
+            </div>
 
             <ProgressBar
                 deck={deck}
@@ -57,7 +61,7 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
 
             <Badge size={1} variant={2}>TEST</Badge>
 
-        </div>
+        {/*</div>*/}
     </>
 )};
 

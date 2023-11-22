@@ -1,0 +1,3 @@
+{
+  "/stats/:deckId/cards/:cardId": "/cards/:cardId"
+}

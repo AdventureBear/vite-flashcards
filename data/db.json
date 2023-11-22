@@ -64,7 +64,7 @@
       "cards": [
         {
           "question": "What is Lifestyle Medicine",
-          "answer": "Prescribin lifestyle changes to treat and reverse chronic diseases",
+          "answer": "Prescribing lifestyle changes to treat and reverse chronic diseases",
           "id": 544
         },
         {
@@ -92,39 +92,85 @@
       "id": "ctmG-d5"
     },
     {
-      "name": "test 69",
-      "archived": false,
-      "cards": [
-        {
-          "question": "adf",
-          "answer": "asdf",
-          "id": 1
-        },
-        {
-          "question": "asdf",
-          "answer": "adsf",
-          "id": 2
-        }
-      ],
-      "id": "Y-HemVV"
-    },
-    {
-      "name": "asdfadf",
-      "archived": true,
-      "cards": [],
-      "id": "Raqainv"
-    },
-    {
-      "name": "asdfa",
-      "archived": true,
-      "cards": [],
-      "id": "ffXnGJO"
-    },
-    {
       "name": "test",
       "archived": true,
       "cards": [],
-      "id": "PUqzcwK"
+      "id": "5kIjlRx"
+    }
+  ],
+  "stats": [
+    {
+      "id": "j-VnnFJGUqJH4oNWzttpT",
+      "cards": [
+        {
+          "id": 1,
+          "reviewed": [
+            {
+              "date": "2023-11-20T04:28:12.743Z",
+              "correct": false,
+              "confidence": 2
+            },
+            {
+              "date": "2023-11-20T04:28:12.743Z",
+              "correct": true,
+              "confidence": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "numCorrect": 1,
+          "numReviewed": 2,
+          "reviewed": [
+            {
+              "date": "2023-11-20T04:28:12.743Z",
+              "correct": false,
+              "confidence": 2
+            },
+            {
+              "date": "2023-11-20T04:28:12.743Z",
+              "correct": true,
+              "confidence": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "deckId": "j-VnnFJGUqJH4oNWzttpT",
+      "id": 1,
+      "reviewed": [
+        {
+          "date": "2023-11-20T04:28:12.743Z",
+          "correct": false,
+          "confidence": 2
+        },
+        {
+          "date": "2023-11-20T04:28:12.743Z",
+          "correct": true,
+          "confidence": 2
+        }
+      ]
+    },
+    {
+      "deckId": "j-VnnFJGUqJH4oNWzttpT",
+      "id": 2,
+      "numCorrect": 1,
+      "numReviewed": 2,
+      "reviewed": [
+        {
+          "date": "2023-11-20T04:28:12.743Z",
+          "correct": false,
+          "confidence": 2
+        },
+        {
+          "date": "2023-11-20T04:28:12.743Z",
+          "correct": true,
+          "confidence": 2
+        }
+      ]
     }
   ]
 }

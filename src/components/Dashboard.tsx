@@ -2,8 +2,7 @@
 //State Management
 import  { useFlashCardState } from '../store.ts'
 import ShowArchivedCheckbox from "./ShowArchivedCheckbox.tsx";
-// import {useEffect, useState} from "react";
-// import {Deck} from "../types.ts";
+
 
 interface DashboardProps {
     selectDeck: (name: string) => void
@@ -17,22 +16,18 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
 
     return (
         <>
-            {/*<div className={`bg-amber-50 p-8`}>*/}
-                <div className="w-full  mx-auto bg-purple-400 rounded-lg p-4 shadow-lg">
-                    {/*<p className="font-bold  mb-2">*/}
-                    {/*    <span className="text-amber-100">Choose your Deck</span>*/}
-                    {/*</p>*/}
-                    <p className="font-bold text-2xl mb-2">
+                {/*<div className="w-full  mx-auto bg-purple-400 rounded-lg p-4 shadow-lg">*/}
+
+                    <div className="bg-white p-8 font-extrabold text-2xl mb-2">
                         <span className="text-blue-900">{showArchived ? 'Archived Decks' : 'Deck List'}</span>
-                    </p>
+                    </div>
 
-                        <div className="mb-8 p-8 bg-indigo-400 shadow-lg rounded-xl w-full h-full">
-
+                        <div className="mb-8 p-8  w-full">
 
                             {deckList.map((name, i) => (
                                 <div
                                     key={i}
-                                    className="bg-blue-800 w-full text-xl text-white text-bold py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
+                                    className="bg-indigo-200 w-full text-2xl text-black font-bold py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
                                     onClick={()=>
                                         selectDeck(name)
                                     }
@@ -56,7 +51,7 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
 
                     <ShowArchivedCheckbox />
 
-                </div>
+                {/*</div>*/}
             {/*</div>*/}
         </>
     )

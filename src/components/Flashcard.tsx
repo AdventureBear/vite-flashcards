@@ -3,6 +3,8 @@ import IsCorrectControls from "./IsCorrectControls.tsx";
 import { Review} from "../types.ts";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 
+import './Flashcard.css'
+
 interface FlashcardProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
     questionsReviewed: Review[]
@@ -19,38 +21,33 @@ export default function Flashcard({handleAnswer, questionsReviewed}: FlashcardPr
     const answer =  deck.find(card=> card.id === cardsToReview[currentCardIndex])?.answer
 
     return (
-            <div className="mb-8 p-8 bg-teal-600 shadow-lg rounded-xl">
+        <>
                 <ReviewedCheckbox questionsReviewed={questionsReviewed} />
-            {!showAnswer ?
-                <>
+                <div
+                    className={`card ${showAnswer ? 'flipped' : ''} hover:scale-105 duration-100 hover:shadow-xl shadow-gray-900  me-2 rounded mb-4`}
+                    onClick={()=>updateShowAnswer(!showAnswer)}
+                >
+                    <div className="card-inner  ">
+                        <div className="card-front">
+                            <p className="text-xl font-bold text-black">{question}</p>
 
-                <h2 className="text-2xl text-amber-100 font-bold mb-4">Question</h2>
-                    <p className="text-xl text-amber-100">{question}</p>
-                    <button className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-12 rounded shadow-lg"
-                            onClick={()=>{updateShowAnswer( !showAnswer)}}
-                    >Reveal Answer
-                    </button>
-                    <IsCorrectControls
-                        handleAnswer={handleAnswer}
-                    />
-                </>
 
-                :
-                <>
-                <h2 className="text-2xl text-amber-100 font-bold mb-4">Answer</h2>
-                    <p className="text-xl text-amber-200">{answer}</p>
+                        </div>
+                        <div className="card-back">
+                            <p className="text-xl font-bold text-black">{answer}</p>
 
-                    <button className="bg-orange-300 text-xl py-2 px-4 mt-10 mb-12 rounded shadow-lg opacity-50"
-                            onClick={()=>{updateShowAnswer( !showAnswer)}}
-                    >Show Question
-                    </button>
-                    <IsCorrectControls
-                        handleAnswer={handleAnswer}
-                    />
-                </>
-            }
 
-            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <IsCorrectControls
+                    handleAnswer={handleAnswer}
+                />
+
+
+        </>
 
     );
 }
