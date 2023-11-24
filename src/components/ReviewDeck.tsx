@@ -20,7 +20,7 @@ interface ReviewDeckProps {
 }
 
 
-const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
+const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, }: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     // const deckName = useFlashCardState((state)=>state.deckName)
 
@@ -41,7 +41,6 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
 
             <Flashcard
                 handleAnswer = {handleAnswer}
-                questionsReviewed={questionsReviewed}
             />
             </div>
 

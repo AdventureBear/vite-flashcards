@@ -7,10 +7,9 @@ import './Flashcard.css'
 
 interface FlashcardProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
-    questionsReviewed: Review[]
 }
 
-export default function Flashcard({handleAnswer, questionsReviewed}: FlashcardProps) {
+export default function Flashcard({handleAnswer}: FlashcardProps) {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const showAnswer = useFlashCardState((state)=>state.showAnswer)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
@@ -23,7 +22,7 @@ export default function Flashcard({handleAnswer, questionsReviewed}: FlashcardPr
 
     return (
         <>
-                <ReviewedCheckbox questionsReviewed={questionsReviewed} />
+                <ReviewedCheckbox  />
                 <div
                     className={`card ${showAnswer ? 'flipped' : ''} hover:scale-105 duration-100 hover:shadow-xl shadow-gray-900  me-2 rounded mb-4`}
                     onClick={()=>updateShowAnswer(!showAnswer)}

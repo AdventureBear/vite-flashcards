@@ -54,8 +54,8 @@ interface FlashCardState {
     // updateDeckList: (list: string[])=>void,
     showDashboard: boolean,
     updateShowDashboard:(to:boolean)=>void
-    cardsToReview: number[]
-    updateCardsToReview: (cardsIds: number[])=>void
+    // cardsToReview: number[]
+    // updateCardsToReview: (cardsIds: number[])=>void
     confirmDashboardShow: boolean
     updateConfirmDashboardShow: (to:boolean)=>void
     // deckId: string

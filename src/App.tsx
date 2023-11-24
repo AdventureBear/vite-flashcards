@@ -38,8 +38,8 @@ import DeckOptions from "./components/DeckOptions.tsx";
 
 function App() {
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
-    const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
-    const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
+    // const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
+    // const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
     const [filteredDecks, setFilteredDecks] = useState()
 
     //Zustand State Management
@@ -50,9 +50,9 @@ function App() {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const changeCurrentCardIndex = useFlashCardState((state)=>state.changeCurrentCardIndex)
     const resetCurrentCardIndex = useFlashCardState((state)=>state.resetCurrentCardIndex)
-    const cardsDone = useFlashCardState((state)=>state.cardsDone)
-    const increaseCardsDone = useFlashCardState((state)=>state.increaseCardsDone)
-    const resetCardsDone = useFlashCardState((state)=>state.resetCardsDone)
+    // const cardsDone = useFlashCardState((state)=>state.cardsDone)
+    // const increaseCardsDone = useFlashCardState((state)=>state.increaseCardsDone)
+    // const resetCardsDone = useFlashCardState((state)=>state.resetCardsDone)
 
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
@@ -68,8 +68,8 @@ function App() {
     const deck = useFlashCardState((state)=>state.deck)
     const updateDeck = useFlashCardState((state)=>state.updateDeck)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
-    const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
-    const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
+    // const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
+    // const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
@@ -108,27 +108,27 @@ function App() {
     //Initialize questions/cards reviewed array,
     //Call init here too?
 
-    useEffect(() => {
-        if(deck) {
-            updateCardsToReview(deck.cards.map(card => card.id))  // creates array of card ids for this round of review
-            resetCurrentCardIndex()
-            setUnrevealedCards(deck.cards)  //initializing unreviewed cards, in case some are skipped
-            setQuestionsReviewed(deck.cards.map((x: Card)=>{
-                return {
-                    id: x.id,
-                    correct: null,
-                    reviewed: false
-                }
-            }))
-
-        }
-    }, [deck]);
+    // useEffect(() => {
+    //     if(deck) {
+            // updateCardsToReview(deck.cards.map(card => card.id))  // creates array of card ids for this round of review
+            // resetCurrentCardIndex()
+            // setUnrevealedCards(deck.cards)  //initializing unreviewed cards, in case some are skipped
+            // setQuestionsReviewed(deck.cards.map((x: Card)=>{
+            //     return {
+            //         id: x.id,
+            //         correct: null,
+            //         reviewed: false
+            //     }
+            // }))
+    //
+    //     }
+    // }, [deck]);
 
     //Dependency **DECK, CARDSDONE**
     //Check for end of review (should this be reviewed array instead?
     //Show end screen
     // useEffect(() => {
-    //     if (deck.length>0 && cardsDone===deck.length){
+    //     if (deck.cards.length>0 && cardsDone===deck.cards.length){
     //         updateShowComplete(true)
     //     }
     // }, [cardsDone, deck]);
@@ -138,10 +138,13 @@ function App() {
 
     console.log(filteredDecks)
 
+    function unreviewedCards(){
+        return deck.cards.filter((card) => !card.reviewed ).map((card)=> card.id)
+    }
+
     const selectDeck = (id: number) => {
         const newDeck = (allDecks.find((deck: { id: number; })=>deck.id===id))
         updateDeck(newDeck)
-
         updateShowDashboard(false)
         updateShowDeckOptions(true)
     }
@@ -159,14 +162,14 @@ function App() {
 
 
 
-    function checkUnreviewedCards() {
-        const unreviewedCards = questionsReviewed.filter(card => !card.reviewed);
-        if (unreviewedCards.length > 0) {
-            return unreviewedCards
-        } else {
-            return null
-        }
-    }
+    // function checkUnreviewedCards() {
+    //     const unreviewedCards = questionsReviewed.filter(card => !card.reviewed);
+    //     if (unreviewedCards.length > 0) {
+    //         return unreviewedCards
+    //     } else {
+    //         return null
+    //     }
+    // }
 
     function handlePrev() {
         //check boundries
@@ -177,14 +180,16 @@ function App() {
     }
 
     function handleNext() {
+        const cardsRemaining =unreviewedCards()
         updateShowAnswer(false)
         //check boundries
         if (currentCardIndex < deck.cards.length - 1) {
             changeCurrentCardIndex(1)
         } else {
-            if (checkUnreviewedCards()) {
+
+            if (cardsRemaining.length>0) {
                 console.log("you have cards to review")
-                console.log(checkUnreviewedCards())
+                console.log(cardsRemaining)
             }
         }
     }
@@ -198,16 +203,17 @@ function App() {
 
     function init(){
         updateDeck({id:0, cards:[],archived:false, name:""})
-        updateCardsToReview([])
+        resetCurrentCardIndex()
+        // updateCardsToReview([])
         setQuestionsReviewed([])
-        resetCardsDone()
+        // resetCardsDone()
         resetCorrect()
         resetIncorrect()
         updateShowAnswer(false)
     }
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
-
+        const cardsDone = deck.cards.filter((card)=>card.reviewed).length
         if (cardsDone < deck.cards.length) {
             if (!questionsReviewed[cardIndex].reviewed) {
                 updateAnsweredCorrectly(isCorrect)  //this triggers success window and message
@@ -216,8 +222,8 @@ function App() {
                 } else {
                     increaseIncorrect()
                 }
-                increaseCardsDone()
-                updateReviewedData(currentCardIndex, true, isCorrect)
+                // increaseCardsDone()
+                // updateReviewedData(currentCardIndex, true, isCorrect)
                 updateShowFeedbackModal(true)
             } else {
                 //card has already been reviewed
@@ -227,29 +233,29 @@ function App() {
             updateShowComplete(true)
         }
     };
-
-    function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
-
-        if (cardsToReview[index] !== questionsReviewed[index].id) {
-            console.log("There is a mismatch between reviewed cards and the current Index")
-        }
-        setQuestionsReviewed(prevData => {
-            // Create a copy of the array
-            const updatedData = prevData.slice();
-
-            if (index >= 0 && index < updatedData.length) {  //checking bounds, but shouldn't be an issue, as only passing existing indexes
-                // Update reviewed and correct properties
-
-                updatedData[index] = {
-                    ...updatedData[index],
-                    reviewed,
-                    correct,
-                };
-            }
-
-            return updatedData;
-        });
-    }
+    //
+    // function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
+    //
+    //     // if (cardsToReview[index] !== questionsReviewed[index].id) {
+    //     //     console.log("There is a mismatch between reviewed cards and the current Index")
+    //     // }
+    //     setQuestionsReviewed(prevData => {
+    //         // Create a copy of the array
+    //         const updatedData = prevData.slice();
+    //
+    //         if (index >= 0 && index < updatedData.length) {  //checking bounds, but shouldn't be an issue, as only passing existing indexes
+    //             // Update reviewed and correct properties
+    //
+    //             updatedData[index] = {
+    //                 ...updatedData[index],
+    //                 reviewed,
+    //                 correct,
+    //             };
+    //         }
+    //
+    //         return updatedData;
+    //     });
+    // }
 
     function saveReviewStats(){
         let newStats: { id: number; deckId: string; reviews: { date: Date, correct:boolean }[]}[]=[]
@@ -455,6 +461,7 @@ return newReviews
         return result;
     }
 
+    let cardsDone = deck.cards.length - unreviewedCards().length
     const progressBarWidth = `${(cardsDone / deck.cards.length) * 100}%`;
 
     if (isLoading) return 'Loading...'
@@ -502,7 +509,6 @@ return newReviews
                        progressBarWidth={progressBarWidth}
                        handleNext={handleNext}
                        handlePrev={handlePrev}
-                       questionsReviewed={questionsReviewed}
                    />
 
 

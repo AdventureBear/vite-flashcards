@@ -15,6 +15,8 @@ export type Card ={
     id: number,
     question: string;
     answer: string;
+    reviewed: boolean;
+    correct: boolean;
 }
 
 export type Review ={
