@@ -33,7 +33,8 @@ import Dashboard from "./components/Dashboard.tsx";
 import ConfirmReopenDashboard from "./components/ConfirmReopenDashboard.tsx";
 import DeckOptions from "./components/DeckOptions.tsx";
 // import showArchivedCheckbox from "./components/ShowArchivedCheckbox.tsx";
-import UploadCsv from "./components/UploadCsv.tsx";
+// import UploadCsv from "./components/UploadCsv.tsx";
+
 
 //functions
 

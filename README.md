@@ -36,6 +36,9 @@ https://quickref.me/generate-an-unique-and-increment-id.html
 [https://paletton.com/#uid=73g0S0kqUjc9ko8iOm3AXfQSRbN
 ]()https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
 https://saltsthlm.github.io/protips/jsonServer.html
+https://medium.com/@joris.l/tutorial-zustand-a-simple-and-powerful-state-management-solution-9ad4d06d5334
+
+
 
 http://paletton.com/#uid=53+0o0ko2Rm01SNcmS9JoVJ++tc
 https://uicolors.app/create

@@ -1,8 +1,15 @@
 import { create } from 'zustand'
 
-import {Card} from "./types.ts";
+import {Card, Deck} from "./types.ts";
 
 
+
+interface DecksStore {
+    deck: Deck,
+    score: {correct: number, incorrect: number},
+    currentCardIndex: number,
+
+}
 
 interface FlashCardState {
     deckName: string,
