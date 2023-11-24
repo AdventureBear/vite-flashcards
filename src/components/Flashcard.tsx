@@ -1,6 +1,6 @@
 import {useFlashCardState} from "../store.ts";
 import IsCorrectControls from "./IsCorrectControls.tsx";
-import { Review} from "../types.ts";
+// import { Review} from "../types.ts";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 
 import './Flashcard.css'

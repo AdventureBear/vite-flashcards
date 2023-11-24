@@ -5,10 +5,11 @@ const UploadCsv = () => {
     //posting the csv file to api, for data parsing
     const fileHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const formData = new FormData();
-        if (event.target.files[0]) {
+        if (event.target.files && event.target.files[0]) {
             formData.append("csvFile", event.target.files[0]);
         }
         console.log(event.target.files)
+
         // const config = {
         //     headers: {
         //         "content-type": "multipart/form-data",

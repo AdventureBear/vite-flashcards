@@ -13,7 +13,7 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
     // const [showConfirmAd, setShowConfirmAd] = useState(false)
-    const deckName = useFlashCardState((state)=>state.deckName)
+    const deck = useFlashCardState((state)=>state.deck)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAddCard = useFlashCardState((state)=>state.updateShowConfirmAddCard)
@@ -44,7 +44,7 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
                 <div
                     className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
                 >
-                    <h2>{deckName}</h2>
+                    <h2>{deck.name}</h2>
                 </div>
                 <p className="font-bold  mb-2">
                     <span className="text-amber-100">Create New Flashcard</span>

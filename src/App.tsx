@@ -10,7 +10,7 @@ import Button from "./templates/Button.tsx";
 
 //Data
 const URL = "http://localhost:3000/decks"
-const statsURL = "http://localhost:3000/stats"
+// const statsURL = "http://localhost:3000/stats"
 // import {useFetch} from "../hooks/useFetch.ts";
 
 //Components
@@ -24,7 +24,7 @@ import AddDeckModal from "./components/AddDeck.tsx"
 import './App.css'
 
 //Types
-import {Card, Review, NewCard, Deck} from './types.ts'
+import {Card, NewCard, Deck} from './types.ts'
 
 //State Management
 import  { useFlashCardState } from "./store.ts";
@@ -37,27 +37,15 @@ import DeckOptions from "./components/DeckOptions.tsx";
 //functions
 
 function App() {
-    // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
-    // const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
-    // const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
     const [filteredDecks, setFilteredDecks] = useState()
 
     //Zustand State Management
-    const increaseCorrect = useFlashCardState((state)=>state.increaseCorrect)
-    const resetCorrect = useFlashCardState((state)=>state.resetCorrect)
-    const increaseIncorrect = useFlashCardState((state)=>state.increaseIncorrect)
-    const resetIncorrect = useFlashCardState((state)=>state.resetIncorrect)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const changeCurrentCardIndex = useFlashCardState((state)=>state.changeCurrentCardIndex)
     const resetCurrentCardIndex = useFlashCardState((state)=>state.resetCurrentCardIndex)
-    // const cardsDone = useFlashCardState((state)=>state.cardsDone)
-    // const increaseCardsDone = useFlashCardState((state)=>state.increaseCardsDone)
-    // const resetCardsDone = useFlashCardState((state)=>state.resetCardsDone)
-
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
-    // const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const showQuiz = useFlashCardState((state)=>(state.showQuiz))
     const showCard = useFlashCardState((state) => state.showCard)
     const showAddDeck = useFlashCardState((state)=> state.showAddDeck)
@@ -67,9 +55,8 @@ function App() {
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
     const deck = useFlashCardState((state)=>state.deck)
     const updateDeck = useFlashCardState((state)=>state.updateDeck)
+    const resetDeck = useFlashCardState((state)=>state.resetDeck)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
-    // const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
-    // const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
@@ -84,67 +71,34 @@ function App() {
         )
     )
 
-    const { isLoading: isLoadingStats, error: errorStats, data: dataStats , refetch: refetchStats } = useQuery('repoStats', () =>
-        fetch(statsURL).then(res =>
-            res.json()
-
-        )
-    )
+    // const { isLoading: isLoadingStats, error: errorStats, data: dataStats , refetch: refetchStats } = useQuery('repoStats', () =>
+    //     fetch(statsURL).then(res =>
+    //         res.json()
+    //
+    //     )
+    // )
 
     //Dependency **DATA**
     //When database loaded, gather deck names
     useEffect(() => {
         if (allDecks) {
-    setFilteredDecks (allDecks.filter((deck: Deck) => deck.archived === showArchived)
-        .map((deck: Deck) => deck));
-    //        updateDeckList(data.filter((deck: Deck)=> deck.archived === showArchived)
-    //            .map((deck: Deck) => deck.name ))
+            setFilteredDecks (allDecks.filter((deck: Deck) => deck.archived === showArchived)
+            .map((deck: Deck) => deck));
+
         }
-    }, [allDecks]);
+    }, [allDecks, showArchived]);
 
-    //Dependency **DECK**
-    //When deck cards loaded...
-    //Create a set of cards for current review session
-    //Initialize questions/cards reviewed array,
-    //Call init here too?
-
-    // useEffect(() => {
-    //     if(deck) {
-            // updateCardsToReview(deck.cards.map(card => card.id))  // creates array of card ids for this round of review
-            // resetCurrentCardIndex()
-            // setUnrevealedCards(deck.cards)  //initializing unreviewed cards, in case some are skipped
-            // setQuestionsReviewed(deck.cards.map((x: Card)=>{
-            //     return {
-            //         id: x.id,
-            //         correct: null,
-            //         reviewed: false
-            //     }
-            // }))
-    //
-    //     }
-    // }, [deck]);
-
-    //Dependency **DECK, CARDSDONE**
-    //Check for end of review (should this be reviewed array instead?
-    //Show end screen
-    // useEffect(() => {
-    //     if (deck.cards.length>0 && cardsDone===deck.cards.length){
-    //         updateShowComplete(true)
-    //     }
-    // }, [cardsDone, deck]);
-    //when deck chosen, load cards into deck global state
-
-    // console.log(isLoadingStats, errorStats, dataStats)
-
-    console.log(filteredDecks)
 
     function unreviewedCards(){
         return deck.cards.filter((card) => !card.reviewed ).map((card)=> card.id)
     }
 
-    const selectDeck = (id: number) => {
-        const newDeck = (allDecks.find((deck: { id: number; })=>deck.id===id))
-        updateDeck(newDeck)
+    const selectDeck = (id: string) => {
+        const newDeck = (allDecks.find((deck: { id: string; })=>deck.id===id))
+        const updatedCards = newDeck.cards.map((card: Card)=> {
+            return {...card, "reviewed": false, "correct": false}
+        })
+        updateDeck({...newDeck, cards: updatedCards})
         updateShowDashboard(false)
         updateShowDeckOptions(true)
     }
@@ -160,17 +114,6 @@ function App() {
     }
 
 
-
-
-    // function checkUnreviewedCards() {
-    //     const unreviewedCards = questionsReviewed.filter(card => !card.reviewed);
-    //     if (unreviewedCards.length > 0) {
-    //         return unreviewedCards
-    //     } else {
-    //         return null
-    //     }
-    // }
-
     function handlePrev() {
         //check boundries
         if (currentCardIndex > 0) {
@@ -181,6 +124,7 @@ function App() {
 
     function handleNext() {
         const cardsRemaining =unreviewedCards()
+        console.log(cardsRemaining)
         updateShowAnswer(false)
         //check boundries
         if (currentCardIndex < deck.cards.length - 1) {
@@ -198,147 +142,89 @@ function App() {
         updateConfirmDashboardShow(false)
         updateShowDashboard(true)
         updateShowQuiz(false)
+        updateShowAnswer(false)
         init()
     }
 
     function init(){
-        updateDeck({id:0, cards:[],archived:false, name:""})
+        resetDeck()
         resetCurrentCardIndex()
-        // updateCardsToReview([])
-        setQuestionsReviewed([])
-        // resetCardsDone()
-        resetCorrect()
-        resetIncorrect()
-        updateShowAnswer(false)
+        // updateShowAnswer(false)
     }
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
-        const cardsDone = deck.cards.filter((card)=>card.reviewed).length
-        if (cardsDone < deck.cards.length) {
-            if (!questionsReviewed[cardIndex].reviewed) {
+        const cardsRemaining = unreviewedCards()
+        // const cardsDone = deck.cards.filter((card)=>card.reviewed).length
+        console.log("Cards done: ", cardsDone)
+
+        //check to see if all cards have been answered
+        // if (cardsDone < deck.cards.length) {
+        if (cardsRemaining.length > 0) {
+            if (!deck.cards[cardIndex].reviewed) {
+                let newCards = [...deck.cards]
+                newCards[currentCardIndex].reviewed = true
                 updateAnsweredCorrectly(isCorrect)  //this triggers success window and message
                 if (isCorrect) {
-                    increaseCorrect()
+                    newCards[currentCardIndex].correct = true
                 } else {
-                    increaseIncorrect()
+                    newCards[currentCardIndex].correct = false
                 }
-                // increaseCardsDone()
-                // updateReviewedData(currentCardIndex, true, isCorrect)
+                updateDeck({...deck, cards: newCards})
                 updateShowFeedbackModal(true)
             } else {
                 //card has already been reviewed
                 alert("You've already reviewed this card for this round")
             }
-        }  else {
-            updateShowComplete(true)
+            //was thsi the last card?
+            if ((cardsRemaining.length === 1) && (cardsRemaining[0]===deck.cards[cardIndex].id)) {
+                updateShowComplete(true)
+            }
         }
+        //this shouldn't ever get called
+        // else {
+        //     updateShowComplete(true)
+        // }
     };
-    //
-    // function updateReviewedData(index: number, reviewed: boolean, correct: boolean | null) {
-    //
-    //     // if (cardsToReview[index] !== questionsReviewed[index].id) {
-    //     //     console.log("There is a mismatch between reviewed cards and the current Index")
-    //     // }
-    //     setQuestionsReviewed(prevData => {
-    //         // Create a copy of the array
-    //         const updatedData = prevData.slice();
-    //
-    //         if (index >= 0 && index < updatedData.length) {  //checking bounds, but shouldn't be an issue, as only passing existing indexes
-    //             // Update reviewed and correct properties
-    //
-    //             updatedData[index] = {
-    //                 ...updatedData[index],
-    //                 reviewed,
-    //                 correct,
-    //             };
+
+    // function saveReviewStats(){
+    //     let newStats: { id: number; deckId: string; reviews: { date: Date, correct:boolean }[]}[]=[]
+    //         console.log("calculatnig review stats")
+    //     deck.cards.map((card)=>{
+    //         console.log(deck.id, card.id, card.correct, card.reviewed)
+    //         //add entry to stats in this format:
+    //         if (card.reviewed) {
+    //             const newReview = {
+    //                 "date": JSON.stringify(new Date()),
+    //                 "correct": card.correct
+    //             }
+    //             newStats.push({"id": card.id, "deckId": deck.id, "reviews": updateStats(deck.id, card.id, newReview)})
     //         }
-    //
-    //         return updatedData;
-    //     });
+    //     } )
+    //     console.log(newStats)
+    //     updateStatsDB(newStats)
     // }
 
-    function saveReviewStats(){
-        let newStats: { id: number; deckId: string; reviews: { date: Date, correct:boolean }[]}[]=[]
-            console.log("calculatnig review stats")
-        questionsReviewed.map((question)=>{
-            console.log(deck.id, question.id, question.correct, question.reviewed)
-            //add entry to stats in this format:
-            if (question.reviewed) {
-                const newReview = {
-                    "date": JSON.stringify(new Date()),
-                    "correct": question.correct
-                }
-                newStats.push({"id": question.id, "deckId": deck.id, "reviews": updateStats(deck.id, question.id, newReview)})
-            }
-        } )
-        console.log(newStats)
-        updateStatsDB(newStats)
-    }
 
-    async function updateStats(deckId: string, cardId: number, review: { reviewDate: string; correct: boolean | null; }) {
-        console.log("*** update stats ***")
-        let currentCardStats = null
-        let currentReviews = []
-        const currentDeckStats = dataStats.find((elem)=> elem.id === deckId)
-        if (currentDeckStats) {
-            // console.log("Found Deck")
-             currentCardStats = currentDeckStats.cards.find((elem) => elem.cardId === cardId)
-            if (currentCardStats) {
-                // The card with the matching deckId & cardId was found
-                // console.log("Found Card");
-                currentReviews = currentCardStats.reviewed
-                console.log("current review stats: ", currentReviews)
-            } else {
-                // The card with the specified Id was not found
-                // console.log("Card not found");
-            }
-        } else {
-            // console.log("Deck not found")
-        }
-
-        const newReviews = [...currentReviews,review]
-return newReviews
-        // console.log("New Reviews for ", cardId, newReviews)
-        // const response = await fetch(`http://localhost:3000/stats/${deckId}/cards`, {
-        //     method: "PUT",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify({
-        //         newReviews
-        //     }),
-        // });
-        //
-        // const result = await response.json();
-        // console.log(result)
-        //
-        // if (!response.ok) {
-        //     throw new Error(result.message);
-        // }
-        //
-        // return result
-    }
-
-    async function updateStatsDB(newReviews: any) {
-        const response = await fetch(`http://localhost:3000/stats/${deckId}/cards`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                newReviews
-            }),
-        });
-
-        const result = await response.json();
-        console.log(result)
-
-        if (!response.ok) {
-            throw new Error(result.message);
-        }
-
-        return result
-    }
+    // async function updateStatsDB(newReviews: any) {
+    //     const response = await fetch(`http://localhost:3000/stats/${deck.id}/cards`, {
+    //         method: "PATCH",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //             newReviews
+    //         }),
+    //     });
+    //
+    //     const result = await response.json();
+    //     console.log(result)
+    //
+    //     if (!response.ok) {
+    //         throw new Error(result.message);
+    //     }
+    //
+    //     return result
+    // }
 
     async function handleAddNewDeck(name: string) {
         // console.log(name)
@@ -365,7 +251,7 @@ return newReviews
         // Update local state after successful API call
         await refetch();
         // updateDeckName(name)
-        updateDeck({id:0, cards:[],archived:false, name:""})
+        updateDeck({id:"", cards:[],archived:false, name:""})
 
         return result;
 
@@ -487,15 +373,10 @@ return newReviews
 
                 {showDeckOptions &&
                     <DeckOptions
-                        deck={deck}
                         handleArchiveDeck={handleArchiveDeck}
                         handleDeleteDeck={handleDeleteDeck}
-                        // deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
-                        // isArchived={isArchived}
-
-
                     />
                 }
 
@@ -551,7 +432,7 @@ return newReviews
                 {/* Complete Modal */}
                 {showComplete &&
                     <CompleteModal
-                        saveReviewStats={saveReviewStats}
+                        // saveReviewStats={saveReviewStats}
                     />
                 }
 

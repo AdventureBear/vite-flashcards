@@ -93,8 +93,21 @@
     },
     {
       "name": "test",
-      "archived": true,
-      "cards": [],
+      "archived": false,
+      "cards": [
+        {
+          "question": "test",
+          "answer": "test",
+          "id": 1,
+          "reviewed": false,
+          "correct": false
+        },
+        {
+          "question": "question",
+          "answer": "answer",
+          "id": 2
+        }
+      ],
       "id": "5kIjlRx"
     }
   ],

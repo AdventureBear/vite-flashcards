@@ -1,9 +1,7 @@
 import {useFlashCardState} from "../store.ts";
-import {Deck} from "../types.ts";
+
 
 interface DeckOptionsProps {
-    // deckName: string
-    deck: Deck
     reviewDeck: ()=>void;
     addQuestions: () => void;
     handleArchiveDeck: (id:string)=>void;
@@ -11,12 +9,11 @@ interface DeckOptionsProps {
     // isArchived:boolean;
 }
 
-const DeckOptions = ({ deck, reviewDeck, addQuestions, handleArchiveDeck, handleDeleteDeck} :DeckOptionsProps) => {
+const DeckOptions = ({ reviewDeck, addQuestions, handleArchiveDeck, handleDeleteDeck} :DeckOptionsProps) => {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
-    // const deck = useFlashCardState((state)=>state.deck)
-    // const deckId = useFlashCardState((state)=>state.deckId)
-    console.log(deck)
+    const deck = useFlashCardState((state)=>state.deck)
+
     return (
         <>
 
@@ -86,8 +83,7 @@ const DeckOptions = ({ deck, reviewDeck, addQuestions, handleArchiveDeck, handle
                     updateShowDashboard(true)
                 }}>Back to Dashboard
             </button>
-                {/*</div>*/}
-            {/*</div>*/}
+
         </>
     )
 };

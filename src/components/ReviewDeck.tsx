@@ -1,5 +1,5 @@
 import Flashcard from "./Flashcard.tsx";
-import { Review} from '../types.ts'
+// import { Review} from '../types.ts'
 
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
@@ -16,7 +16,6 @@ interface ReviewDeckProps {
     progressBarWidth: string;
     handlePrev: ()=> void,
     handleNext: ()=> void,
-    questionsReviewed: Review[]
 }
 
 
