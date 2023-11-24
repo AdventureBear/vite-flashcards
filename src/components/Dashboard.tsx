@@ -7,7 +7,7 @@ import {Deck} from "../types.ts";
 
 interface DashboardProps {
     filteredDecks: Deck[]
-    selectDeck: (name: string) => void
+    selectDeck: (name: number) => void
 }
 
 const Dashboard = ({selectDeck, filteredDecks}:DashboardProps) => {
