@@ -22,21 +22,15 @@ interface ReviewDeckProps {
 
 const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, questionsReviewed}: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
-    const deckName = useFlashCardState((state)=>state.deckName)
+    // const deckName = useFlashCardState((state)=>state.deckName)
 
     return (
     <>
-        {/*<div className=" min-h-screen bg-slate-100">*/}
-        {/*<div className=" max-w-xl mx-auto bg-teal-800 rounded-lg p-8 shadow-lg">*/}
-        {/*    <div*/}
-        {/*        className="bg-orange-300 w-full text-xl py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"*/}
-        {/*    >*/}
                 <div className="bg-white p-8 font-extrabold text-2xl mb-2">
 
-                <h2>{deckName}</h2>
+                <h2>{deck.name}</h2>
             </div>
 
-            {/*<ReviewedCheckbox questionsReviewed={questionsReviewed} />*/}
             <div className="mb-8 px-8 py-4 bg-indigo-200 shadow-lg rounded-xl">
 
             <NavigationControls
@@ -44,7 +38,6 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
                 handleNext={handleNext}
             />
 
-            {/*<QuestionNumber deckLength = {deck.length as number} />*/}
 
             <Flashcard
                 handleAnswer = {handleAnswer}
@@ -53,7 +46,7 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, qu
             </div>
 
             <ProgressBar
-                deck={deck}
+                cards={deck.cards}
                 progressBarWidth={progressBarWidth}
             />
 

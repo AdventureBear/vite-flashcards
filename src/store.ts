@@ -1,21 +1,21 @@
 import { create } from 'zustand'
 
-import {Card, Deck} from "./types.ts";
+import { Deck} from "./types.ts";
 
 
 
-interface DecksStore {
-    deck: Deck,
-    score: {correct: number, incorrect: number},
-    currentCardIndex: number,
-
-}
+// interface DecksStore {
+//     deck: Deck,
+//     score: {correct: number, incorrect: number},
+//     currentCardIndex: number,
+//
+// }
 
 interface FlashCardState {
-    deckName: string,
-    updateDeckName: (to: string) =>void,
-    deck: Card[],
-    updateDeck: (deck: Card[]) => void
+    // deckName: string,
+    // updateDeckName: (to: string) =>void,
+    deck: Deck,
+    updateDeck: (deck: Deck) => void
     correct: number
     increaseCorrect: () => void
     resetCorrect: ()=>void
@@ -42,34 +42,34 @@ interface FlashCardState {
     updateShowAddDeck: (to:boolean)=>void
     showDeckOptions: boolean
     updateShowDeckOptions: (to:boolean)=>void
-    deckLength: number
-    updateDeckLength:(to:number)=>void
+    // deckLength: number
+    // updateDeckLength:(to:number)=>void
     showQuiz: boolean
     updateShowQuiz:  (to:boolean)=>void
     showFeedbackModal: boolean
     updateShowFeedbackModal: (to:boolean)=>void
     answeredCorrectly: boolean
     updateAnsweredCorrectly: (to:boolean)=>void
-    deckList: string[],
-    updateDeckList: (list: string[])=>void,
+    // deckList: string[],
+    // updateDeckList: (list: string[])=>void,
     showDashboard: boolean,
     updateShowDashboard:(to:boolean)=>void
     cardsToReview: number[]
     updateCardsToReview: (cardsIds: number[])=>void
     confirmDashboardShow: boolean
     updateConfirmDashboardShow: (to:boolean)=>void
-    deckId: string
-    updateDeckId: (to: string)=>void
+    // deckId: string
+    // updateDeckId: (to: string)=>void
     showArchived: boolean
     updateShowArchived: (to:boolean)=>void
 
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
-    deckName: "",
-    updateDeckName: (to) => set(()=>({deckName: to})),
-    deck: [],
-    updateDeck: (deck: Card[])=> set(()=>({deck: deck})),
+    // deckName: "",
+    // updateDeckName: (to) => set(()=>({deckName: to})),
+    deck: {id:0, cards:[], archived: false, name: ""},
+    updateDeck: (deck: Deck)=> set(()=>({deck: deck})),
     correct: 0,
     increaseCorrect: () => set((state) => ({ correct: state.correct + 1 })),
     resetCorrect: () => set(()=>({correct: 0})),
@@ -96,24 +96,24 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     updateShowAddDeck: (to)=> set(()=>({showAddDeck: to})),
     showDeckOptions: false,
     updateShowDeckOptions: (to)=> set(()=>({showDeckOptions: to})),
-    deckLength: 0,
-    updateDeckLength: (to) => set((state)=>({deckLength: state.deckLength + to})),
+    // deckLength: 0,
+    // updateDeckLength: (to) => set((state)=>({deckLength: state.deckLength + to})),
     showQuiz: false,
     updateShowQuiz: (to)=>set(()=>({showQuiz: to})),
     showFeedbackModal: false,
     updateShowFeedbackModal: (to)=>set(()=>({showFeedbackModal: to})),
     answeredCorrectly: false,
     updateAnsweredCorrectly: (to) => set(()=>({answeredCorrectly: to})),
-    deckList: [],
-    updateDeckList: (list: string[]) => set(()=>({deckList: list})),
+    // deckList: [],
+    // updateDeckList: (list: string[]) => set(()=>({deckList: list})),
     showDashboard: true,
     updateShowDashboard:(to)=> set(()=>({showDashboard: to})),
     cardsToReview: [],
     updateCardsToReview: (cardsIds: number[])=> set(()=>({cardsToReview: cardsIds})),
     confirmDashboardShow: false,
     updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to})),
-    deckId: "",
-    updateDeckId: (to: string)=>set(()=>({deckId: to})),
+    // deckId: "",
+    // updateDeckId: (to: string)=>set(()=>({deckId: to})),
     showArchived: false,
     updateShowArchived:(to: boolean)=> set(()=>({showArchived: to}))
 }))

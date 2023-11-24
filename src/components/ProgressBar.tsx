@@ -2,11 +2,11 @@ import {Card} from '../types.ts'
 import {useFlashCardState} from "../store.ts";
 
 interface ProgressBarProps {
-    deck: Card[],
+    cards: Card[],
     progressBarWidth: string
 }
 
-const ProgressBar = ({ deck, progressBarWidth}: ProgressBarProps) => {
+const ProgressBar = ({ cards, progressBarWidth}: ProgressBarProps) => {
 
     const cardsDone = useFlashCardState((state)=>state.cardsDone)
 
@@ -24,7 +24,7 @@ const ProgressBar = ({ deck, progressBarWidth}: ProgressBarProps) => {
             </div>
             <div>
                 <p className="text-lg font-bold ml-2"><span
-                    className="text-amber-100">{cardsDone}</span> / {deck.length}
+                    className="text-amber-100">{cardsDone}</span> / {cards.length}
                 </p>
             </div>
         </div>

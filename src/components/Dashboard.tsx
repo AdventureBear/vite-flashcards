@@ -2,17 +2,20 @@
 //State Management
 import  { useFlashCardState } from '../store.ts'
 import ShowArchivedCheckbox from "./ShowArchivedCheckbox.tsx";
+import {Deck} from "../types.ts";
 
 
 interface DashboardProps {
+    filteredDecks: Deck[]
     selectDeck: (name: string) => void
 }
 
-const Dashboard = ({selectDeck}:DashboardProps) => {
-    const deckList = useFlashCardState((state)=>state.deckList)
+const Dashboard = ({selectDeck, filteredDecks}:DashboardProps) => {
+    // const deckList = useFlashCardState((state)=>state.deckList)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
     const showArchived = useFlashCardState((state)=>state.showArchived)
+    if (!filteredDecks) return null
 
     return (
         <>
@@ -24,15 +27,15 @@ const Dashboard = ({selectDeck}:DashboardProps) => {
 
                         <div className="mb-8 p-8  w-full">
 
-                            {deckList.map((name, i) => (
+                            {filteredDecks.map((deck, i) => (
                                 <div
                                     key={i}
                                     className="bg-indigo-200 w-full text-2xl text-black font-bold py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
                                     onClick={()=>
-                                        selectDeck(name)
+                                        selectDeck(deck.id)
                                     }
                                 >
-                                    <h2>{name}</h2>
+                                    <h2>{deck.name}</h2>
                                 </div>
                             ))}
                         </div>

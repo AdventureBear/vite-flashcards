@@ -40,11 +40,10 @@ import DeckOptions from "./components/DeckOptions.tsx";
 
 
 function App() {
-    const [isArchived, setIsArchived] = useState(false)
     // const [cardIdsToReview, setCardIdsToReview] = useState<number[]>([]);
-    const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
+    // const [unrevealedCards, setUnrevealedCards] = useState<Card[]>([]);
     const [questionsReviewed, setQuestionsReviewed] = useState<Review[]>([]);  //Array to track each question for this round reviewed and correct
-
+    const [filteredDecks, setFilteredDecks] = useState()
 
     //Zustand State Management
     const increaseCorrect = useFlashCardState((state)=>state.increaseCorrect)
@@ -62,7 +61,6 @@ function App() {
     const updateShowComplete = useFlashCardState((state)=>state.updateShowComplete)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     // const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
-    // const updateDeckLength = useFlashCardState((state)=>state.updateDeckLength)
     const showQuiz = useFlashCardState((state)=>(state.showQuiz))
     const showCard = useFlashCardState((state) => state.showCard)
     const showAddDeck = useFlashCardState((state)=> state.showAddDeck)
@@ -72,26 +70,18 @@ function App() {
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
     const deck = useFlashCardState((state)=>state.deck)
     const updateDeck = useFlashCardState((state)=>state.updateDeck)
-    // const deckLength = useFlashCardState((state)=>state.deckLength)
-    const updateDeckList = useFlashCardState((state)=> state.updateDeckList)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
     const updateCardsToReview = useFlashCardState((state)=>state.updateCardsToReview)
-    const deckName = useFlashCardState((state) => state.deckName)
-    const updateDeckName = useFlashCardState((state)=> state.updateDeckName)
-    // const postId = useFlashCardState((state)=>state.postId)
-    // const updatePostId = useFlashCardState((state)=>state.updatePostId)
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const confirmDashboardShow = useFlashCardState((state)=>state.confirmDashboardShow)
     const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
-    const deckId = useFlashCardState((state)=>state.deckId)
-    const updateDeckId = useFlashCardState((state)=>state.updateDeckId)
     const showArchived = useFlashCardState((state)=>state.showArchived)
 
     //reactQuery, get all data
-    const { isLoading, error,  data , refetch } = useQuery('repoData', () =>
+    const { isLoading, error,  data: allDecks , refetch } = useQuery('repoData', () =>
         fetch(URL).then(res =>
             res.json()
         )
@@ -104,25 +94,57 @@ function App() {
         )
     )
 
-    // console.log(isLoadingStats, errorStats, dataStats)
-
     //Dependency **DATA**
     //When database loaded, gather deck names
     useEffect(() => {
-        if (data) {
-           updateDeckList(data.filter((deck: Deck)=> deck.archived === showArchived)
-               .map((deck: Deck) => deck.name ))
+        if (allDecks) {
+    setFilteredDecks (allDecks.filter((deck: Deck) => deck.archived === showArchived)
+        .map((deck: Deck) => deck));
+    //        updateDeckList(data.filter((deck: Deck)=> deck.archived === showArchived)
+    //            .map((deck: Deck) => deck.name ))
         }
-    }, [data, showArchived]);
+    }, [allDecks]);
 
+    //Dependency **DECK**
+    //When deck cards loaded...
+    //Create a set of cards for current review session
+    //Initialize questions/cards reviewed array,
+    //Call init here too?
+
+    // useEffect(() => {
+    //     if(deck) {
+    //         updateCardsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
+    //         resetCurrentCardIndex()
+    //         setUnrevealedCards(deck as Card[])  //initializing unreviewed cards, in case some are skipped
+    //         setQuestionsReviewed(deck.map((x: Card)=>{
+    //             return {
+    //                 id: x.id,
+    //                 correct: null,
+    //                 reviewed: false
+    //             }
+    //         }))
+    //
+    //     }
+    // }, [deck]);
+
+    //Dependency **DECK, CARDSDONE**
+    //Check for end of review (should this be reviewed array instead?
+    //Show end screen
+    // useEffect(() => {
+    //     if (deck.length>0 && cardsDone===deck.length){
+    //         updateShowComplete(true)
+    //     }
+    // }, [cardsDone, deck]);
     //when deck chosen, load cards into deck global state
-    const selectDeck = (name: string) => {
-        const deck = (data.find((deck: { name: string; })=>deck.name===name))
-        console.log(deck.id)
-        setIsArchived(deck.archived)
-        updateDeckName(name)
-        updateDeckId(deck.id)
-        updateDeck(deck.cards)
+
+    // console.log(isLoadingStats, errorStats, dataStats)
+
+    console.log(filteredDecks)
+
+    const selectDeck = (id: number) => {
+        const newDeck = (allDecks.find((deck: { id: number; })=>deck.id===id))
+        updateDeck(newDeck)
+
         updateShowDashboard(false)
         updateShowDeckOptions(true)
     }
@@ -137,36 +159,7 @@ function App() {
         updateShowDeckOptions(false)
     }
 
-    //Dependency **DECK**
-    //When deck cards loaded...
-    //Create a set of cards for current review session
-    //Initialize questions/cards reviewed array,
-    //Call init here too?
 
-    useEffect(() => {
-        if(deck) {
-            updateCardsToReview(deck.map(card => card.id))  // creates array of card ids for this round of review
-            resetCurrentCardIndex()
-            setUnrevealedCards(deck as Card[])  //initializing unreviewed cards, in case some are skipped
-            setQuestionsReviewed(deck.map((x: Card)=>{
-                return {
-                    id: x.id,
-                    correct: null,
-                    reviewed: false
-                }
-            }))
-
-        }
-    }, [deck]);
-
-    //Dependency **DECK, CARDSDONE**
-    //Check for end of review (should this be reviewed array instead?
-    //Show end screen
-    useEffect(() => {
-    if (deck.length>0 && cardsDone===deck.length){
-               updateShowComplete(true)
-           }
-       }, [cardsDone, deck]);
 
 
     function checkUnreviewedCards() {
@@ -476,9 +469,12 @@ return newReviews
                 <div className={`bg-white p-8`}>
                     <div className="w-full  mx-auto bg-gray-800 rounded-lg p-4 shadow-lg">
 
-            {data && <>
+            {filteredDecks && <>
                 {showDashboard &&
-                    <Dashboard selectDeck ={selectDeck} />
+                    <Dashboard
+                        selectDeck ={selectDeck}
+                        filteredDecks     ={filteredDecks}
+                    />
                 }
 
                 {showAddDeck &&
@@ -489,12 +485,13 @@ return newReviews
 
                 {showDeckOptions &&
                     <DeckOptions
+                        deck={deck}
                         handleArchiveDeck={handleArchiveDeck}
                         handleDeleteDeck={handleDeleteDeck}
-                        deckName = {deckName}
+                        // deckName = {deckName}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
-                        isArchived={isArchived}
+                        // isArchived={isArchived}
 
 
                     />
