@@ -65,17 +65,28 @@
         {
           "question": "What is Lifestyle Medicine",
           "answer": "Prescribing lifestyle changes to treat and reverse chronic diseases",
-          "id": 544
+          "id": 544,
+          "reviewed": false,
+          "correct": false
         },
         {
           "question": "What are the 6 pillars of Lifestyle medicine?",
           "answer": "WFPB Diet, Sleep, Physical Activity, Social Engagement",
-          "id": 545
+          "id": 545,
+          "reviewed": false,
+          "correct": false
         },
         {
           "question": "WHo was the first physician to teach lifestyle medicine?",
           "answer": "Hippocrates",
-          "id": 546
+          "id": 546,
+          "reviewed": false,
+          "correct": false
+        },
+        {
+          "question": "test4",
+          "answer": "test4",
+          "id": 547
         }
       ]
     },
@@ -105,7 +116,14 @@
         {
           "question": "question",
           "answer": "answer",
-          "id": 2
+          "id": 2,
+          "reviewed": false,
+          "correct": false
+        },
+        {
+          "question": "test3",
+          "answer": "test3",
+          "id": 3
         }
       ],
       "id": "5kIjlRx"

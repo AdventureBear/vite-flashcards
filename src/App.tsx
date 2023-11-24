@@ -303,8 +303,7 @@ function App() {
         return result;
     }
     async function handleAddNewCard(newCard: NewCard ) {
-        // const workingDeck = data.find((elem: { id: number, name: string; cards: Card[] }) => elem.name === deckName);
-        // console.log(workingDeck.name, workingDeck.id, newCard)
+        console.log(newCard)
         const uid = (() => {
             let id: number;
             if (deck.cards.length > 0) {
