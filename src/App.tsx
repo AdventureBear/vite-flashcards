@@ -37,6 +37,7 @@ import DeckOptions from "./components/DeckOptions.tsx";
 //functions
 
 function App() {
+    // const [allDecks, setAllDecks] = useState()
     const [filteredDecks, setFilteredDecks] = useState()
 
     //Zustand State Management
@@ -71,6 +72,10 @@ function App() {
         )
     )
 
+
+    // if( postQuery.isLoading ) return ( <h1>Loading....</h1>)
+    // if( postQuery.isError ) return (<h1>Error loading data!!!</h1>)
+
     // const { isLoading: isLoadingStats, error: errorStats, data: dataStats , refetch: refetchStats } = useQuery('repoStats', () =>
     //     fetch(statsURL).then(res =>
     //         res.json()
@@ -78,8 +83,10 @@ function App() {
     //     )
     // )
 
-    //Dependency **DATA**
-    //When database loaded, gather deck names
+
+
+    // Dependency **DATA**
+    // When database loaded, gather deck names
     useEffect(() => {
         if (allDecks) {
             setFilteredDecks (allDecks.filter((deck: Deck) => deck.archived === showArchived)
@@ -89,9 +96,6 @@ function App() {
     }, [allDecks, showArchived]);
 
 
-    function unreviewedCards(){
-        return deck.cards.filter((card) => !card.reviewed ).map((card)=> card.id)
-    }
 
     const selectDeck = (id: string) => {
         const newDeck = (allDecks.find((deck: { id: string; })=>deck.id===id))
@@ -101,6 +105,10 @@ function App() {
         updateDeck({...newDeck, cards: updatedCards})
         updateShowDashboard(false)
         updateShowDeckOptions(true)
+    }
+
+    function unreviewedCards(){
+        return deck.cards.filter((card) => !card.reviewed ).map((card)=> card.id)
     }
 
     const handleReviewDeck = () => {
