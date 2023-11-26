@@ -1,6 +1,6 @@
 # React + TypeScript + Vite
 
-This is a Flashcard app built with React, Typescript, Tailwind, react-query, json-server.  
+This is a Flashcard app built with React, Vite, Typescript, Zustand, Tailwind, react-query and json-server.  
 To use it you'll need to run the json-server locally, in addition to running the dev mode.
 
 ## Instructions
@@ -26,7 +26,7 @@ https://quickref.me/generate-an-unique-and-increment-id.html
 https://saltsthlm.github.io/protips/jsonServer.html
 https://medium.com/@joris.l/tutorial-zustand-a-simple-and-powerful-state-management-solution-9ad4d06d5334
 
-
+https://my-json-server.typicode.com/
 
 http://paletton.com/#uid=53+0o0ko2Rm01SNcmS9JoVJ++tc
 https://uicolors.app/create
