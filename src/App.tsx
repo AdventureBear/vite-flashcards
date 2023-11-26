@@ -2,7 +2,7 @@
 import { useQuery } from "react-query";
 
 //Data
-const URL = "http://localhost:3000/decks"
+// const URL = "http://localhost:3000/decks"
 const buildURL = "https://my-json-server.typicode.com/adventurebear/vite-flashcards/decks"
 
 //Style

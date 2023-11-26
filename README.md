@@ -21,10 +21,11 @@ https://dev.to/frontenddeveli/simple-mutations-with-tanstack-query-and-nextjs-4b
 https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
 https://shekhargulati.com/2019/07/10/how-to-setup-json-server-to-use-custom-id-and-route/
 https://quickref.me/generate-an-unique-and-increment-id.html
-[https://paletton.com/#uid=73g0S0kqUjc9ko8iOm3AXfQSRbN
-]()https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
+https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
 https://saltsthlm.github.io/protips/jsonServer.html
 https://medium.com/@joris.l/tutorial-zustand-a-simple-and-powerful-state-management-solution-9ad4d06d5334
+https://tkdodo.eu/blog/mastering-mutations-in-react-query
+
 
 https://my-json-server.typicode.com/
 
