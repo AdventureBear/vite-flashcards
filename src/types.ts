@@ -1,8 +1,3 @@
-// export type DeckApiResponse = {
-//     name: string;
-//     cards: Card[];
-// }[];
-
 
 export type Deck = {
     id: string,
@@ -21,6 +16,12 @@ export type Card ={
 
 
 export type NewCard = {
-    question: string,
-    answer: string
-}
+    question: string;
+    answer: string;
+};
+
+export type NewCardApiResponse = {
+    id: string,
+    question: string;
+    answer: string;
+};

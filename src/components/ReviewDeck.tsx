@@ -4,7 +4,7 @@ import Flashcard from "./Flashcard.tsx";
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
 // import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 
 import  Badge  from '../templates/Badge.tsx'
 
@@ -19,7 +19,7 @@ interface ReviewDeckProps {
 }
 
 
-const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext, }: ReviewDeckProps) => {
+const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext }: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     // const deckName = useFlashCardState((state)=>state.deckName)
 

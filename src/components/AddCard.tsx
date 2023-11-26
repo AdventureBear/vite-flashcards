@@ -1,26 +1,43 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import SuccessfulAddModal from "./SuccessfulAddModal";
-// import {useFlashCardState} from "../store.ts";
-import {NewCard} from '../types.ts'
-import {useFlashCardState} from "../store.ts";
+// import {useFlashCardState} from "../flashCardStore.ts";
+import {Deck, NewCard} from '../types.ts'
+import {useFlashCardState} from "../flashCardStore.ts";
 
-interface AddCardModalProps {
-    // onClose: ()=>void,
-    handleAddNewCard: (newCard: NewCard)=>void
-}
+import {useMutation, useQueryClient} from 'react-query'
+import {handleAddNewCard} from "../rest/http.ts";
 
-const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
+// interface AddCardModalProps {
+//     // onClose: ()=>void,
+//     // handleAddNewCard: (newCard: NewCard)=>NewCardApiResponse
+// }
+
+const AddCardModal = () => {
+    //local state
     const [answer, setAnswer] = useState('')
     const [question, setQuestion] = useState('')
-    // const [showConfirmAd, setShowConfirmAd] = useState(false)
+
+    //Zustand State
     const deck = useFlashCardState((state)=>state.deck)
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAddCard = useFlashCardState((state)=>state.updateShowConfirmAddCard)
 
+    //react-query
+    const queryClient = useQueryClient()
 
-    // const showCard = useFlashCardState((state)=>state.showCard)
-    // const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
+
+    const { mutate: mutateAddCard } = useMutation(
+        'addDeck',
+        ({newCard, deck}: {newCard: NewCard, deck: Deck}) => handleAddNewCard(newCard, deck),
+        {
+            onSuccess: () => {
+                console.log("Successful mutation add card");
+                queryClient.invalidateQueries({queryKey: ['getAllDecks']})
+                    .then(()=>console.log("Successful invalidation"))
+            },
+        }
+    );
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -28,13 +45,10 @@ const AddCardModal = ({ handleAddNewCard }: AddCardModalProps) => {
             question,
             answer
         };
-
-        handleAddNewCard(newCard)
+        mutateAddCard({newCard, deck})
         setQuestion('')
         setAnswer('')
         updateShowConfirmAddCard(true)
-        // onClose()
-
     }
 
     return (

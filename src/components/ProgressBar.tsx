@@ -1,5 +1,5 @@
 import {Card} from '../types.ts'
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 
 interface ProgressBarProps {
     cards: Card[],

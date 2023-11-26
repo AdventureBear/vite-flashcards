@@ -1,18 +1,56 @@
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
+
+import {useMutation, useQueryClient} from 'react-query'
+
+import { handleArchiveDeck, handleDeleteDeck } from '../rest/http.ts'
 
 
 interface DeckOptionsProps {
     reviewDeck: ()=>void;
     addQuestions: () => void;
-    handleArchiveDeck: (id:string)=>void;
-    handleDeleteDeck:(id:string)=>void;
-    // isArchived:boolean;
+
 }
 
-const DeckOptions = ({ reviewDeck, addQuestions, handleArchiveDeck, handleDeleteDeck} :DeckOptionsProps) => {
+const DeckOptions = ({ reviewDeck, addQuestions} :DeckOptionsProps) => {
     const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const deck = useFlashCardState((state)=>state.deck)
+    const queryClient = useQueryClient()
+
+
+    const { mutate: mutateArchiveDeck } = useMutation(
+        'addDeck',
+        ({deckId, archive}: {deckId: string, archive: boolean}) => handleArchiveDeck(deckId, archive),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['getAllDecks'] });
+            },
+        }
+    );
+
+
+    const { mutate: mutateDeleteDeck } = useMutation<boolean, Error, { deckId: string }>(
+        'deleteDeck',
+        ({deckId}: {deckId: string}) => handleDeleteDeck(deckId),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['getAllDecks'] });
+            },
+        }
+    );
+
+
+    function handleArchive(deckId: string, archive: boolean){
+        mutateArchiveDeck({deckId, archive})
+        updateShowDeckOptions(false)
+        updateShowDashboard(true)
+    }
+
+    function handleDelete(deckId: string) {
+        mutateDeleteDeck({deckId})
+        updateShowDeckOptions(false)
+        updateShowDashboard(true)
+    }
 
     return (
         <>
@@ -49,9 +87,7 @@ const DeckOptions = ({ reviewDeck, addQuestions, handleArchiveDeck, handleDelete
                             rounded-xl cursor-pointer shadow-gray-500 shadow-l `}>
                             <button
                                 onClick={()=>{
-                                    handleArchiveDeck(deck.id)
-                                    updateShowDeckOptions(false)
-                                    updateShowDashboard(true)
+                                    handleArchive(deck.id, !deck.archived)
                                 }}
                                 >
                                 { deck.archived ? "Un-archive Deck" : "Archive Deck" }
@@ -63,11 +99,8 @@ const DeckOptions = ({ reviewDeck, addQuestions, handleArchiveDeck, handleDelete
                         'rounded-xl cursor-pointer shadow-gray-500 shadow-l': 'hidden'}`}>
                         <button
                             onClick={()=>{
-                                handleDeleteDeck(deck.id)
-                                updateShowDeckOptions(false)
-                                updateShowDashboard(true)
+                                handleDelete(deck.id)
                             }}
-                            // className={`hover:text-white text-black font-bold  bg-red-300 hover:bg-red-500 px-8 py-2 rounded shadow-lg mb-8 shadow-green-800 w-96`}>
                             >
                             { deck.archived ? "Delete Deck" : "Archive Deck" }
                         </button>

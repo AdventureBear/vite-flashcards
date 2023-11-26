@@ -1,20 +1,37 @@
 import {useState} from "react";
 import SuccessfulAddDeckModal from "./SuccessfulAddDeck.tsx";
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 
-interface AddDeckModalProps {
-    handleAddNewDeck: (name: string) => void
-}
+import {useMutation, useQueryClient} from 'react-query'
 
-const AddDeckModal = ({handleAddNewDeck}: AddDeckModalProps) => {
+
+import {handleAddNewDeck} from "../rest/http.ts";
+
+
+
+
+const AddDeckModal = () => {
     const [deckName, setDeckName] = useState('')
     const updateShowAddDeck = useFlashCardState((state) => state.updateShowAddDeck)
     const updateShowConfirmAddDeck = useFlashCardState((state) => state.updateShowConfirmAddDeck)
     const showConfirmAddDeck = useFlashCardState((state)=>state.showConfirmAddCard)
 
+    const queryClient = useQueryClient()
+
+    const { mutate } = useMutation(
+        'addDeck',
+        handleAddNewDeck,
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['getAllDecks'] });
+            },
+        }
+    );
+
+
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        handleAddNewDeck(deckName)
+        mutate(deckName)
         setDeckName('')
         updateShowConfirmAddDeck(true)
     }

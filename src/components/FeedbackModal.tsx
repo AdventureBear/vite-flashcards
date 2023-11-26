@@ -1,4 +1,4 @@
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 import {encouragementPhrases, successPhrases} from '../utils/successPhrases.ts'
 import Modal from "../templates/Modal.tsx";
 import Button from "../templates/Button.tsx";
@@ -9,12 +9,11 @@ interface FeedbackModalProps {
 }
 
 const FeedbackModal = ({ handleNext }: FeedbackModalProps) => {
-    const showFeedbackModal = useFlashCardState((state)=> (state.showFeedbackModal))
+    // const showFeedbackModal = useFlashCardState((state)=> (state.showFeedbackModal))
     const answeredCorrectly = useFlashCardState((state)=> (state.answeredCorrectly))
     const updateShowFeedbackModal = useFlashCardState((state)=>(state.updateShowFeedbackModal))
 
     return (
-        showFeedbackModal && (
             <>
                 <Modal >
                     <h2 className="text-2xl  mt-2 h-20 overflow-hidden">
@@ -37,7 +36,6 @@ const FeedbackModal = ({ handleNext }: FeedbackModalProps) => {
 
             </>
         )
-    );
 
 };
 

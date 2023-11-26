@@ -1,8 +1,8 @@
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 
 
 const SuccessfulAddModal = ( ) => {
-    const updateShowQuiz = useFlashCardState((state)=>state.updateShowQuiz)
+    const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
     const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAdd = useFlashCardState((state)=>state.updateShowConfirmAddCard)
     const showConfirmAddCard = useFlashCardState((state)=>state.showConfirmAddCard)
@@ -29,9 +29,9 @@ const SuccessfulAddModal = ( ) => {
                                 onClick={() => {
                                     updateShowConfirmAdd(false)
                                     updateShowCard(false)
-                                    updateShowQuiz(true)
+                                    updateShowDeckOptions(true)
                             }}>
-                                Go to Review
+                                Go to Deck Options
                             </button>
                         </div>
                     </div>

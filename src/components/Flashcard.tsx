@@ -1,4 +1,4 @@
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 import IsCorrectControls from "./IsCorrectControls.tsx";
 // import { Review} from "../types.ts";
 import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
@@ -15,10 +15,6 @@ export default function Flashcard({handleAnswer}: FlashcardProps) {
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const deck = useFlashCardState((state)=>state.deck)
     const cards = deck.cards
-    // const cardsToReview = useFlashCardState((state)=>state.cardsToReview)
-
-    // const question =  deck.find(card=> card.id === cardsToReview[currentCardIndex])?.question
-    // const answer =  deck.find(card=> card.id === cardsToReview[currentCardIndex])?.answer
 
     return (
         <>
@@ -30,13 +26,9 @@ export default function Flashcard({handleAnswer}: FlashcardProps) {
                     <div className="card-inner  ">
                         <div className="card-front">
                             <p className="text-xl font-bold text-black">{cards[currentCardIndex].question}</p>
-
-
                         </div>
                         <div className="card-back">
                             <p className="text-xl font-bold text-black">{cards[currentCardIndex].answer}</p>
-
-
                         </div>
                     </div>
 

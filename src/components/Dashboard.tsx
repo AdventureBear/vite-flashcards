@@ -1,6 +1,6 @@
 
 //State Management
-import  { useFlashCardState } from '../store.ts'
+import  { useFlashCardState } from '../flashCardStore.ts'
 import ShowArchivedCheckbox from "./ShowArchivedCheckbox.tsx";
 import {Deck} from "../types.ts";
 

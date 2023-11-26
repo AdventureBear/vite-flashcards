@@ -1,4 +1,4 @@
-import {useFlashCardState} from "../store.ts";
+import {useFlashCardState} from "../flashCardStore.ts";
 
 interface ConfirmReopenDashboardModalProps {
     handleOpenDashboard: ()=> void
