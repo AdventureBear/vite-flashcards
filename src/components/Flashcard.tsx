@@ -16,6 +16,8 @@ export default function Flashcard({handleAnswer}: FlashcardProps) {
     const deck = useFlashCardState((state)=>state.deck)
     const cards = deck.cards
 
+
+
     return (
         <>
                 <ReviewedCheckbox  />

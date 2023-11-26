@@ -8,8 +8,9 @@ interface ProgressBarProps {
 
 const ProgressBar = ({ cards, progressBarWidth}: ProgressBarProps) => {
 
-    const cardsDone = useFlashCardState((state)=>state.cardsDone)
+    const deck = useFlashCardState((state)=>state.deck)
 
+    const cardsReviewed = deck.cards.filter((card)=> card.reviewed ===true).length
     return (
         <div className="w-full  mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
             <div>
@@ -24,7 +25,7 @@ const ProgressBar = ({ cards, progressBarWidth}: ProgressBarProps) => {
             </div>
             <div>
                 <p className="text-lg font-bold ml-2"><span
-                    className="text-amber-100">{cardsDone}</span> / {cards.length}
+                    className="text-amber-100">{cardsReviewed}</span> / {cards.length}
                 </p>
             </div>
         </div>
