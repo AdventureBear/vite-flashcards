@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 
 //Data
 const URL = "http://localhost:3000/decks"
+const buildURL = "https://my-json-server.typicode.com/adventurebear/vite-flashcards/decks"
 
 //Style
 import './App.css'
@@ -16,7 +17,7 @@ function App() {
     //reactQuery, get all data
     const { isLoading, error,  data: allDecks  } =   useQuery(
         'getAllDecks', () =>
-        fetch(URL).then(res =>
+        fetch(buildURL).then(res =>
             res.json()
         )
     )
