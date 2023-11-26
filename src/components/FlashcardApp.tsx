@@ -129,7 +129,6 @@ function FlashCardApp({decks}: FlashCardAppProps) {
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
         const cardsRemaining = unreviewedCards()
-        console.log("Cards done: ", cardsDone)
 
         //check to see if all cards have been answered
         if (cardsRemaining.length > 0) {
@@ -152,8 +151,8 @@ function FlashCardApp({decks}: FlashCardAppProps) {
 
     };
 
-    const cardsDone = deck.cards.length - unreviewedCards().length
-    const progressBarWidth = `${(cardsDone / deck.cards.length) * 100}%`;
+    // const cardsDone = deck.cards.length - unreviewedCards().length
+    // const progressBarWidth = `${(cardsDone / deck.cards.length) * 100}%`;
 
 
     return (
@@ -181,7 +180,6 @@ function FlashCardApp({decks}: FlashCardAppProps) {
                 {showQuiz &&
                     <QuizArea
                         handleAnswer={handleAnswer}
-                        progressBarWidth={progressBarWidth}
                         handleNext={handleNext}
                         handlePrev={handlePrev}
                         handleOpenDashboard={handleOpenDashboard}

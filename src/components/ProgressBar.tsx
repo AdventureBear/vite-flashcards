@@ -3,14 +3,17 @@ import {useFlashCardState} from "../flashCardStore.ts";
 
 interface ProgressBarProps {
     cards: Card[],
-    progressBarWidth: string
+    // progressBarWidth: string
 }
 
-const ProgressBar = ({ cards, progressBarWidth}: ProgressBarProps) => {
+const ProgressBar = ({ cards}: ProgressBarProps) => {
 
     const deck = useFlashCardState((state)=>state.deck)
+    const cardsReviewed = deck.cards.filter((card)=> card.reviewed).length
 
-    const cardsReviewed = deck.cards.filter((card)=> card.reviewed ===true).length
+    const progressBarWidth = `${(cardsReviewed / deck.cards.length) * 100}%`;
+
+
     return (
         <div className="w-full  mx-auto mt-4 bg-gray-500 rounded-lg p-4 shadow-lg flex justify-between items-center">
             <div>

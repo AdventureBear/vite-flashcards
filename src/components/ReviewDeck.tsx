@@ -12,14 +12,13 @@ import  Badge  from '../templates/Badge.tsx'
 //     deckLength: number
 // }
 interface ReviewDeckProps {
-    handleAnswer: (cardIndex: number, isCorrect: boolean) => void;
-    progressBarWidth: string;
+    handleAnswer: (cardIndex: number, isCorrect: boolean) => void,
     handlePrev: ()=> void,
     handleNext: ()=> void,
 }
 
 
-const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext }: ReviewDeckProps) => {
+const ReviewDeck = ({ handleAnswer, handlePrev, handleNext }: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     // const deckName = useFlashCardState((state)=>state.deckName)
 
@@ -45,7 +44,6 @@ const ReviewDeck = ({ handleAnswer, progressBarWidth, handlePrev, handleNext }: 
 
             <ProgressBar
                 cards={deck.cards}
-                progressBarWidth={progressBarWidth}
             />
 
 
