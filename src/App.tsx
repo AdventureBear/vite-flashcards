@@ -8,7 +8,7 @@ const buildURL = "https://my-json-server.typicode.com/adventurebear/vite-flashca
 //Style
 import './App.css'
 
-
+console.log(import.meta.env.MODE)
 //components
 import FlashcardApp from "./components/FlashcardApp.tsx";
 
