@@ -1,5 +1,7 @@
 import {useFlashCardState} from "../flashCardStore.ts";
 import {Stats} from "../types.ts";
+import {handleAddNewCardReview, handleUpdateCardReview} from "../rest/httpStats.ts";
+import {getNextStatUid} from "../utils/deckLogic.ts";
 
 interface CompleteModalStats {
     stats: Stats[]
@@ -20,31 +22,30 @@ function CompleteModal({stats}:CompleteModalStats) {
             const today = new Date()
             const formattedDate = today.toISOString();
             deck.cards.forEach((card) => {
-                // console.log("Card: ", card)
-                // const deckStats = stats.filter((stat) =>(stat.deckId===deck.id))
-                // console.log("deck stats: ", deckStats)
-                // let newStat = {}
                 let newReviews = []
                 const cardStats = stats.filter((stat: Stats) => (stat.cardId === card.id && stat.deckId === deck.id))
                 if (cardStats.length>0) {
-
-                    console.log("Add to existing stats: ", cardStats)
+                    // console.log("Add to existing stats: ", cardStats)
                     newReviews = cardStats[0].reviews
+
                     const reviewToAdd = {
-                        deckId: deck.id,
-                        cardId: card.id,
+                        nextReviewDate: formattedDate,
                         reviews: [...newReviews, {
                             date: formattedDate,
                             correct: card.correct,
                             confidence: 3
                         }]
                     }
-                    console.log(reviewToAdd)
+                    handleUpdateCardReview(reviewToAdd, cardStats[0].id)
+                    // console.log(reviewToAdd)
                 } else {
-                    console.log("new stat to save")
+                    console.log("New stat to save")
+                    const id =    getNextStatUid(stats)
                     const reviewToAdd = {
+                        id: id,
                         deckId: deck.id,
                         cardId: card.id,
+                        nextReviewDate: formattedDate,
                         reviews: [ {
                             date: formattedDate,
                             correct: card.correct,
@@ -52,6 +53,8 @@ function CompleteModal({stats}:CompleteModalStats) {
                         }]
                     }
                     console.log(reviewToAdd)
+
+                    handleAddNewCardReview(reviewToAdd)
                 }
             })
         }

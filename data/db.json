@@ -137,6 +137,7 @@
   ],
   "stats": [
     {
+      "id": 1,
       "deckId": "j-VnnFJGUqJH4oNWzttpT",
       "cardId": 1,
       "nextReview": "2023-11-20T04:28:12.743Z",
@@ -154,6 +155,7 @@
       ]
     },
     {
+      "id": 2,
       "deckId": "j-VnnFJGUqJH4oNWzttpT",
       "cardId": 2,
       "nextReview": "2023-11-20T04:28:12.743Z",
@@ -171,23 +173,7 @@
       ]
     },
     {
-      "deckId": "2",
-      "cardId": 545,
-      "nextReview": "2023-11-20T04:28:12.743Z",
-      "reviews": [
-        {
-          "date": "2023-11-20T04:28:12.743Z",
-          "correct": false,
-          "confidence": 2
-        },
-        {
-          "date": "2023-11-20T04:28:12.743Z",
-          "correct": true,
-          "confidence": 2
-        }
-      ]
-    },
-    {
+      "id": 4,
       "deckId": "2",
       "cardId": 547,
       "nextReview": "2023-11-20T04:28:12.743Z",
@@ -196,6 +182,92 @@
           "date": "2023-11-20T04:28:12.743Z",
           "correct": true,
           "confidence": 2
+        },
+        {
+          "date": "2023-11-27T19:09:56.271Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:10:36.609Z",
+          "correct": true,
+          "confidence": 3
+        }
+      ],
+      "nextReviewDate": "2023-11-27T19:10:36.609Z"
+    },
+    {
+      "id": 5,
+      "deckId": "2",
+      "cardId": 544,
+      "nextReviewDate": "2023-11-27T19:10:36.609Z",
+      "reviews": [
+        {
+          "date": "2023-11-27T18:52:12.443Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:09:56.271Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:10:36.609Z",
+          "correct": true,
+          "confidence": 3
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "deckId": "2",
+      "cardId": 546,
+      "nextReview": "2023-11-28T04:28:12.743Z",
+      "reviews": [
+        {
+          "date": "2023-11-28T05:28:12.743Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-28T04:28:12.743Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:09:56.271Z",
+          "correct": false,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:10:36.609Z",
+          "correct": true,
+          "confidence": 3
+        }
+      ],
+      "nextReviewDate": "2023-11-27T19:10:36.609Z"
+    },
+    {
+      "id": 7,
+      "deckId": "2",
+      "cardId": 545,
+      "nextReviewDate": "2023-11-27T19:10:36.609Z",
+      "reviews": [
+        {
+          "date": "2023-11-27T18:58:38.457Z",
+          "correct": false,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:09:56.271Z",
+          "correct": true,
+          "confidence": 3
+        },
+        {
+          "date": "2023-11-27T19:10:36.609Z",
+          "correct": true,
+          "confidence": 3
         }
       ]
     }

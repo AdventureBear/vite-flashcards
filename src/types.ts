@@ -32,6 +32,7 @@ export type Review = {
 }
 
 export type Stats = {
+    id: number,
     deckId: string,
     cardId: number,
     nextReviewDate: string,
