@@ -5,7 +5,7 @@ import {Deck, NewCard} from '../types.ts'
 import {useFlashCardState} from "../flashCardStore.ts";
 
 import {useMutation, useQueryClient} from 'react-query'
-import {handleAddNewCard} from "../rest/http.ts";
+import {handleAddNewCard} from "../rest/httpDecks.ts";
 
 // interface AddCardModalProps {
 //     // onClose: ()=>void,

@@ -25,3 +25,15 @@ export type NewCardApiResponse = {
     question: string;
     answer: string;
 };
+export type Review = {
+    date: string,
+    correct: boolean,
+    confidence: number
+}
+
+export type Stats = {
+    deckId: string,
+    cardId: number,
+    nextReviewDate: string,
+    reviews: Review[]
+}

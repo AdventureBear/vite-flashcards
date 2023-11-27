@@ -5,19 +5,21 @@ import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 
 import './Flashcard.css'
 
+import {Stats} from "../types.ts";
+
 interface FlashcardProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
+    stats: Stats[]
 }
 
-export default function Flashcard({handleAnswer}: FlashcardProps) {
+export default function Flashcard({handleAnswer, stats }: FlashcardProps) {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const showAnswer = useFlashCardState((state)=>state.showAnswer)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const deck = useFlashCardState((state)=>state.deck)
+
     const cards = deck.cards
-
-
-
+    const cardStats = stats.filter((stat: Stats) => (stat.cardId === cards[currentCardIndex].id && stat.deckId === deck.id))
     return (
         <>
                 <ReviewedCheckbox  />
@@ -39,6 +41,19 @@ export default function Flashcard({handleAnswer}: FlashcardProps) {
                 <IsCorrectControls
                     handleAnswer={handleAnswer}
                 />
+
+            <div>
+                {!cardStats[0] ? 'This is your first review' :
+                    <div>
+                    <p> Your stats for this card:
+                        <ul>
+                            <li>Reviewed:  {cardStats[0].reviews?.length}</li>
+                            <li>Correct:  {cardStats[0].reviews?.filter((review) => review.correct).length}</li>
+                        </ul>
+                    </p>
+                    </div>
+                }
+            </div>
 
 
         </>

@@ -25,7 +25,8 @@ https://strictlywebdev.com/blog/json-server-put-patch-post-delete/
 https://saltsthlm.github.io/protips/jsonServer.html
 https://medium.com/@joris.l/tutorial-zustand-a-simple-and-powerful-state-management-solution-9ad4d06d5334
 https://tkdodo.eu/blog/mastering-mutations-in-react-query
-
+https://github.com/sitek94/vite-deploy-demo
+https://vitejs.dev/guide/static-deploy.html#github-pages
 
 https://my-json-server.typicode.com/
 

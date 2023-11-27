@@ -8,7 +8,7 @@ import FeedbackModal from "./FeedbackModal.tsx";
 import AddDeckModal from "./AddDeck.tsx"
 
 //Types
-import {Card, Deck} from '../types.ts'
+import {Card, Deck, Stats} from '../types.ts'
 
 //State Management
 import  { useFlashCardState } from "../flashCardStore.ts";
@@ -19,6 +19,7 @@ import QuizArea from "./QuizArea.tsx";
 
 interface FlashCardAppProps {
     decks: Deck[],
+    stats: Stats[]
 }
 
 //functions
@@ -26,8 +27,11 @@ function filterDecks(decks: Deck[], archived: boolean){
     return decks.filter((deck: Deck) => deck.archived === archived)
 }
 
-function FlashCardApp({decks}: FlashCardAppProps) {
 
+
+
+
+function FlashCardApp({decks, stats}: FlashCardAppProps) {
     //Zustand State Management
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
     const changeCurrentCardIndex = useFlashCardState((state)=>state.changeCurrentCardIndex)
@@ -60,6 +64,8 @@ function FlashCardApp({decks}: FlashCardAppProps) {
     );
 
 
+
+
     const selectDeck = (id: string) => {
         const newDeck = (filteredDecks.find((deck: { id: string; })=>deck.id===id))
         if (!newDeck){
@@ -71,6 +77,7 @@ function FlashCardApp({decks}: FlashCardAppProps) {
         updateDeck({...newDeck, cards: updatedCards })
         updateShowDashboard(false)
         updateShowDeckOptions(true)
+
     }
 
     function unreviewedCards(){
@@ -150,10 +157,7 @@ function FlashCardApp({decks}: FlashCardAppProps) {
         }
 
     };
-
-    // const cardsDone = deck.cards.length - unreviewedCards().length
-    // const progressBarWidth = `${(cardsDone / deck.cards.length) * 100}%`;
-
+    
 
     return (
         <Frame>
@@ -179,6 +183,7 @@ function FlashCardApp({decks}: FlashCardAppProps) {
 
                 {showQuiz &&
                     <QuizArea
+                        stats={stats}
                         handleAnswer={handleAnswer}
                         handleNext={handleNext}
                         handlePrev={handlePrev}

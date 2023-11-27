@@ -5,7 +5,7 @@ import {useFlashCardState} from "../flashCardStore.ts";
 import {useMutation, useQueryClient} from 'react-query'
 
 
-import {handleAddNewDeck} from "../rest/http.ts";
+import {handleAddNewDeck} from "../rest/httpDecks.ts";
 
 
 
