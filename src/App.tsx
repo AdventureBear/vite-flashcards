@@ -1,9 +1,16 @@
 //React Query
 import { useQuery } from "react-query";
 
+let decksURL = ""
+let statsURL = ""
 //Data
-const decksURL = "http://localhost:3000/decks"
-const statsURL = "http://localhost:3000/stats"
+if (import.meta.env.MODE === "development") {
+     decksURL = "http://localhost:3000/decks"
+     statsURL = "http://localhost:3000/stats"
+} else if (import.meta.env.MODE === "production") {
+    decksURL = "https://my-json-server.typicode.com/adventurebear/vite-flashcards/decks"
+    statsURL = "https://my-json-server.typicode.com/adventurebear/vite-flashcards/stats"
+}
 // const productionURLDecks = "https://my-json-server.typicode.com/adventurebear/vite-flashcards/decks"
 
 //Style
