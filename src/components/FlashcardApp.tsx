@@ -202,7 +202,9 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
                 }
 
                 {showComplete &&
-                    <CompleteModal />
+                    <CompleteModal
+                        stats={stats}
+                    />
                 }
             </>
         </Frame>

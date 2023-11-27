@@ -20,11 +20,40 @@ interface ReviewDeckProps {
 }
 
 
+
 const ReviewDeck = ({ stats, handleAnswer, handlePrev, handleNext }: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     // const deckName = useFlashCardState((state)=>state.deckName)
 
-    return (
+
+    // function saveStats() {
+    //     deck.cards.forEach((card) => {
+    //         //let newStat = {}
+    //         let newReviews = []
+    //         const cardStats = stats.filter((stat: Stats) => (stat.cardId === card.id && stat.deckId === deck.id))
+    //         if (cardStats) {
+    //             newReviews = cardStats[0].reviews
+    //             const reviewToAdd = {
+    //                 deckId: deck.id,
+    //                 cardId: card.id,
+    //                 reviews: [...newReviews, {
+    //                     date: new Date(),
+    //                     correct: card.correct,
+    //                     confidence: 3
+    //                 }]
+    //             }
+    //             console.log(reviewToAdd)
+    //         } else {
+    //             console.log("new stat to save")
+    //         }
+    //     })
+    // }
+
+
+
+
+
+        return (
     <>
                 <div className="bg-white p-8 font-extrabold text-2xl mb-2">
 
@@ -58,4 +87,4 @@ const ReviewDeck = ({ stats, handleAnswer, handlePrev, handleNext }: ReviewDeckP
     </>
 )};
 
-export default ReviewDeck;
+export default ReviewDeck
