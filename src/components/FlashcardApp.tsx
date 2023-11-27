@@ -157,7 +157,7 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
         }
 
     };
-    
+
 
     return (
         <Frame>
