@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 
-import { Deck} from "./types.ts";
+import {Deck, Stats} from "./types.ts";
 
 const deckInit = {id:"", cards:[], archived: false, name: ""}
-
+const statsInit = {deckId: "", cardId: 0, nextReviewDate: "", reviews: [{date: "", correct: false, confidence: 0}]}
 interface FlashCardState {
     deck: Deck,
     updateDeck: (deck: Deck) => void
@@ -37,6 +37,8 @@ interface FlashCardState {
     updateConfirmDashboardShow: (to:boolean)=>void
     showArchived: boolean
     updateShowArchived: (to:boolean)=>void
+    stats: Stats
+    updateStats: (to:Stats)=> void
 
 }
 
@@ -72,7 +74,9 @@ export const useFlashCardState = create<FlashCardState>()((set) => ({
     confirmDashboardShow: false,
     updateConfirmDashboardShow: (to)=>set(()=>({confirmDashboardShow: to})),
     showArchived: false,
-    updateShowArchived:(to: boolean)=> set(()=>({showArchived: to}))
+    updateShowArchived:(to: boolean)=> set(()=>({showArchived: to})),
+    stats: statsInit,
+    updateStats: (to) => set(()=>({stats: to}))
 }))
 
 

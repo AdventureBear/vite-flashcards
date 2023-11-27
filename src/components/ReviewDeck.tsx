@@ -7,6 +7,7 @@ import NavigationControls from "./NavigationControls.tsx";
 import {useFlashCardState} from "../flashCardStore.ts";
 
 import  Badge  from '../templates/Badge.tsx'
+import {Stats} from "../types.ts";
 
 // interface QuestionNumberProps {
 //     deckLength: number
@@ -15,10 +16,11 @@ interface ReviewDeckProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean) => void,
     handlePrev: ()=> void,
     handleNext: ()=> void,
+    stats: Stats[]
 }
 
 
-const ReviewDeck = ({ handleAnswer, handlePrev, handleNext }: ReviewDeckProps) => {
+const ReviewDeck = ({ stats, handleAnswer, handlePrev, handleNext }: ReviewDeckProps) => {
     const deck = useFlashCardState((state)=>state.deck)
     // const deckName = useFlashCardState((state)=>state.deckName)
 
@@ -39,7 +41,9 @@ const ReviewDeck = ({ handleAnswer, handlePrev, handleNext }: ReviewDeckProps) =
 
             <Flashcard
                 handleAnswer = {handleAnswer}
+                stats={stats}
             />
+
             </div>
 
             <ProgressBar

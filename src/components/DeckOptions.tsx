@@ -2,7 +2,7 @@ import {useFlashCardState} from "../flashCardStore.ts";
 
 import {useMutation, useQueryClient} from 'react-query'
 
-import { handleArchiveDeck, handleDeleteDeck } from '../rest/http.ts'
+import { handleArchiveDeck, handleDeleteDeck } from '../rest/httpDecks.ts'
 
 
 interface DeckOptionsProps {
