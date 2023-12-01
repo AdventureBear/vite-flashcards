@@ -1,5 +1,4 @@
-import {Deck, NewCard, NewCardApiResponse} from "../types.ts";
-import {getNextCardUid} from "../utils/deckLogic.ts";
+import {Card, Deck, NewCardApiResponse} from "../types.ts";
 
 export async function handleAddNewDeck(name: string) {
     const response = await fetch("http://localhost:3000/decks", {
@@ -60,9 +59,9 @@ export async function handleDeleteDeck(deckId: string): Promise<boolean> {
 }
 
 
-export async function handleAddNewCard(newCard: NewCard, deck: Deck ):Promise<NewCardApiResponse> {
-    const nextId = getNextCardUid(deck)
-    const updatedCards = [...deck.cards, {...newCard, "id": nextId}]
+export async function handleAddNewCard(updatedCards: Card[], deck: Deck ):Promise<NewCardApiResponse> {
+    // const nextId = getNextCardUid(deck)
+    // const updatedCards = [...deck.cards, {...newCard}]
 
     const response = await fetch(`http://localhost:3000/decks/${deck.id}`, {
         method: "PATCH",

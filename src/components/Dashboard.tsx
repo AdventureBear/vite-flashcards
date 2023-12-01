@@ -7,15 +7,23 @@ import {Deck} from "../types.ts";
 
 interface DashboardProps {
     filteredDecks: Deck[]
-    selectDeck: (name: string) => void
+    // createReviewData: (id: string)=> void
+    // selectDeck: (name: string) => void
 }
 
-const Dashboard = ({selectDeck, filteredDecks}:DashboardProps) => {
+const Dashboard = ({ filteredDecks}:DashboardProps) => {
     // const deckList = useFlashCardState((state)=>state.deckList)
+    const updateDeckId = useFlashCardState((state)=>state.updateDeckId)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
+    const updateShowDeckOptions = useFlashCardState((state)=>state.updateShowDeckOptions)
+
+
     const showArchived = useFlashCardState((state)=>state.showArchived)
     if (!filteredDecks) return null
+
+
+
 
     return (
         <>
@@ -31,9 +39,12 @@ const Dashboard = ({selectDeck, filteredDecks}:DashboardProps) => {
                                 <div
                                     key={i}
                                     className="bg-indigo-200 w-full text-2xl text-black font-bold py-2 px-2 mb-4 rounded-xl cursor-pointer shadow-gray-500 shadow-l hover:shadow-xl hover:scale-105"
-                                    onClick={()=>
-                                        selectDeck(deck.id)
-                                    }
+                                    onClick={()=>{
+                                        updateDeckId(deck.id)
+                                        // createReviewData(deck.id)
+                                        updateShowDashboard(false)
+                                        updateShowDeckOptions(true)
+                                    }}
                                 >
                                     <h2>{deck.name}</h2>
                                 </div>

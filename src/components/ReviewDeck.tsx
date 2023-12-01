@@ -4,10 +4,11 @@ import Flashcard from "./Flashcard.tsx";
 import ProgressBar from "./ProgressBar.tsx";
 import NavigationControls from "./NavigationControls.tsx";
 // import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
-import {useFlashCardState} from "../flashCardStore.ts";
 
 import  Badge  from '../templates/Badge.tsx'
-import {Stats} from "../types.ts";
+import {Deck, Stats} from "../types.ts";
+import {useQueryClient} from "react-query";
+import {useFlashCardState} from "../flashCardStore.ts";
 
 // interface QuestionNumberProps {
 //     deckLength: number
@@ -20,11 +21,13 @@ interface ReviewDeckProps {
 }
 
 
-
 const ReviewDeck = ({ stats, handleAnswer, handlePrev, handleNext }: ReviewDeckProps) => {
-    const deck = useFlashCardState((state)=>state.deck)
-    // const deckName = useFlashCardState((state)=>state.deckName)
-
+    // const deck = useFlashCardState((state)=>state.deck)
+    const deckId = useFlashCardState((state)=>state.deckId)
+    const inReviewData = useFlashCardState((state)=>state.inReviewData)
+    const queryClient = useQueryClient()
+    const deck: Deck | undefined = queryClient.getQueryData(['getDeck', deckId]);
+    // console.log(deck)
 
     // function saveStats() {
     //     deck.cards.forEach((card) => {
@@ -51,40 +54,43 @@ const ReviewDeck = ({ stats, handleAnswer, handlePrev, handleNext }: ReviewDeckP
 
 
 
+    if (!deck) return null
+    console.log(inReviewData)
+    return (
+                <>
+
+                    <div className="bg-white p-8 font-extrabold text-2xl mb-2">
+
+                        <h2>{deck.name}</h2>
+                    </div>
+
+                    <div className="mb-8 px-8 py-4 bg-indigo-200 shadow-lg rounded-xl">
+
+                        <NavigationControls
+                            handlePrev={handlePrev}
+                            handleNext={handleNext}
+                        />
 
 
-        return (
-    <>
-                <div className="bg-white p-8 font-extrabold text-2xl mb-2">
+                        <Flashcard
+                            deck={deck}
+                            handleAnswer={handleAnswer}
+                            stats={stats}
+                        />
 
-                <h2>{deck.name}</h2>
-            </div>
+                    </div>
 
-            <div className="mb-8 px-8 py-4 bg-indigo-200 shadow-lg rounded-xl">
-
-            <NavigationControls
-                handlePrev={handlePrev}
-                handleNext={handleNext}
-            />
+                    <ProgressBar
+                        deck={deck}
+                    />
 
 
-            <Flashcard
-                handleAnswer = {handleAnswer}
-                stats={stats}
-            />
+                    <Badge size={1} variant={2}>TEST</Badge>
 
-            </div>
+                    {/*</div>*/}
+                </>
 
-            <ProgressBar
-                cards={deck.cards}
-            />
-
-
-
-            <Badge size={1} variant={2}>TEST</Badge>
-
-        {/*</div>*/}
-    </>
-)};
+    )
+};
 
 export default ReviewDeck

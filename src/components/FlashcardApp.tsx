@@ -8,7 +8,7 @@ import FeedbackModal from "./FeedbackModal.tsx";
 import AddDeckModal from "./AddDeck.tsx"
 
 //Types
-import {Card, Deck, Stats} from '../types.ts'
+import {Card, Deck, InReviewData, Stats} from '../types.ts'
 
 //State Management
 import  { useFlashCardState } from "../flashCardStore.ts";
@@ -16,6 +16,7 @@ import Dashboard from "./Dashboard.tsx";
 import DeckOptions from "./DeckOptions.tsx";
 import { Frame } from './Frame.tsx';
 import QuizArea from "./QuizArea.tsx";
+import {useQueryClient} from "react-query";
 
 interface FlashCardAppProps {
     decks: Deck[],
@@ -46,9 +47,7 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
     const updateShowQuiz = useFlashCardState((state)=>(state.updateShowQuiz))
     const updateShowFeedbackModal = useFlashCardState((state)=>state.updateShowFeedbackModal)
     const updateAnsweredCorrectly = useFlashCardState((state) =>state.updateAnsweredCorrectly )
-    const deck = useFlashCardState((state)=>state.deck)
-    const updateDeck = useFlashCardState((state)=>state.updateDeck)
-    const resetDeck = useFlashCardState((state)=>state.resetDeck)
+    const deckId = useFlashCardState((state)=>state.deckId)
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const showDashboard = useFlashCardState((state)=>state.showDashboard)
     const showDeckOptions = useFlashCardState((state)=>state.showDeckOptions)
@@ -56,36 +55,35 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
     const updateConfirmDashboardShow = useFlashCardState((state)=>state.updateConfirmDashboardShow)
     const showArchived = useFlashCardState((state)=>state.showArchived)
     const showFeedbackModal = useFlashCardState((state)=> (state.showFeedbackModal))
+    const inReviewData = useFlashCardState((state)=> (state.inReviewData))
+    const updateInReviewData = useFlashCardState((state)=> (state.updateInReviewData))
 
+    const queryClient = useQueryClient()
+
+    const deck: Deck | undefined = queryClient.getQueryData(['getDeck', deckId]);
 
     const filteredDecks = useMemo(
         () => filterDecks(decks, showArchived),
         [decks, showArchived]
     );
 
-
-
-
-    const selectDeck = (id: string) => {
-        const newDeck = (filteredDecks.find((deck: { id: string; })=>deck.id===id))
-        if (!newDeck){
-            return "No deck found"
+    function createReviewData (deck: Deck) {
+        console.log("Creating review data")
+        console.log("Deck Selected: ", deck)
+        if (deck) {
+            const freshReviewData: InReviewData[] = deck.cards.map((card: Card) => {
+                return {cardId: card.id, reviewed: false, correct: false, confidence: 3}
+            })
+            console.log("New Review Data:", freshReviewData)
+            updateInReviewData(freshReviewData)
         }
-        const updatedCards = newDeck?.cards?.map((card: Card)=> {
-            return {...card, "reviewed": false, "correct": false}
-        })
-        updateDeck({...newDeck, cards: updatedCards })
-        updateShowDashboard(false)
-        updateShowDeckOptions(true)
-
     }
 
     function unreviewedCards(){
-        return deck.cards?.filter((card) => !card.reviewed ).map((card)=> card.id)
+        return inReviewData.filter((card) => !card.reviewed ).map((card)=> card.cardId)
     }
 
     const handleReviewDeck = () => {
-        // dispatch({ type: 'show_quiz' });
         updateShowDeckOptions(false)
         updateShowQuiz(true)
     }
@@ -106,15 +104,16 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
     }
 
     function handleNext() {
+        if (!deck?.cards.length) return null
         const cardsRemaining =unreviewedCards()
         console.log(cardsRemaining)
         updateShowAnswer(false)
         //check boundaries
-        if (currentCardIndex < deck.cards.length - 1) {
+        if (currentCardIndex < deck?.cards.length - 1) {
             changeCurrentCardIndex(1)
         } else {
 
-            if (cardsRemaining.length>0) {
+            if (cardsRemaining && cardsRemaining.length>0) {
                 console.log("you have cards to review")
                 console.log(cardsRemaining)
             }
@@ -130,28 +129,30 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
     }
 
     function init(){
-        resetDeck()
+        // resetDeck()
         resetCurrentCardIndex()
     }
 
     const handleAnswer = (cardIndex: number, isCorrect: boolean) => {
         const cardsRemaining = unreviewedCards()
-
+        console.log("Handling answer! ReviewData: ", inReviewData)
         //check to see if all cards have been answered
-        if (cardsRemaining.length > 0) {
-            if (!deck.cards[cardIndex].reviewed) {
-                const newCards = [...deck.cards]
-                newCards[currentCardIndex].reviewed = true
-                updateAnsweredCorrectly(isCorrect)  //this triggers success window and message
-                newCards[currentCardIndex].correct = isCorrect;
-                updateDeck({...deck, cards: newCards})
-                updateShowFeedbackModal(true)
+        if (cardsRemaining && cardsRemaining.length > 0) {
+            //check to see if card has been reviewed
+            if (!inReviewData[cardIndex].reviewed) {
+                //if card hasn't been reviewed, update this cards review key to true
+                const newData = inReviewData         //make shallow copy
+                newData[currentCardIndex].reviewed = true          //set this card to true
+                updateAnsweredCorrectly(isCorrect)                  //this triggers success window and message
+                newData[currentCardIndex].correct = isCorrect;     //this updates the answer (correct vs incorrect)
+                updateInReviewData(newData)              //this updates the review
+                updateShowFeedbackModal(true)                   //shows the feedback
             } else {
                 //card has already been reviewed
                 alert("You've already reviewed this card for this round")
             }
             //was this the last card?
-            if ((cardsRemaining.length === 1) && (cardsRemaining[0]===deck.cards[cardIndex].id)) {
+            if ((cardsRemaining.length === 1) && (cardsRemaining[0]===deck?.cards[cardIndex].id)) {
                 updateShowComplete(true)
             }
         }
@@ -164,7 +165,8 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
             <>
                 {showDashboard &&
                     <Dashboard
-                        selectDeck ={selectDeck}
+                        // selectDeck ={selectDeck}
+                        // createReviewData={createReviewData}
                         filteredDecks     ={filteredDecks}
                     />
                 }
@@ -178,6 +180,7 @@ function FlashCardApp({decks, stats}: FlashCardAppProps) {
                         // handleDeleteDeck={handleDeleteDeck}
                         reviewDeck = {handleReviewDeck}
                         addQuestions = {handleAddQuestions}
+                        createReviewData={createReviewData}
                     />
                 }
 

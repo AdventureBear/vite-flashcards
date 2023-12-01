@@ -27,7 +27,8 @@ function App() {
         'getAllDecks', () =>
         fetch(DECKS_URL).then(res =>
             res.json()
-        )
+        ),
+
     )
 
     const { isLoading: isLoadingStats, error: errorStats,  data: allStats  } =   useQuery(

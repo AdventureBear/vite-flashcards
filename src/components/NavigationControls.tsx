@@ -1,19 +1,20 @@
 import {useFlashCardState} from "../flashCardStore.ts";
 import './NavigationControls.css'
+import {Deck} from "../types.ts";
+import {useQueryClient} from "react-query";
 
 interface NavigationControlsProps {
     handlePrev: () => void,
     handleNext: () => void,
 }
 
-// interface QuestionNumberProps {
-//     deckLength: number
-// }
+interface QuestionNumberProps {
+    deck: Deck
+}
 
-const QuestionNumber = () => {
+const QuestionNumber = ({deck}:QuestionNumberProps) => {
 
 
-    const deck = useFlashCardState((state) => state.deck)
     const currentCardIndex = useFlashCardState((state) => state.currentCardIndex)
 
     return (
@@ -32,8 +33,11 @@ const QuestionNumber = () => {
 
 const NavigationControls = ({handlePrev, handleNext}: NavigationControlsProps) => {
     const currentCardIndex = useFlashCardState((state) => state.currentCardIndex)
-    const deck = useFlashCardState((state) => state.deck)
+    const deckId = useFlashCardState((state) => state.deckId)
+    const queryClient = useQueryClient()
+    const deck: Deck | undefined = queryClient.getQueryData(['getDeck', deckId]);
 
+    if (!deck) return null
     return (
         <div className=" flex justify-between items-center pb-4">
             <button
@@ -50,7 +54,7 @@ const NavigationControls = ({handlePrev, handleNext}: NavigationControlsProps) =
                 Prev
             </button>
 
-            <QuestionNumber />
+            <QuestionNumber deck={deck}/>
 
             <button
                 className={`text-xl font-bold bg-blue-500 text-white px-4 py-2 rounded ${currentCardIndex === deck.cards.length - 1 

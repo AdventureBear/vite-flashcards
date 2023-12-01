@@ -6,8 +6,8 @@ import {useMutation, useQueryClient} from 'react-query'
 
 
 import {handleAddNewDeck} from "../rest/httpDecks.ts";
-
-
+// import {prepareNewDeck} from "../utils/deckLogic.ts";
+import {Deck} from "../types.ts";
 
 
 const AddDeckModal = () => {
@@ -15,15 +15,31 @@ const AddDeckModal = () => {
     const updateShowAddDeck = useFlashCardState((state) => state.updateShowAddDeck)
     const updateShowConfirmAddDeck = useFlashCardState((state) => state.updateShowConfirmAddDeck)
     const showConfirmAddDeck = useFlashCardState((state)=>state.showConfirmAddCard)
+    // const updateDeck = useFlashCardState((state)=>state.updateDeck)
 
     const queryClient = useQueryClient()
 
+    //optimistic update of decks
     const { mutate } = useMutation(
-        'addDeck',
-        handleAddNewDeck,
+        'addDeck', handleAddNewDeck,
         {
-            onSuccess: () => {
+            onMutate: async (deckName)=> {
+                const previousDecks = queryClient.getQueryData(['getAllDecks']);
+                // Optimistically update to the new value
+                queryClient.setQueryData(['getAllDecks'], (old) => {
+                    return [...(old as Deck[]),
+                        {name: deckName, id: 'optimistic-id', cards: []}, // Use a temporary ID for optimistic update
+                    ];
+                });
+                return { previousDecks };
+            },
+            onSettled: (data) => {
                 queryClient.invalidateQueries({ queryKey: ['getAllDecks'] });
+                return data
+            },
+            onError: (_err, _deckName, context) => {
+                // Roll back to the previous value on error
+                queryClient.setQueryData(['getAllDecks'], context?.previousDecks);
             },
         }
     );
@@ -34,6 +50,7 @@ const AddDeckModal = () => {
         mutate(deckName)
         setDeckName('')
         updateShowConfirmAddDeck(true)
+
     }
 
     return (

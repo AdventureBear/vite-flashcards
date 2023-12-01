@@ -5,7 +5,7 @@ const SuccessfulAddDeckModal = () => {
 
     const updateShowDashboard = useFlashCardState((state)=>state.updateShowDashboard)
     const updateShowAddDeck = useFlashCardState((state)=>state.updateShowAddDeck)
-    const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
+    // const updateShowCard = useFlashCardState((state)=>state.updateShowCard)
     const updateShowConfirmAddDeck = useFlashCardState((state)=>state.updateShowConfirmAddDeck)
     // const showConfirmAddDeck = useFlashCardState((state)=>state.showConfirmAddCard)
 
@@ -20,13 +20,13 @@ const SuccessfulAddDeckModal = () => {
                         {/*// Modal*/}
                         <div className="bg-white p-8 rounded shadow-lg text-center">
                             <h2 className="text-2xl mb-4">Success!</h2>
-                            <button
-                                className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
-                                onClick={()=>{
-                                    updateShowCard(true)
-                                    updateShowAddDeck(false)
-                                    updateShowConfirmAddDeck(false)
-                                }}>Add Questions</button>
+                            {/*<button*/}
+                            {/*    className="bg-blue-500 text-white px-4 py-2 rounded mr-4"*/}
+                            {/*    onClick={()=>{*/}
+                            {/*        updateShowCard(true)*/}
+                            {/*        updateShowAddDeck(false)*/}
+                            {/*        updateShowConfirmAddDeck(false)*/}
+                            {/*    }}>Add Questions</button>*/}
                             <button
                                 className="bg-blue-500 text-white px-4 py-2 rounded mr-4"
                                 onClick={()=>{

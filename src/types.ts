@@ -25,6 +25,14 @@ export type NewCardApiResponse = {
     question: string;
     answer: string;
 };
+
+export type InReviewData = {
+    cardId: number,
+    reviewed: boolean,
+    correct: boolean,
+    confidence: number
+}
+
 export type Review = {
     date: string,
     correct: boolean,

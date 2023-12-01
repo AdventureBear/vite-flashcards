@@ -5,25 +5,21 @@ import ReviewedCheckbox from "./ReviewedCheckbox.tsx";
 
 import './Flashcard.css'
 
-import {Stats} from "../types.ts";
+import {Deck, Stats} from "../types.ts";
 
 interface FlashcardProps {
     handleAnswer: (cardIndex: number, isCorrect: boolean, )=> void;
-    stats: Stats[]
+    stats: Stats[],
+    deck: Deck
 }
 
-export default function Flashcard({handleAnswer, stats }: FlashcardProps) {
+export default function Flashcard({handleAnswer, stats, deck }: FlashcardProps) {
     const updateShowAnswer = useFlashCardState((state)=>state.updateShowAnswer)
     const showAnswer = useFlashCardState((state)=>state.showAnswer)
     const currentCardIndex = useFlashCardState((state)=>state.currentCardIndex)
-    const deck = useFlashCardState((state)=>state.deck)
 
     const cards = deck.cards
     const cardStats = stats.filter((stat: Stats) => (stat.cardId === cards[currentCardIndex].id && stat.deckId === deck.id))
-
-    console.log("all stats: ", stats)
-    console.log("Card Stats: ", deck.id, cards[currentCardIndex].id, cardStats)
-
 
     return (
         <>
@@ -50,12 +46,12 @@ export default function Flashcard({handleAnswer, stats }: FlashcardProps) {
             <div>
                 {!cardStats[0] ? 'This is your first review' :
                     <div>
-                        <p> Your stats for this card:
-                            <ul>
-                                <li>Reviewed:  {cardStats[0].reviews?.length}</li>
-                                <li>Correct:  {cardStats[0].reviews?.filter((review) => review.correct).length}</li>
-                            </ul>
-                        </p>
+                        <p> Your stats for this card:</p>
+                        <ul>
+                            <li>Reviewed:  {cardStats[0].reviews?.length}</li>
+                            <li>Correct:  {cardStats[0].reviews?.filter((review) => review.correct).length}</li>
+                        </ul>
+
                     </div>
                 }
             </div>

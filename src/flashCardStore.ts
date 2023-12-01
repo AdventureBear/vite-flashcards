@@ -1,13 +1,17 @@
 import { create } from 'zustand'
 
-import {Deck, Stats} from "./types.ts";
+import { Stats, InReviewData} from "./types.ts";
 
-const deckInit = {id:"", cards:[], archived: false, name: ""}
-const statsInit = {deckId: "", cardId: 0, nextReviewDate: "", reviews: [{date: "", correct: false, confidence: 0}]}
+const inReviewInit: InReviewData[] = [
+    { cardId: -1, correct: false, reviewed: false, confidence: 3 },
+];
+// const inReviewInit = [{cardId: -1, reviewed: false, correct: false, confidence: 3}]
+const statsInit = {id: 0, deckId: "", cardId: 0, nextReviewDate: "", reviews: [{date: "", correct: false, confidence: 0}]}
 interface FlashCardState {
-    deck: Deck,
-    updateDeck: (deck: Deck) => void
-    resetDeck: ()=> void
+    inReviewData: InReviewData[]
+    updateInReviewData: (to: InReviewData[]) => InReviewData[]
+    deckId: string
+    updateDeckId: (to: string) => void
     currentCardIndex: number
     changeCurrentCardIndex: (by: number) => void
     resetCurrentCardIndex: ()=> void
@@ -43,9 +47,14 @@ interface FlashCardState {
 }
 
 export const useFlashCardState = create<FlashCardState>()((set) => ({
-    deck: deckInit,
-    updateDeck: (deck: Deck)=> set(()=>({deck: deck})),
-    resetDeck: ()=>set(()=>({deck: deckInit})),
+    inReviewData: inReviewInit,
+    // updateInReviewData: (to) => set(() => ({inReviewData: to})),
+    updateInReviewData: (to) => {
+        set(()=>({ inReviewData: to }))
+        return to
+    },
+    deckId: "",
+    updateDeckId: (to) => set(()=>({deckId: to})),
     currentCardIndex: 0,
     changeCurrentCardIndex: (by) => set((state) => ({ currentCardIndex: state.currentCardIndex + by })),
     resetCurrentCardIndex: ()=>set({currentCardIndex: 0}),

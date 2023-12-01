@@ -1,14 +1,14 @@
-import {Card} from '../types.ts'
-import {useFlashCardState} from "../flashCardStore.ts";
+import {Deck} from '../types.ts'
+// import {useFlashCardState} from "../flashCardStore.ts";
 
 interface ProgressBarProps {
-    cards: Card[],
+    deck: Deck,
     // progressBarWidth: string
 }
 
-const ProgressBar = ({ cards}: ProgressBarProps) => {
+const ProgressBar = ({ deck}: ProgressBarProps) => {
 
-    const deck = useFlashCardState((state)=>state.deck)
+    // const deck = useFlashCardState((state)=>state.deck)
     const cardsReviewed = deck.cards.filter((card)=> card.reviewed).length
 
     const progressBarWidth = `${(cardsReviewed / deck.cards.length) * 100}%`;
@@ -28,7 +28,7 @@ const ProgressBar = ({ cards}: ProgressBarProps) => {
             </div>
             <div>
                 <p className="text-lg font-bold ml-2"><span
-                    className="text-amber-100">{cardsReviewed}</span> / {cards.length}
+                    className="text-amber-100">{cardsReviewed}</span> / {deck.cards.length}
                 </p>
             </div>
         </div>
